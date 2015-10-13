@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0D2158851BBEEA7D0017A484 /* menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0D2158831BBEEA7D0017A484 /* menu.cpp */; };
-		0D2158881BC717DB0017A484 /* Playersv2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0D2158861BC717DB0017A484 /* Playersv2.cpp */; };
 		0D56AC761B16AA5B0054E1E4 /* dealerPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0D56AC741B16AA5B0054E1E4 /* dealerPlayer.cpp */; };
 		0D56AC791B16ABCC0054E1E4 /* gamePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0D56AC771B16ABCC0054E1E4 /* gamePlayer.cpp */; };
 		0DD62F181AF04EBF00671A2F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD62F171AF04EBF00671A2F /* main.cpp */; };
@@ -38,8 +37,6 @@
 /* Begin PBXFileReference section */
 		0D2158831BBEEA7D0017A484 /* menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = menu.cpp; sourceTree = "<group>"; };
 		0D2158841BBEEA7D0017A484 /* menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = menu.h; sourceTree = "<group>"; };
-		0D2158861BC717DB0017A484 /* Playersv2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Playersv2.cpp; sourceTree = "<group>"; };
-		0D2158871BC717DB0017A484 /* Playersv2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Playersv2.h; sourceTree = "<group>"; };
 		0D53226E1B6C0F4500879F81 /* scrapped code.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = "scrapped code.strings"; sourceTree = "<group>"; };
 		0D56AC741B16AA5B0054E1E4 /* dealerPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = dealerPlayer.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		0D56AC751B16AA5B0054E1E4 /* dealerPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = dealerPlayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -118,8 +115,6 @@
 				0D2158841BBEEA7D0017A484 /* menu.h */,
 				0DD62F241AF1563100671A2F /* player.cpp */,
 				0DD62F251AF1563100671A2F /* player.h */,
-				0D2158861BC717DB0017A484 /* Playersv2.cpp */,
-				0D2158871BC717DB0017A484 /* Playersv2.h */,
 				0DD62F2A1AF2A41600671A2F /* prompts.cpp */,
 				0DD62F2B1AF2A41600671A2F /* prompts.h */,
 				0D53226E1B6C0F4500879F81 /* scrapped code.strings */,
@@ -191,7 +186,6 @@
 				0DD62F261AF1563100671A2F /* player.cpp in Sources */,
 				0DD62F2F1AF824CA00671A2F /* card.cpp in Sources */,
 				0DD62F181AF04EBF00671A2F /* main.cpp in Sources */,
-				0D2158881BC717DB0017A484 /* Playersv2.cpp in Sources */,
 				0DD62F2C1AF2A41600671A2F /* prompts.cpp in Sources */,
 				0D2158851BBEEA7D0017A484 /* menu.cpp in Sources */,
 				0DD62F201AF04F4700671A2F /* game.cpp in Sources */,
