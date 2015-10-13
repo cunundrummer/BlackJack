@@ -8,12 +8,12 @@
 
 #include "gamePlayer.h"
 
-GamePlayer::GamePlayer(): PlayerV2("PLAYER", 15, 500, 4, true) {
+GamePlayer::GamePlayer(): Player("PLAYER", 15, 500, 4, true) {
     //setName("PLAYER", 15);
 }
 
 
-GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED = 15, double money = 500,  const size_t MAX_NUMBER_HANDS = 4, bool inSession = true) : PlayerV2(name, MAX_CHARACTERS_ALLOWED, money, MAX_NUMBER_HANDS, true) {
+GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED = 15, double money = 500,  const size_t MAX_NUMBER_HANDS = 4, bool inSession = true) : Player(name, MAX_CHARACTERS_ALLOWED, money, MAX_NUMBER_HANDS, true) {
     setName(name, 15);
     _name = getName(false);
     _insuranceBet = 0;

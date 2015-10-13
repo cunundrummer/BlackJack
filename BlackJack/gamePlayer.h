@@ -11,9 +11,9 @@
 
 #include <iostream>
 #include "player.h"
-#include "Playersv2.h"
+//#include "Playersv2.h"
 
-class GamePlayer : public PlayerV2 { //original :Player
+class GamePlayer : public Player { //original :Player
 private:
     double _max_allowable_bet_allowed;
     double _bet;

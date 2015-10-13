@@ -8,26 +8,43 @@
 
 #include "player.h"
 
-Player::Player () {
-    _name = "PLAYER";
-    int count = 0;
-    count = _playerCount;
-    _name.append(std::to_string(count));
-    _money = 500;
-    _playerCount++;
+Player::Player (bool toIncludeInCount):
+MAX_HANDS_ALLOWED_TO_HOLD_(4),
+_name("PLAYER"),
+_money(500)
+{
+    if (toIncludeInCount == true) {
+        _playerCount++;
+        
+    }
+    if (_name == "PLAYER") {
+        _name.append(std::to_string(_playerCount));
+    }
+    
 }
 
-Player::Player(std::string name, const int MAX_CHARACTERS = 15, double money = 500, bool inSession = true) : _money(money), _inSession(inSession) {
+Player::Player(std::string name, const int MAX_CHARACTERS = 15, double money = 500, const size_t MAX_NUMBER_HAND_TO_HOLD = 4, bool toIncludeInCount = false) :
+_money(money),
+MAX_HANDS_ALLOWED_TO_HOLD_(MAX_NUMBER_HAND_TO_HOLD)
+{
+    if (toIncludeInCount == true) {
+        _playerCount++;
+        
+    }
+    
     setName(name, MAX_CHARACTERS);
-    _playerCount++;
+    if (_name == "PLAYER") {
+        _name.append(std::to_string(_playerCount));
+    }
+    
 }
 
 std::ostream& operator<< (std::ostream &os, Player &p) {
     //int maxSpaces = p._MAX_CHARACTERS_ALLOWED;
     /*if (p.getInSession())
-        os << p._name << ": " << "$" << std::fixed << std::setprecision(2) << p._money;
-    else
-        os << p._name << ": " << "[out]";*/
+     os << p._name << ": " << "$" << std::fixed << std::setprecision(2) << p._money;
+     else
+     os << p._name << ": " << "[out]";*/
     p.print();
     return os ;
 }
@@ -37,7 +54,7 @@ std::ostream& operator<< (std::ostream &os, Player &p) {
  * @param
  * @return
  */
-void Player::setName(std::string name, const int MAX_CHARACTERS) {
+void Player::setName(std::string &name, const int MAX_CHARACTERS) {
     
     if ( name.empty() || stringIsAlphaNumOnly(name) == false || name.size() > MAX_CHARACTERS ) {
         std::cout << "Name error: letters and numbers only. No more then " << MAX_CHARACTERS << " characters long" << std::endl;
@@ -46,22 +63,8 @@ void Player::setName(std::string name, const int MAX_CHARACTERS) {
     else {
         _name = name;
         _nameIsSet = true;
-       
+        
     }
-}
-
-
-void Player::removeCardsFromHand(int numCards = 1) {
-/*
-    if (numCards > hands_.pileSize()) {
-        std::cout << "Invalid amount of cards to be removed in Player::removeCardsFromHand(...), making numCards = pilesize." << std::endl;
-        numCards = hands_.pileSize();
-    }
-    
-    for (int i = 0; i < numCards; i++) {
-        hands_.removeLastCard();
-    }
-*/
 }
 
 /*!
@@ -70,14 +73,26 @@ void Player::removeCardsFromHand(int numCards = 1) {
  * @warning
  * @return string
  */
+void Player::removeCardsFromHand(int numCards = 1, size_t index = 0) {
+    if (numCards > hands_[index].pileSize()) {
+        std::cout << "Invalid amount of cards to be removed in Player::removeCardsFromHand(...), making numCards = pilesize." << std::endl;
+        numCards = hands_[index].pileSize();
+    }
+    
+    for (int i = 0; i < numCards; i++) {
+        hands_[index].removeLastCard();
+    }
+    
+}
+
 std::string Player::getName(bool showErrMsg) {
     if ( _name.empty() || stringIsAlphaNumOnly(_name) == false || _nameIsSet == false) {
         if (showErrMsg == true)
             std::cout << "Name error: Giving a default name!" << std::endl;
         std::string name = "PLAYER";  //maybe move into parameter list?
-        name.append(std::to_string(_playerCount)); //give player1/2/3/...
+        name.append(std::to_string(0/*_playerCount*/)); //give player1/2/3/...
         _nameIsSet = true;
-       
+        
         return _name = name;
     }
     else
@@ -85,7 +100,7 @@ std::string Player::getName(bool showErrMsg) {
 }
 
 int Player::getPlayerCount() {
-    return _playerCount;
+    return  _playerCount;
 }
 
 void Player::setPlayerCount(int count) {
@@ -93,7 +108,7 @@ void Player::setPlayerCount(int count) {
 }
 
 double Player::getMoney() {
-
+    
     return _money;
 }
 
@@ -101,36 +116,54 @@ void Player::setMoney(double money) {
     _money = money;
 }
 
-void Player::addCardToHandFromDeck(Card cardToAdd) {
-    hands_.at(0).addCard(cardToAdd);
+void Player::addCardToHandFromDeck(Card cardToAdd, size_t index) {
+    //std::cout << "\n\nIn addCardToHand for " << _name << "...\nindex = " << index << ", " << "MAX_HANDS_ALLOWED_TO_HOLD_: " << MAX_HANDS_ALLOWED_TO_HOLD_ <<std::endl;
+    if (index > MAX_HANDS_ALLOWED_TO_HOLD_) {
+        std::cout << "ERROR: Exceeded MAX_HANDS_TO_HOLD in Player::addCardsToHandFromDeck" << std::endl;
+        exit(9);
+    }
     
+    if (hands_.empty() || index >= hands_.size()) {
+        Hand h;
+        h.addCard(cardToAdd);
+        
+        hands_.push_back(h);
+    }
+    else
+        hands_.at(index).addCard(cardToAdd);
 }
 
-void Player::addCardToHandFromDeck(Card cardToAdd, int handIndex) {
-    hands_.at(handIndex).addCard(cardToAdd);
+void Player::displayHand() {
+    if (hands_.size() == 0) {
+        std::cout << "Hand(s) N/A" << std::endl;
+    }
+    else {
+        int i = 0;
+        
+        for (auto hand: hands_) {
+            std::cout << "Hand " << i << ": " << hand << std::endl;
+            i++;
+        }
+    }
+}
+
+void Player::print() {
+    //if ( getInSession() == true)
+    std::cout << _name << ": " << "$" << std::fixed << std::setprecision(2) << getMoney();
+    //else
+    // std::cout << _name << ": " << "[out]";
+    std::cout << std::endl;
+    displayHand();
+    
 }
 
 void Player::hit(Card card) {
     
     //std::cout << "Before handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
-    addCardToHandFromDeck(card, 0);
+    addCardToHandFromDeck(card);
     //std::cout << "After handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
 }
 
 void Player::stand() {
-    setInSession(false);
-}
-
-Hand Player::getHand(int index = 0) {
-    return hands_[index];
-}
-
-void Player::displayHand() {
-    int i = 0;
-    std::cout << std::endl;
-    for (auto hand: hands_) {
-        std::cout << "Hand#" << i + 1 << " " << hand << std::endl;
-        i++;
-    }
-    
+    //setInSession(false);
 }

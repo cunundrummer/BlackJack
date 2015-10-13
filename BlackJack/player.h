@@ -17,57 +17,47 @@
 
 class Player {
 private:
-
+    
     bool _nameIsSet;
-    bool _inSession;
+    //bool _inSession;
     
 protected:
     int _MAX_CHARACTERS_ALLOWED = 15;
     std::string _name;
     double _money;
-    //Hand hands_; //only dealer?
-    std::vector<Hand> hands_; //only gameplayer?
-    //Hands(Gameplayer allowed 4 hand[4 splits], Dealer only allowed 1)
+    const size_t MAX_HANDS_ALLOWED_TO_HOLD_;
+    std::vector<Hand> hands_;
+    void setMAX_CARDS_TO_HOLD(const size_t NUMBER_OF_HANDS);
     
 public:
     static int _playerCount;
     friend std::ostream& operator<< (std::ostream &os, Player &p);
     
-    Player();
-    Player(std::string, int, double, bool); //set name only, left out bool to allow for auto/default name
+    Player() = delete;
+    Player(bool toIncludeInCount = false);
+    Player(std::string name, const int MAX_CHARACTERS, double money, const size_t MAX_NUMBER_HAND_TO_HOLD, bool toIncludeInCount); //set name only, left out bool to allow for auto/default name
     
     int getPlayerCount();
-    void setPlayerCount(int);
+    void setPlayerCount(int count);
     
-    void setName(std::string, const int);
-    std::string getName(bool); //boolfor showing error message
-
-    void setNameIsSet(bool TrueOrFalse);
-    bool getNameIsSet() { return _nameIsSet; }
+    virtual void setName(std::string&, const int  MAX_CHARACTERS);
+    std::string getName(bool showErrMsg); //bool for showing error message
     
-    void setInSession(bool TrueOrFalse) { _inSession = TrueOrFalse; }
-    bool getInSession() { return _inSession; }
+    //void setNameIsSet(bool TrueOrFalse);
+    //bool getNameIsSet() { return _nameIsSet; }
     
-    void setMoney(double);
-    double getMoney();
+    virtual void setMoney(double money);
+    virtual double getMoney();
     
-    //Hand getHand() { return hands_; }
+    void addCardToHandFromDeck(Card, size_t index = 0);
+    void removeCardsFromHand(int numCards, size_t index);
     
+    std::vector<Hand>& getHand() { return hands_; }
     void displayHand();
-    void addCardToHandFromDeck(Card);
-    void addCardToHandFromDeck(Card cardToAdd, int handIndex = 0);
-    void removeCardsFromHand(int numCards);
-    //virtual void getHand(Hand &hand, int index);
-    Hand getHand(int index);
-    //void getAllHands(std::vector<Hand>& hands) { hands_=hands; }
-    virtual void print() {
-        std::cout << "Base";
-    }
     
+    virtual void print();
     virtual void hit(Card card);
     void stand();
-    //void stand();
-    
 };
 
 #endif /* defined(__BlackJack__player__) */

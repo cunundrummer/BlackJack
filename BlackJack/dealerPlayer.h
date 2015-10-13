@@ -11,14 +11,14 @@
 
 #include <iostream>
 #include "player.h"
-#include "Playersv2.h"
+//#include "Playersv2.h"
 
-class DealerPlayer : public PlayerV2 {
+class DealerPlayer : public Player {
 private:
 
 public:
     DealerPlayer(std::string name = "Dealer", const int MAX_CHARACTERS = 15, double money = 2000, const size_t MAX_NUMBER_HAND_TO_HOLD = 0, bool toIncludeInCount = true):
-    PlayerV2(name, MAX_CHARACTERS, money, MAX_NUMBER_HAND_TO_HOLD, toIncludeInCount) {
+    Player(name, MAX_CHARACTERS, money, MAX_NUMBER_HAND_TO_HOLD, toIncludeInCount) {
         //setInSession(true);
     }
     
