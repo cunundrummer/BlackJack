@@ -1,0 +1,66 @@
+/* 
+  scrapped code.strings
+  BlackJack
+
+  Created by Leeran Pinckovich on 2015-07-31.
+  Copyright (c) 2015 Compulsive Gamblers inc. All rights reserved.
+*/
+void Game::setUpPlayers() {
+    //reset player count
+    Player::_playerCount = 0;
+    
+    //Name, money, flags, computer/human
+    if (_isDemoMode == true) {
+        //default computer player names...
+        
+        std::cout << "In setUpPlayers(), player count is " << Player::_playerCount <<std::endl;
+        
+        while (Player::_playerCount < _numPlayers) {
+            std::string compName = generateName("COMP");
+            _players.push_back(new GamePlayer(compName, _MAX_CHARACTERS_FOR_NAME, 500, true));
+            
+        }
+    }
+    else {
+        do {
+            std::string answeryn = getYNFromQuestion("Will this player be human (y/n)?");
+            if (answeryn == "y") {
+                std::cout << "Please enter a name upto " << _MAX_CHARACTERS_FOR_NAME << " characters long. Leave blank for default name: " << std::endl;
+                
+                std::string pName = getAlphaNumInput(_MAX_CHARACTERS_FOR_NAME, true);
+                
+                //Maybe ask to stop inputting names(for < 5 player games
+                if (pName.empty())
+                {
+                    std::cout << "Player" << Player::_playerCount << " will be ";
+                    std::cout << std::endl << "Player count in empty human before new pushback is: " << Player::_playerCount << std::endl;
+                    _players.push_back(new GamePlayer());
+                    std::cout << std::endl << "Player count in empty human input is: " << Player::_playerCount << std::endl;
+                    std::cout << _players[GamePlayer::_playerCount - 1]->getName(false) << " YAAAARG" << std::endl;
+                }
+                else {
+                    //code for non empty names
+                    std::cout << "Player" << Player::_playerCount << " will be ";
+                    _players.push_back(new GamePlayer(pName, _MAX_CHARACTERS_FOR_NAME,500, true));
+                    //std::cout << players[Player::_playerCount - 1]->getName(false) << std::endl;
+                }
+            }
+            else {
+                //enter code for computer player init
+                std::string compName = generateName("COMP");
+                _players.push_back(new GamePlayer(compName, _MAX_CHARACTERS_FOR_NAME, 500, true));
+            }
+        } while (GamePlayer::_playerCount < _MAX_GAMEPLAYERS_ALLOWED);
+    }
+    
+    /*DealerPlayer*/ //_dealer = *new DealerPlayer();
+    std::cout << "DEALERS NAME IS: " << _dealer.getName(false) << std::endl;
+    std::cout << "Before adding dealer to setUpPlayers(), player count is " << Player::_playerCount <<std::endl;
+    _players.push_back(&_dealer);
+    
+    //std::cout << std::endl;
+    //for (auto p:players) {
+    //    std::cout << p->getName(false) << " with " << p->getMoney() << std::endl;  //displayed here for debugging
+    //}
+    std::cout << "After setUpPlayers(), player count is " << Player::_playerCount <<std::endl;
+}
