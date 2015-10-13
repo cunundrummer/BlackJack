@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include "player.h"
-//#include "Playersv2.h"
 
 class DealerPlayer : public Player {
 private:
