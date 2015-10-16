@@ -8,17 +8,20 @@
 
 #include "gamePlayer.h"
 
-GamePlayer::GamePlayer(): Player("PLAYER", 15, 500, 4, true) {
+GamePlayer::GamePlayer(): Player("PLAYER", 15, 500, 4, true, true) {
     //setName("PLAYER", 15);
 }
 
-
-GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED = 15, double money = 500,  const size_t MAX_NUMBER_HANDS = 4, bool inSession = true) : Player(name, MAX_CHARACTERS_ALLOWED, money, MAX_NUMBER_HANDS, true) {
+/*!
+ * @discussion constructor call with parameters
+ * @param name, MAX_CHARACTERS_ALLOWED, double money, const size t MAX_NUMBERS, bool inSession
+ * @warning
+ */
+GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED, double money,  const size_t MAX_NUMBER_HANDS, bool inSession) : Player(name, MAX_CHARACTERS_ALLOWED, money, MAX_NUMBER_HANDS, true, true) {
     setName(name, 15);
     _name = getName(false);
     _insuranceBet = 0;
 }
-
 
 void GamePlayer::setBet(double bet = 0) {
     _bet = bet;

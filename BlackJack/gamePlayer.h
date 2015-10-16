@@ -19,19 +19,17 @@ private:
     double _insuranceBet;
     bool _wantsInsuranceFlag = false;
     bool _insuranceBetIsSet = false;
-    bool _inSession = true;
     
 public:
     GamePlayer();
-    GamePlayer(std::string, int, double money, const size_t maxNumberHands, bool inSession);
+    GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED = 15, double money = 500,  const size_t MAX_NUMBER_HANDS = 4, bool inSession = true);
     
     void setBet(double);
     double getBet() { return _bet; }
     
     double getMaxBetAllowed(double, double);
     void setMaxAllowableBet(double, double);
-    bool isInSession() { return _inSession; }
-    void setInSession(bool session) { _inSession = session; }
+    
     virtual void print();
     
     void setInsuranceFlag(bool flag) { _wantsInsuranceFlag = flag; }

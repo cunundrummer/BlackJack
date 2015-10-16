@@ -7,7 +7,7 @@
 //
 
 #include "game.h"
-/*
+
 void Game::displayHelp() {
     std::cout << std::endl << "Blackjack allows up to 5 player (might change) of human, computer players.  Either all or mixed." <<
                 std::endl << "There are 52 cards per deck.  There is a limit of 8 decks in use." << std::endl;
@@ -23,9 +23,10 @@ void Game::setUpPlayers(std::vector<GamePlayer*> &gPlayers){
         
         std::cout << "In setUpPlayers(), before setting up players, player count is " << Player::_playerCount <<std::endl;
         
-        while (Player::_playerCount < _numPlayers) {
+        while (Player::_playerCount < _numPlayers) {  //use iterators instead?
             std::string compName = generateName("COMP");
             gPlayers.push_back(new GamePlayer(compName, _MAX_CHARACTERS_FOR_NAME, 500, true));
+            std::cout << "DEBUG: In game::setUpPlayers, new gameplayer setup...\n" << gPlayers.at(gPlayers.size() -1)->getName(false) << std::endl;
             
         }
     }
@@ -40,17 +41,14 @@ void Game::setUpPlayers(std::vector<GamePlayer*> &gPlayers){
                 //Maybe ask to stop inputting names(for < 5 player games
                 if (pName.empty())
                 {
-                    std::cout << "Player" << Player::_playerCount << " will be ";
-                    std::cout << std::endl << "Player count in empty human before new pushback is: " << Player::_playerCount << std::endl;
                     gPlayers.push_back(new GamePlayer());
-                    std::cout << std::endl << "Player count in empty human input is: " << Player::_playerCount << std::endl;
-                    std::cout << gPlayers[GamePlayer::_playerCount - 1]->getName(false) << " YAAAARG" << std::endl;
+                    std::cout << "Players name will be: " << gPlayers.at(gPlayers.size() - 1)->getName(false) << std::endl;
                 }
                 else {
                     //code for non empty names
                     std::cout << "Player" << Player::_playerCount << " will be ";
                     gPlayers.push_back(new GamePlayer(pName, _MAX_CHARACTERS_FOR_NAME,500, true));
-                    //std::cout << players[Player::_playerCount - 1]->getName(false) << std::endl;
+                    std::cout << gPlayers.at(gPlayers.size() - 1)->getName(false) << std::endl;
                 }
             }
             else {
@@ -60,13 +58,12 @@ void Game::setUpPlayers(std::vector<GamePlayer*> &gPlayers){
             }
         } while (GamePlayer::_playerCount < _MAX_GAMEPLAYERS_ALLOWED);
     }
-    
-    //std::cout << "DEALERS NAME IS: " << _dealer.getName(false) << std::endl;
+    std::cout << "DEBUG: GAME::setUpPlayers" << std::endl;
     std::cout << "After adding players in setUpPlayers(), player count is " << Player::_playerCount <<std::endl;
     for (auto p: gPlayers) {
         std::cout << *p << std::endl;
     }
-    std::cout << "SetupPlayers done..." << std::endl;
+    std::cout << "END Debug of GAME::SetupPlayers: SetupPlayers done..." << std::endl;
 }
 
 
@@ -80,9 +77,9 @@ void Game::setNumPlayers(int numPlayers = 5) {
 
 /*!
  * @discussion Show as many or all variables in Game
- * @param <#param description#>
- * @return <#return description#>
- *
+ * @param none
+ * @return none
+ */
 void Game::showDebug() {
     
     std::cout <<  std::endl << "IN GAME.DEBUG....for testing purposes only-------------------" << std::endl;
@@ -95,7 +92,7 @@ void Game::showDebug() {
     //players names
     int i = 0;
     for (auto p: _players) {
-        std::cout << i + 1 << ": " << p->getName(false) << " $" << p->getMoney() << ". Player isSet:" << ((p->getInSession() == true) ? "yes" : "no") << std::endl;
+        std::cout << i + 1 << ": " << p->getName(false) << " $" << p->getMoney() << ". Player isSet:" << ((p->isInSession() == true) ? "yes" : "no") << std::endl;
         i++;
     }
     
@@ -123,7 +120,7 @@ void Game::setupDeck(int nDecks) {
 void Game::dealCard(Player &player, bool faceup = true) {
     
     //for (auto pl: players) {
-        if (player.getInSession() == true) {
+        if (player.isInSession() == true) {
             Card c = _deck->removeLastCard();
             //std::cout << "PILE SIZE is " << pl->getHand().pileSize();
             if (player.getHand(0).pileSize() == 1 && player.getName(false).compare("DEALER") == 0 ) //setting hidden card for dealing only!
@@ -140,15 +137,19 @@ void Game::dealCard(Player &player, bool faceup = true) {
 }
 
 void Game::dealCardToAllPlayers(std::vector<Player*> players, bool faceUp = true) {
+    const int ONE_CARD = 1;
+    const int NO_CARDS = 0;
     for (auto p: players) {
-        if (p->getInSession() == true) {
-            Card c = _deck->removeLastCard();
-            if (p->getHand(0).pileSize() == 1 && p->getName(false).compare("DEALER") == 0 ) //setting hidden card for dealing only!
-                c.setFaceUp(false);
+        if (p->isInSession() == true) {
+            Card card = _deck->removeLastCard();
+            Hand plyrHand = p->getHand(0); //check for errors!!!!!!
+            int handSize = plyrHand.pileSize();
+            if (handSize == ONE_CARD && p->getName(false).compare("DEALER") == NO_CARDS ) //setting hidden card for dealing only!
+                card.setFaceUp(false);
             else
-                c.setFaceUp(faceUp);
+                card.setFaceUp(faceUp);
             
-            p->addCardToHandFromDeck(c, 0);
+            p->addCardToHandFromDeck(card, 0);
         }
     }
 }
@@ -156,12 +157,14 @@ void Game::dealCardToAllPlayers(std::vector<Player*> players, bool faceUp = true
 void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
     
     //do demo mode a.i. here for determining bets?
+    std::cout << "DEBUG: getBetsFromAllPlayers" << std::endl;
     
     std::cout << "Players size is " << p.size() << std::endl;
+
     for (size_t pCounter = 0; pCounter < p.size(); pCounter++) {
         const double MAX_ALLOWABLE_BET_FROM_PLAYER = p[pCounter]->getMaxBetAllowed(MIN_ALLOWABLE_BET, MAX_ALLOWABLE_BET);
-        
-        if (p[pCounter]->getInSession() == true) {
+        std::cout << p[pCounter]->getName(false) << " session status: " << p[pCounter]->isInSession() << std::endl;
+        if (p[pCounter]->isInSession() == true) {
             std::cout << p[pCounter]->getName(false) << " has " << p[pCounter]->getMoney() << "." << std::endl;
             std::cout << "Please enter an amount upto " << MAX_ALLOWABLE_BET_FROM_PLAYER << std::endl;
             std::cout << "$";
@@ -169,7 +172,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
             double bet;
             /*
              player will be allowed to input 0 in order to not play round.  min. bet should be five and max should be 500(or 50)
-            *
+            */
             while ( (bet = getDoubleInput(false)) > MAX_ALLOWABLE_BET_FROM_PLAYER || (bet < 5 && bet > 0) ) {
                 std::cout << "Type 0 to skip round or input a bet not more then " << MAX_ALLOWABLE_BET_FROM_PLAYER << ": ";
             }
@@ -193,7 +196,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
     //std::cout << "END";
     /* this method probably does too much.  It probably shouldn't change the session but return an error sentinel per player?
      May change getting all players bets to getting individual players bets, like a loop in main or from a fuction in main
-     *
+     */
 }
 
 int Game::phase1(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {  //change the name of method!!!!
@@ -280,7 +283,7 @@ void Game::getInsuranceFromPlayers(std::vector<GamePlayer*> &gPlayers) {
     
     for (auto gp: gPlayers) {
 
-        if (gp->getInSession() == true) {
+        if (gp->isInSession() == true) {
             std::cout << std::endl;
             std::cout << gp->getName(false) << ": " << std::endl;
             std::string question = "Would you like insurance? ";
@@ -313,7 +316,7 @@ void Game::getInsuranceFromPlayer(GamePlayer &p) {
 void Game::getBetFromPlayer(GamePlayer &p) {
     const double MAX_ALLOWABLE_BET_FROM_PLAYER = p.getMaxBetAllowed(MIN_ALLOWABLE_BET, MAX_ALLOWABLE_BET);
     
-    if (p.getInSession() == true) {
+    if (p.isInSession() == true) {
         std::cout << p.getName(false) << " has " << p.getMoney() << "." << std::endl;
         std::cout << "Please enter an amount upto " << MAX_ALLOWABLE_BET_FROM_PLAYER << std::endl;
         std::cout << "$";
@@ -321,7 +324,7 @@ void Game::getBetFromPlayer(GamePlayer &p) {
         double bet;
         /*
          player will be allowed to input 0 in order to not play round.  min. bet should be five and max should be 500(or 50)
-         *
+         */
         while ( (bet = getDoubleInput(false)) > MAX_ALLOWABLE_BET_FROM_PLAYER || (bet < 5 && bet > 0) ) {
             std::cout << "Type 0 to skip round or input a bet not more then " << MAX_ALLOWABLE_BET_FROM_PLAYER << ": ";
         }
@@ -356,7 +359,7 @@ int Game::buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer) {
     std::vector<std::string> options;
     int choice;
     
-    if (gPlayer.getInSession() == true) { //default values as long as player is still in the game(hit, stand)
+    if (gPlayer.isInSession() == true) { //default values as long as player is still in the game(hit, stand)
         options.push_back("Hit");
         options.push_back("Stand");
         
@@ -376,5 +379,3 @@ int Game::buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer) {
     
     return choice;
 }
-
-*/

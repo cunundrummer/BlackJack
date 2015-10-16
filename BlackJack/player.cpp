@@ -23,9 +23,10 @@ _money(500)
     
 }
 
-Player::Player(std::string name, const int MAX_CHARACTERS = 15, double money = 500, const size_t MAX_NUMBER_HAND_TO_HOLD = 4, bool toIncludeInCount = false) :
+Player::Player(std::string name, const int MAX_CHARACTERS = 15, double money = 500, const size_t MAX_NUMBER_HAND_TO_HOLD = 4, bool toIncludeInCount = false, bool inSession = true) :
 _money(money),
-MAX_HANDS_ALLOWED_TO_HOLD_(MAX_NUMBER_HAND_TO_HOLD)
+MAX_HANDS_ALLOWED_TO_HOLD_(MAX_NUMBER_HAND_TO_HOLD),
+_inSession(inSession)
 {
     if (toIncludeInCount == true) {
         _playerCount++;
@@ -68,10 +69,11 @@ void Player::setName(std::string &name, const int MAX_CHARACTERS) {
 }
 
 /*!
- * @discussion Returns the name of player.  If a name is empty, then an default name will be set.
- * @param optional error message, set to tru to show message
+ * @discussion Removes a card from the hand
+ * @param int numCards: number of cards to remove, index of hand vector
+ * @param size_t index: index of hand vector
  * @warning
- * @return string
+ * @return
  */
 void Player::removeCardsFromHand(int numCards = 1, size_t index = 0) {
     if (numCards > hands_[index].pileSize()) {

@@ -43,7 +43,7 @@ public:
     Game(bool isDemoMode = true, int numPlayers = 5) : _isDemoMode(isDemoMode), _numPlayers(numPlayers) {};
     
     //void retrievePlayers(std::vector<Player*> &p) {  p = _players; }
-    /*
+    
     std::string getGameTitle()      { return _GAME_TITLE; }
     int getMinDecksToUse()          { return _MIN_DECKS_TO_USE; }
     int getMaxDecksToUse()          { return _MAX_DECKS_TO_USE; }
@@ -72,7 +72,7 @@ public:
     void getInsuranceFromPlayers(std::vector<GamePlayer*> &);
     void getInsuranceFromPlayer(GamePlayer &);
     
-    int phase1(std::vector<GamePlayer*> &, Hand); // returns 0 for game goes on; 1 ask for insurance; 2 dealer has blackjack
+    int phase1(std::vector<GamePlayer*> &players, const Hand dealersHand); // returns 0 for game goes on; 1 ask for insurance; 2 dealer has blackjack
     int buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer);
     
     void hit(Player &p);
@@ -83,7 +83,7 @@ public:
     void printGame(std::vector<GamePlayer*> &, DealerPlayer) const;
     void showDebug();
     //~Game() { delete _dealer; }
-*/
+
 };
 
 #endif /* defined(__BlackJack__game__) */

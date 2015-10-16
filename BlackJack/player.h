@@ -28,6 +28,7 @@ protected:
     const size_t MAX_HANDS_ALLOWED_TO_HOLD_;
     std::vector<Hand> hands_;
     void setMAX_CARDS_TO_HOLD(const size_t NUMBER_OF_HANDS);
+    bool _inSession;
     
 public:
     static int _playerCount;
@@ -35,7 +36,7 @@ public:
     
     Player() = delete;
     Player(bool toIncludeInCount = false);
-    Player(std::string name, const int MAX_CHARACTERS, double money, const size_t MAX_NUMBER_HAND_TO_HOLD, bool toIncludeInCount); //set name only, left out bool to allow for auto/default name
+    Player(std::string name, const int MAX_CHARACTERS, double money, const size_t MAX_NUMBER_HAND_TO_HOLD, bool toIncludeInCount, bool inSession); //set name only, left out bool to allow for auto/default name
     
     int getPlayerCount();
     void setPlayerCount(int count);
@@ -52,8 +53,18 @@ public:
     void addCardToHandFromDeck(Card, size_t index = 0);
     void removeCardsFromHand(int numCards, size_t index);
     
-    std::vector<Hand>& getHand() { return hands_; }
+    std::vector<Hand>& getHand() { return hands_ ; }
+    Hand getHand(const int index = 0)
+    {
+        if (hands_.empty()) {
+            hands_.push_back(*new Hand());
+        }
+        return hands_.at(index);
+    }
     void displayHand();
+    
+    bool isInSession() { return _inSession; }
+    void setInSession(bool session) { _inSession = session; }
     
     virtual void print();
     virtual void hit(Card card);

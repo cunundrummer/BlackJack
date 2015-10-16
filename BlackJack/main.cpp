@@ -32,10 +32,10 @@ enum PLAY_OPTIONS {HIT, STAND, DOUBLE_DOWN, SPLIT};
 
 void testMenu();
 void testPlayer();
+void showAllPlayers(std::vector<Player*> players);
 
 int main(int argc, const char * argv[]) {
-    testPlayer();
- /*
+ 
     Game game; // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;
@@ -50,37 +50,39 @@ int main(int argc, const char * argv[]) {
     }
     
     std::vector<GamePlayer*> gPlayers;
-    DealerPlayer dealer;
     game.setUpPlayers(gPlayers);
+    
+    DealerPlayer dealer;
     std::cout << "Dealers name is " << dealer << std::endl;
+    
     ////////Making a vector for all player objects for ease of use in certain methods/functions
     std::vector<Player*> players(gPlayers.begin(), gPlayers.end());
     players.push_back(&dealer);
+    std::cout << "DEBUG: Testing all players including dealer..." << std::endl;
+    //showAllPlayers(players);
+    std::cout << "END OF DEBUG: Testing all players including dealer..." << std::endl;
     ///////////////////////////////////////////////////////////////////////////////////////////
     
-
-    std::cout << "Dealers name is " << dealer << std::endl;
-    //testing std::cout << "Player1 name is " << *gPlayers[0] << std::endl;
-
     std::cout << "Player setup phaze complete." << std::endl;
     std::cout << "Added dealer to players list." << std::endl;
     std::cout << "Building cards...deck(s)..." << std::endl;
-    //std::cout << "There are a total of " << players.size() << " players on the table. " << std::endl;
     
     game.setupDeck(2);
     std::cout << std::endl;
     std::cout << "GAME BEGINS, asking players for bets..." << std::endl;
 
-    //game.getBetsFromAllPlayers(gPlayers);
+    game.getBetsFromAllPlayers(gPlayers);
     
+
     if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked
         game.dealCardToAllPlayers(players, true);
         game.dealCardToAllPlayers(players, true);
+   
         game.setDealStart(false); //game started, must be reset to false when round is over
-        
-        /*phase1 is the start of the game; with checking dealers hand, and insurance phase
 
-        int gameFlag = game.phase1(gPlayers, dealer.getHand()); //check dealers hand to see if players need to be asked for insurance
+        //phase1 is the start of the game; with checking dealers hand, and insurance phase
+        Hand dealersHand = dealer.getHand(0);
+        int gameFlag = game.phase1(gPlayers, dealersHand); //check dealers hand to see if players need to be asked for insurance
         std::cout << "Gameflag is " << printFlag(gameFlag) << std::endl;
         
         std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
@@ -110,14 +112,26 @@ int main(int argc, const char * argv[]) {
                 exit(9);
                 break;
         }
-        
+     
     }
     
     //todo: test phase1
     
     
-    game.printGame(gPlayers, dealer);*/
+    showAllPlayers(players);
     return 0;
+}
+
+void showAllPlayers(std::vector<Player*> players) {
+    
+    std::cout << "DEBUG: showAllPlayers..." << std::endl;
+    size_t i  = 0;
+    for (auto player: players) {
+        std::cout << "(index" << i << ") " << "(PLAYER" << i + 1 << ")" << std::endl;
+        std::cout << *player << std::endl;
+        i++;
+    }
+    std::cout << "END OF DEBUG: showAllPlayers" << std::endl;
 }
 
 void testHands() {
