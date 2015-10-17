@@ -57,7 +57,8 @@ public:
     Hand getHand(const int index = 0)
     {
         if (hands_.empty()) {
-            hands_.push_back(*new Hand());
+            Hand hand;
+            hands_.push_back(hand);
         }
         return hands_.at(index);
     }
