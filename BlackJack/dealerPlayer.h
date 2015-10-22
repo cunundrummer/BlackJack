@@ -12,19 +12,19 @@
 #include <iostream>
 #include "player.h"
 
-const bool inSession = true; //for constructor -> player
+const bool IN_SESSION = true; //for constructor -> player
+const std::string DEALERS_NAME = "DEALER";
+const int MAX_CHARACTERS_FOR_NAME = 6;
+const size_t ONE_HAND = 0;  //0 for a vector index i.e  vector Hands[0] <- thats is one hand
 
 class DealerPlayer : public Player {
 private:
 
 public:
-    DealerPlayer(std::string name = "Dealer", const int MAX_CHARACTERS = 15, double money = 2000, const size_t MAX_NUMBER_HAND_TO_HOLD = 0, bool toIncludeInCount = true):
-    Player(name, MAX_CHARACTERS, money, MAX_NUMBER_HAND_TO_HOLD, toIncludeInCount, inSession) {
-        //setInSession(true);
-    }
+    DealerPlayer(double money = 2000, const size_t MAX_NUMBER_HAND_TO_HOLD = ONE_HAND, bool toIncludeInCount = true):
+    Player(DEALERS_NAME, MAX_CHARACTERS_FOR_NAME, money, MAX_NUMBER_HAND_TO_HOLD, toIncludeInCount, IN_SESSION) {}
     
     void print();
-    
     
     ~DealerPlayer(){};
 };

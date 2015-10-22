@@ -142,7 +142,7 @@ void Game::dealCardToAllPlayers(std::vector<Player*> players, bool faceUp = true
     for (auto p: players) {
         if (p->isInSession() == true) {
             Card card = _deck->removeLastCard();
-            Hand plyrHand = p->getHand(0); //check for errors!!!!!!
+            Hand plyrHand = p->getHand(NO_CARDS); //check for errors!!!!!!
             int handSize = plyrHand.pileSize();
             if (handSize == ONE_CARD && p->getName(false).compare("DEALER") == NO_CARDS ) //setting hidden card for dealing only!
                 card.setFaceUp(false);

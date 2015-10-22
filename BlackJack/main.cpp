@@ -73,7 +73,6 @@ int main(int argc, const char * argv[]) {
 
     game.getBetsFromAllPlayers(gPlayers);
     
-
     if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked
         game.dealCardToAllPlayers(players, true);
         game.dealCardToAllPlayers(players, true);

@@ -19,7 +19,7 @@ class Player {
 private:
     
     bool _nameIsSet;
-    //bool _inSession;
+    bool _inSession;
     
 protected:
     int _MAX_CHARACTERS_ALLOWED = 15;
@@ -28,7 +28,7 @@ protected:
     const size_t MAX_HANDS_ALLOWED_TO_HOLD_;
     std::vector<Hand> hands_;
     void setMAX_CARDS_TO_HOLD(const size_t NUMBER_OF_HANDS);
-    bool _inSession;
+    //bool _inSession;
     
 public:
     static int _playerCount;
