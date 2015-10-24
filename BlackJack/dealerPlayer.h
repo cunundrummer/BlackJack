@@ -24,6 +24,8 @@ public:
     DealerPlayer(double money = 2000, const size_t MAX_NUMBER_HAND_TO_HOLD = ONE_HAND, bool toIncludeInCount = true):
     Player(DEALERS_NAME, MAX_CHARACTERS_FOR_NAME, money, MAX_NUMBER_HAND_TO_HOLD, toIncludeInCount, IN_SESSION) {}
     
+    void hit(Card card);
+    
     void print();
     
     ~DealerPlayer(){};

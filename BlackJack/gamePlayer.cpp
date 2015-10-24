@@ -81,3 +81,21 @@ void GamePlayer::hit(Card card) {
     addCardToHandFromDeck(card);
     //std::cout << "After handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
 }
+
+void GamePlayer::doubleDown(Card card, int handIndex = 0) {
+    //set to return boolean? Might be better for error checking
+    
+    std::cout << _name << " doubleing down" << std::endl;
+    
+    if (_money - _bet > 0) { //enough money available for doubling down?
+        std::cout << "Player can double down." << std::endl;
+        std::cout << "Removing $" << _bet << " from $" << _money << ": " << "$" << _money << " - $" << _bet << " = $" << _money - _bet << std::endl;
+        _money -= _bet;
+        std::cout << "Adding card to hand, and disabling rest of session..." << std::endl;
+        hands_[handIndex].addCard(card);
+        setInSession(false);
+    }
+    else {
+        std::cout << _name << " cannot double down, not enough money. " << std::endl;
+    }
+}

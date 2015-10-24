@@ -167,5 +167,14 @@ void Player::hit(Card card) {
 }
 
 void Player::stand() {
+    std::cout << _name << " stands" << std::endl;
     //setInSession(false);
+}
+
+void Player::doubleDown() {
+    
+}
+
+void Player::split() {
+    
 }

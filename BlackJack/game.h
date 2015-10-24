@@ -72,7 +72,7 @@ public:
     void getInsuranceFromPlayers(std::vector<GamePlayer*> &);
     void getInsuranceFromPlayer(GamePlayer &);
     
-    int phase1(std::vector<GamePlayer*> &players, const Hand dealersHand); // returns 0 for game goes on; 1 ask for insurance; 2 dealer has blackjack
+    int insurancePayout(std::vector<GamePlayer*> &players, const Hand dealersHand); // returns 0 for game goes on; 1 ask for insurance; 2 dealer has blackjack
     int buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer);
     
     void hit(Player &p);

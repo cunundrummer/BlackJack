@@ -13,3 +13,14 @@ void DealerPlayer::print() {
     displayHand();
     
 }
+
+void DealerPlayer::hit(Card card) {
+    const int SEVENTEEN = 17; //dealer cannot hit when hand == 17, thats the rules!
+    Hand *ptr_dealersHand = &hands_[ONE_HAND]; //alias for clarity
+    if (ptr_dealersHand->calculate() >= SEVENTEEN) {
+        std::cout << _name << " stands on " << SEVENTEEN << std::endl;
+    }
+    else {
+        addCardToHandFromDeck(card);
+    }
+}

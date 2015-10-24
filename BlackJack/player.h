@@ -69,7 +69,10 @@ public:
     
     virtual void print();
     virtual void hit(Card card);
-    void stand();
+    virtual void stand();
+    virtual void doubleDown();
+    virtual void split();
+    
 };
 
 #endif /* defined(__BlackJack__player__) */

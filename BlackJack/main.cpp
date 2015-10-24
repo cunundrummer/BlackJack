@@ -27,7 +27,7 @@ int Player::_playerCount = 0;
 enum PLAY_OPTIONS {HIT, STAND, DOUBLE_DOWN, SPLIT};
 //const int MIN_AMOUNT_OF_MONEY = 5;
 //const int BLACKJACK_FLAG = 21;
-//const int GAME_GOES_ON_FLAG = 0;
+const int GAME_GOES_ON_FLAG = 0;
 //const int ASK_FOR_INSURANCE_FLAG = 1;
 
 void testMenu();
@@ -44,7 +44,6 @@ int main(int argc, const char * argv[]) {
     
     if (game.getIsInDemoMode() == true ) {
         std::cout << "Demo mode. Only computer(5) players will be playing." << std::endl;
-        
     }
     else {
         std::cout << "Player setup..." << std::endl;
@@ -77,47 +76,52 @@ int main(int argc, const char * argv[]) {
     if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked
         game.dealCardToAllPlayers(players, true);
         game.dealCardToAllPlayers(players, true);
-   
-        game.setDealStart(false); //game started, must be reset to false when round is over
 
         //phase1 is the start of the game; with checking dealers hand, and insurance phase
         Hand dealersHand = dealer.getHand(0);
-        int gameFlag = game.phase1(gPlayers, dealersHand); //check dealers hand to see if players need to be asked for insurance
+        if (game.isInsuranceRequired(gPlayers, dealersHand)) {
+            game.getInsuranceFromPlayers(gPlayers);
+        }
+        
+        game.setDealStart(false); //game started, must be reset to false when round is over
+        int gameFlag = game.insurancePayout(gPlayers, dealersHand); //detects and pays/deducts insurance if players chose insurance
         std::cout << "Gameflag is " << printFlag(gameFlag) << std::endl;
         
-        std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
-        int choice = game.buildPlayOptionForPlayerAndReturnChoice(*gPlayers[0]);
+        if (gameFlag == GAME_GOES_ON_FLAG) {
+            //build options for players still in session
+        
+            std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
+            int choice = game.buildPlayOptionForPlayerAndReturnChoice(*gPlayers[0]);
 
-        switch (choice) {
-            case PLAY_OPTIONS::HIT:
-                //add card from deck to players hand
-                std::cout << "Player chose to hit." << std::endl;
-                gPlayers[0]->hit(game.getDeck().removeLastCard());
-                break;
-            case PLAY_OPTIONS::STAND:
-                std::cout << "Player chose to stand." << std::endl;
-                //pause players session
-                gPlayers[0]->stand();
-                break;
-            case PLAY_OPTIONS::DOUBLE_DOWN:
-                //bet equivalent of another bet and pause players session
-                std::cout << "Player chose to double down." << std::endl;
-                break;
-            case PLAY_OPTIONS::SPLIT:
-                // create another hand from players second card and bet equivalent of another bet.  play hand to completion then play other hand splits allowed upto 4 times.  optional: allow double after splits
-                std::cout << "Player chose to split." << std::endl;
-                break;
-            default:
-                std::cout << "Unknown error in switch(choice)...exiting";
-                exit(9);
-                break;
+            switch (choice) {
+                case PLAY_OPTIONS::HIT:
+                    //add card from deck to players hand
+                    std::cout << "Player chose to hit." << std::endl;
+                    gPlayers[0]->hit(game.getDeck().removeLastCard()); //test deck to see if there is another card to give(end of the deck?)
+                    break;
+                case PLAY_OPTIONS::STAND:
+                    std::cout << "Player chose to stand." << std::endl;
+                    //pause players session
+                    gPlayers[0]->stand();
+                    break;
+                case PLAY_OPTIONS::DOUBLE_DOWN:
+                    //bet equivalent of another bet and pause players session
+                    std::cout << "Player chose to double down." << std::endl;
+                    gPlayers[0]->doubleDown(game.getDeck().removeLastCard(), 0);
+                    break;
+                case PLAY_OPTIONS::SPLIT:
+                    // create another hand from players second card and bet equivalent of another bet.  play hand to completion then play other hand splits allowed upto 4 times.  optional: allow double after splits
+                    std::cout << "Player chose to split." << std::endl;
+                    break;
+                default:
+                    std::cout << "Unknown error in switch(choice)...exiting";
+                    exit(9);
+                    break;
+            }
         }
-     
     }
-    
-    //todo: test phase1
-    
-    
+
+
     showAllPlayers(players);
     return 0;
 }

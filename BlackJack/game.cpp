@@ -199,14 +199,11 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
      */
 }
 
-int Game::phase1(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {  //change the name of method!!!!
+int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {  //change the name of method!!!!
+    //testing win conditions
     
     const int BLACKJACK_FLAG = 21;
     const int GAME_GOES_ON_FLAG = 0;
-        
-    if (isInsuranceRequired(gPlayers, dealersHand)) {
-        getInsuranceFromPlayers(gPlayers);
-    }
     
     if (dealersHand.calculate() == BLACKJACK_FLAG) {
         for (auto gP: gPlayers) {
@@ -256,14 +253,11 @@ int Game::phase1(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {  //chan
                 }
                 else
                     std::cout << gP->getName(false) << " not in play" << std::endl;
-                
             }
         }
     }
         //game goes on
     return GAME_GOES_ON_FLAG;
-    
-    
 }
 
 void Game::getInsuranceFromPlayers(std::vector<GamePlayer*> &gPlayers) {

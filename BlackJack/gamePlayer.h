@@ -12,6 +12,9 @@
 #include <iostream>
 #include "player.h"
 
+//make play flags i.e. for doubleing down, stand, splitting/etc.
+
+
 class GamePlayer : public Player {
 private:
     double _max_allowable_bet_allowed;
@@ -43,6 +46,7 @@ public:
         hands = hands_;
     }*/
     void hit(Card card);
+    void doubleDown(Card card, int handIndex);
     
 };
 
