@@ -200,23 +200,11 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
 }
 
 int Game::phase1(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {  //change the name of method!!!!
-
-    std::cout << "DEALERS HAND: " << dealersHand << std::endl;
-    
-    Card dealersUpCard = dealersHand.getIndividualCard(0);      //LEARN HOW TO PROGRAM WITH CONSTS!!!
-    Card dealersHoleCard =  dealersHand.getIndividualCard(1);   //LEARN HOW TO PROGRAM WITH CONSTS!!!
     
     const int BLACKJACK_FLAG = 21;
     const int GAME_GOES_ON_FLAG = 0;
-    //const int ASK_FOR_INSURANCE_FLAG = 1;
-    const int TEN_CARD = 10;
-    const int ACE = 1;
-    
-    std::cout << "Dealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
-    std::cout << "Dealers hole card is " << dealersHoleCard << ". And its value is " << (dealersHand.getIndividualCard(1)).getCardValue() << std::endl;
-    
-    if ((dealersUpCard.getCardValue() == TEN_CARD || dealersUpCard.getCardValue() == ACE) || (dealersUpCard.getCardValue() == ACE || dealersUpCard.getCardValue() == TEN_CARD)) { //if dealer has 10 or ACE as UP card
-        std::cout << "Dealer might have a BlackJack! Dealer will ask for insurance." << std::endl;
+        
+    if (isInsuranceRequired(gPlayers, dealersHand)) {
         getInsuranceFromPlayers(gPlayers);
     }
     
@@ -378,4 +366,28 @@ int Game::buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer) {
     }
     
     return choice;
+}
+
+bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
+    bool askForInsurance = false;
+    
+    std::cout << "DEALERS HAND: " << dealersHand << std::endl;
+    
+    Card dealersUpCard = dealersHand.getIndividualCard(0);      //LEARN HOW TO PROGRAM WITH CONSTS!!!
+    Card dealersHoleCard = dealersHand.getIndividualCard(1);   //LEARN HOW TO PROGRAM WITH CONSTS!!!
+    
+    const int TEN_CARD = 10;
+    const int ACE = 1;
+    
+    std::cout << "Dealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
+    std::cout << "Dealers hole card is " << dealersHoleCard << ". And its value is " << dealersHoleCard.getCardValue() << std::endl;
+    
+    if (dealersUpCard.getCardValue() == TEN_CARD || dealersUpCard.getCardValue() == ACE)  { //if dealer has 10 or ACE as UP card
+        std::cout << "Dealer might have a BlackJack! Dealer will ask for insurance." << std::endl;
+        askForInsurance = true;
+    }
+    else
+        askForInsurance = false;
+    
+    return askForInsurance;
 }

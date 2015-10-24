@@ -67,8 +67,8 @@ public:
     void setDealStart(bool tf) { _dealStart = tf; }
     bool getDealStart() { return _dealStart; }
     
-    bool getInsuranceFlag() { return _insuranceFlags; }
-    void setInsuranceFlag(int flag) { _insuranceFlags = flag; }
+    bool isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand dealersHand);
+    //void setInsuranceFlag(int flag) { _insuranceFlags = flag; }
     void getInsuranceFromPlayers(std::vector<GamePlayer*> &);
     void getInsuranceFromPlayer(GamePlayer &);
     

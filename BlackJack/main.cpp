@@ -32,10 +32,11 @@ enum PLAY_OPTIONS {HIT, STAND, DOUBLE_DOWN, SPLIT};
 
 void testMenu();
 void testPlayer();
+void testAskForInsurance();
 void showAllPlayers(std::vector<Player*> players);
 
 int main(int argc, const char * argv[]) {
- 
+
     Game game; // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;
@@ -235,6 +236,15 @@ void testPlayer() {
     std::cout << *player <<std::endl;
 
     }
+}
+
+void testAskForInsurance() {
+    Game game;
+    std::vector<GamePlayer*> gPlayers;
+    DealerPlayer dealer;
+    dealer.addCardToHandFromDeck(Card(9, spades));
+    dealer.addCardToHandFromDeck(Card(9, spades));
+    std::cout << (game.isInsuranceRequired(gPlayers, dealer.getHand(0)) ? "DEBUG isInsuranceRequired: TRUE" : "DEBUG isInsuranceRequired: FALSE") << std::endl;
 }
 
 void testMenu() {
