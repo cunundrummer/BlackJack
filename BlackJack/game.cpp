@@ -162,6 +162,8 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
     std::cout << "Players size is " << p.size() << std::endl;
 
     for (size_t pCounter = 0; pCounter < p.size(); pCounter++) {
+        p[pCounter]->setPreBetMoney();
+        
         const double MAX_ALLOWABLE_BET_FROM_PLAYER = p[pCounter]->getMaxBetAllowed(MIN_ALLOWABLE_BET, MAX_ALLOWABLE_BET);
         std::cout << p[pCounter]->getName(false) << " session status: " << p[pCounter]->isInSession() << std::endl;
         if (p[pCounter]->isInSession() == true) {
@@ -210,12 +212,14 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
                 if (gP->getInsuranceFlag() == true) {
                     std::cout << gP->getName(false) << " took insurance and wins even money! (2:1)" << std::endl;
                     std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
+                    gP->setResolvedInsurancePayout(gP->getBet() + gP->getInsuranceBet());
                     gP->setMoney(gP->getMoney() + gP->getBet() + gP->getInsuranceBet());
                     std::cout << "AFTER $" << gP->getMoney() << std::endl;
                 }
                 else {
                     std::cout << gP->getName(false) << " did not take insurance, therefore it's a push! (1:1)" << std::endl;
                     std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
+                    gP->setResolvedInsurancePayout(gP->getBet());
                     gP->setMoney(gP->getMoney() + gP->getBet());
                     std::cout << "AFTER $" << gP->getMoney() << std::endl;
                 }
@@ -224,11 +228,13 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
                 if (gP->getInsuranceFlag() == true) {
                     std::cout << gP->getName(false) << " took insurance, therefore " << gP->getName(false) << " loses bet, but get back insurance! (2:1)" << std::endl;
                     std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
+                    gP->setResolvedInsurancePayout((gP->getInsuranceBet() * 2));
                     gP->setMoney(gP->getMoney() + (gP->getInsuranceBet() * 2));
                     std::cout << "AFTER $" << gP->getMoney() << std::endl;
                 }
                 else {
                     std::cout << gP->getName(false) << " did not take insurance, and loses bet as a result." << std::endl;
+                    gP->setResolvedInsurancePayout(0);
                     std::cout << "MONEY: $" << gP->getMoney() << std::endl;
                 }
             }

@@ -35,8 +35,8 @@ const int NEXT_GAME = 99;
 void testMenu();
 void testPlayer();
 void testAskForInsurance();
-void showAllPlayers(std::vector<Player*> players);
-int calculatePlayerResult(GamePlayer g);
+void showAllPlayers(std::vector<Player*> players, bool showOnePlayer = true, int playerToShowIndex = 0);
+int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
 
@@ -91,7 +91,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "Gameflag is " << printFlag(gameFlag) << std::endl;
         
         if (gameFlag == GAME_GOES_ON_FLAG) {
-            do {
+            do { //move do to better location after implementing split
                 //build options for players still in session
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
                 std::cout << *gPlayers[0] << std::endl;
@@ -123,7 +123,8 @@ int main(int argc, const char * argv[]) {
                         break;
                 }
                 //set appropriate actions here
-                
+                calculatePlayerResult(*gPlayers[0]);
+                //reset flags?
                 std::cout << "@END OF DO WHILE LOOP" << std::endl;
             } while (gPlayers[0]->isInSession() == true);
         }
@@ -139,12 +140,12 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
-int calculatePlayerResult(GamePlayer g) {
+int calculatePlayerResult(GamePlayer& g) {
     int total = g.getHand(0).calculate();
     
     if (total > 21) {
-        //g.setBustedFlag(true);
-        //g.setInSession(false);
+        g.setBustedFlag(true);
+        g.setInSession(false);
         return BUSTED;
     }
     else if (total == 21) {
@@ -153,20 +154,28 @@ int calculatePlayerResult(GamePlayer g) {
         return BLACKJACK;
     }
     else {
+        //check if player has enough money to play
+        g.setInSession(true);
         return GAME_GOES_ON_FLAG;
     }
 
     //return 0;
 }
 
-void showAllPlayers(std::vector<Player*> players) {
+void showAllPlayers(std::vector<Player*> players, bool showOnePlayer, int index) {
     
-    std::cout << "DEBUG: showAllPlayers..." << std::endl;
-    size_t i  = 0;
-    for (auto player: players) {
-        std::cout << "(index" << i << ") " << "(PLAYER" << i + 1 << ")" << std::endl;
-        std::cout << *player << std::endl;
-        i++;
+    if (showOnePlayer == true) {
+        std::cout << "DEBUG: showAllPlayers...for player[" << index << "]"  << std::endl;
+        std::cout << *players[index] << std::endl;
+    }
+    else {
+        std::cout << "DEBUG: showAllPlayers..." << std::endl;
+        size_t i  = 0;
+        for (auto player: players) {
+            std::cout << "(index" << i << ") " << "(PLAYER" << i + 1 << ")" << std::endl;
+            std::cout << *player << std::endl;
+            i++;
+        }
     }
     std::cout << "END OF DEBUG: showAllPlayers" << std::endl;
 }

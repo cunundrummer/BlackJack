@@ -23,6 +23,17 @@ GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED, doubl
     _insuranceBet = 0;
 }
 
+void GamePlayer::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool inSessionFlag, bool doubledFlag, bool standFlag, bool splitFlag, bool blackjackFlag) {
+    bustedFlag_ = bustedFlag;
+    pushFlag_ = pushFlag;
+    surrenderFlag_ = surrenderFlag;
+    inSessionFlag_ = inSessionFlag;
+    doubledFlag_ = doubledFlag;
+    standFlag_ = standFlag;
+    splitFlag_ = splitFlag;
+    blackjackFlag_ = blackjackFlag;
+}
+
 void GamePlayer::setBet(double bet = 0) {
     _bet = bet;
 }
@@ -54,6 +65,7 @@ void GamePlayer::print() {
     else
         std::cout << _name << ": " << "$" << std::fixed << std::setprecision(2) << getMoney() << "[out]";
     std::cout << std::endl;
+    printBetReport();
     displayHand();
 }
 
@@ -75,16 +87,32 @@ void GamePlayer::implementInsuranceBet() {
     _insuranceBetIsSet = true;
 }
 
-/*void GamePlayer::hit(Card card) {
-    
-    //std::cout << "Before handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
-    addCardToHandFromDeck(card);
-    //std::cout << "After handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
-}*/
+void GamePlayer::printFlags() {
+    std::cout << "bustedFlag: " <<  "[" << bustedFlag_ << "] " <<
+    "pushFlag: " << "[" << pushFlag_ << "] " <<
+    "surrenderFlag: " << "[" << surrenderFlag_ << "] " <<
+    "inSessionFlag: " << "[" << inSessionFlag_ << "] " << std::endl <<
+    "doubleFlag: " << "[" << doubledFlag_ << "] " <<
+    "standFlag: " << "[" << standFlag_ << "] " <<
+    "splitFlag: " << "[" << splitFlag_ << "] " <<
+    "blackJackFlag"  << "[" << blackjackFlag_ << "] " << std::endl;
+}
+
+void GamePlayer::printBetReport() {
+    std::cout << std::endl;
+    std::cout << "BET REPORT:" << std::endl;
+    std::cout << "Money @ start of round: " << getPreBetMoney() << std::endl;
+    std::cout << "Bet: -$" << _bet << std::endl;
+    std::cout << "Insurance bet: -$" << _insuranceBet << std::endl;
+    std::cout << "Resolved insurance bet: $" << resolvedInsurancePayout_ << std::endl;
+    std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;
+    std::cout << "Total: $" << _money << std::endl;
+    std::cout << "END OF BET REPORT" << std::endl << std::endl;
+}
 
 void GamePlayer::doubleDown(Card card, int handIndex = 0) {
     //set to return boolean? Might be better for error checking
-    
+
     std::cout << _name << " doubleing down" << std::endl;
     
     if (_money - _bet > 0) { //enough money available for doubling down?

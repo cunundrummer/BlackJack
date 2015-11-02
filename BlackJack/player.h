@@ -30,14 +30,11 @@ protected:
     void setMAX_CARDS_TO_HOLD(const size_t NUMBER_OF_HANDS);
     bool bustedFlag_;
     bool pushFlag_;
-    bool surrenderFlag_;
     bool inSessionFlag_;
-    bool doubledFlag_;
     bool standFlag_;
-    bool splitFlag_;
     bool blackjackFlag_;
     
-    virtual void init(bool bustedFlag = false, bool pushFlag = false, bool surrenderFlag = false, bool inSessionFlag = true, bool doubledFlag = false, bool standFlag = false, bool splitFlag = false, bool blackjackFlag = false);
+    virtual void init(bool bustedFlag = false, bool pushFlag = false, bool inSessionFlag = true, bool standFlag = false, bool blackjackFlag = false);
     
 public:
     static int _playerCount;
@@ -55,20 +52,15 @@ public:
         
     virtual void setBustedFlag(bool flag)       { bustedFlag_ = flag; }
     virtual void setpushFlag(bool flag)         { pushFlag_ = flag; }
-    virtual void setSurrenderFlag(bool flag)    { surrenderFlag_ = flag; }
     virtual void setInSession(bool flag)        { inSessionFlag_ = _inSession = flag; } //remove reudundant _inSession
-    virtual void setDoubledFlag(bool flag)         { doubledFlag_ = flag; }
-    virtual void setStandFlag(bool flag)           { standFlag_ = flag; }
-    virtual void setSplitFlag(bool flag)            { splitFlag_ = flag; }
-    virtual void setBlackjackFlag(bool flag)            { blackjackFlag_ = flag; }
+    virtual void setStandFlag(bool flag)        { standFlag_ = flag; }
+    virtual void setBlackjackFlag(bool flag)    { blackjackFlag_ = flag; }
     
     virtual bool getBustedFlag()    { return bustedFlag_; }
     virtual bool getPushFlag()      { return pushFlag_; }
-    virtual bool getSurrenderFlag() { return surrenderFlag_; }
-    virtual bool getDoubledFlag()   { return doubledFlag_; }
     virtual bool getStandFlag()     { return standFlag_; }
-    virtual bool getSplitFlag()     { return splitFlag_; }
-    virtual bool getBlackJackFlag()   { return blackjackFlag_; }
+    virtual bool getBlackJackFlag() { return blackjackFlag_; }
+    bool isInSession()              { return _inSession; } //should be renamed getSessionFlag/fast ugly hack: make method and call it?
     
     virtual void setMoney(double money);
     virtual double getMoney();
@@ -78,11 +70,11 @@ public:
     
     std::vector<Hand>& getHand() { return hands_ ; }
     Hand getHand(const int index = 0);
+    
     void displayHand();
-    
-    bool isInSession() { return _inSession; }
-    
+    virtual void printFlags();
     virtual void print();
+    
     virtual void hit(Card card);
     virtual void stand();
     virtual void doubleDown();

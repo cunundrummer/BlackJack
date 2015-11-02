@@ -40,14 +40,11 @@ _inSession(inSession)
     
 }
 
-void Player::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool inSessionFlag, bool doubledFlag, bool standFlag, bool splitFlag, bool blackjackFlag) {
+void Player::init(bool bustedFlag, bool pushFlag, bool inSessionFlag, bool standFlag, bool blackjackFlag) {
     bustedFlag_ = bustedFlag;
     pushFlag_ = pushFlag;
-    surrenderFlag_ = surrenderFlag;
     inSessionFlag_ = inSessionFlag;
-    doubledFlag_ = doubledFlag;
     standFlag_ = standFlag;
-    splitFlag_ = splitFlag;
     blackjackFlag_ = blackjackFlag;
 }
 
@@ -58,17 +55,19 @@ std::ostream& operator<< (std::ostream &os, Player &p) {
      else
      os << p._name << ": " << "[out]";*/
     std::cout << "*****" << p.getName() << " STATUS DISPLAY START" << "*****" << std::endl;
-    std::cout << "bustedFlag: " <<  "[" << p.getBustedFlag() << "] " <<
-                 "pushFlag: " << "[" << p.getPushFlag() << "] " <<
-                 "surrenderFlag: " << "[" << p.getSurrenderFlag() << "] " <<
-                 "inSessionFlag: " << "[" << p.isInSession() << "] " << std::endl <<
-                 "doubleFlag: " << "[" << p.getDoubledFlag() << "] " <<
-                 "standFlag: " << "[" << p.getStandFlag() << "] " <<
-                 "splitFlag: " << "[" << p.getSplitFlag() << "] " <<
-                 "blackJackFlag"  << "[" << p.getBlackJackFlag() << "] " << std::endl;
+    p.printFlags();
     std::cout << "*****" << p.getName() << " STATUS DISPLAY END" << "*****" << std::endl;
+   
     p.print();
     return os ;
+}
+
+void Player::printFlags() {
+    std::cout << "bustedFlag: " <<  "[" << bustedFlag_ << "] " <<
+    "pushFlag: " << "[" << pushFlag_ << "] " <<
+    "inSessionFlag: " << "[" << inSessionFlag_ << "] " << std::endl <<
+    "standFlag: " << "[" << standFlag_ << "] " <<
+    "blackJackFlag"  << "[" << blackjackFlag_ << "] " << std::endl;
 }
 
 /*!

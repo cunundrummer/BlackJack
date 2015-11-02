@@ -12,31 +12,50 @@
 #include <iostream>
 #include "player.h"
 
-//make play flags i.e. for doubleing down, stand, splitting/etc.
-
-
 class GamePlayer : public Player {
 private:
     double _max_allowable_bet_allowed;
     double _bet;
     double _insuranceBet;
-    bool _wantsInsuranceFlag = false;
-    bool _insuranceBetIsSet = false;
+    double doubledBet_;  //used for betReport
+    double preBetMoney_;  //used for betReport
+    double resolvedInsurancePayout_; // used for betReport
+    
+    bool _insuranceBetIsSet;
+    bool _wantsInsuranceFlag;
+    bool surrenderFlag_;
+    bool doubledFlag_;
+    bool splitFlag_;
     
 public:
     GamePlayer();
     GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED = 15, double money = 500,  const size_t MAX_NUMBER_HANDS = 4, bool inSession = true);
+    virtual void init(bool bustedFlag = false, bool pushFlag = false, bool surrenderFlag = false, bool inSessionFlag = true, bool doubledFlag = false, bool standFlag = false, bool splitFlag = false, bool blackjackFlag = false);
     
     void setBet(double);
     double getBet() { return _bet; }
+    void setPreBetMoney() { preBetMoney_ = _money; }
+    double getPreBetMoney() { return preBetMoney_; }
+    void setResolvedInsurancePayout(double payout) { resolvedInsurancePayout_ = payout; }
+    double getResolvedInsurancePayout() { return resolvedInsurancePayout_; }
     
     double getMaxBetAllowed(double, double);
     void setMaxAllowableBet(double, double);
     
     virtual void print();
+    virtual void printFlags();
+    void printBetReport();
     
     void setInsuranceFlag(bool flag) { _wantsInsuranceFlag = flag; }
+    void setSurrenderFlag(bool flag) { surrenderFlag_ = flag; }
+    void setDoubledFlag(bool flag)   { doubledFlag_ = flag; }
+    void setSplitFlag(bool flag)     { splitFlag_ = flag; }
+    
     bool getInsuranceFlag() { return _wantsInsuranceFlag; }
+    bool getSurrenderFlag() { return surrenderFlag_; }
+    bool getDoubledFlag()   { return doubledFlag_; }
+    bool getSplitFlag()     { return splitFlag_; }
+    
     void implementInsuranceBet();
     double getInsuranceBet() { return _insuranceBet; }
     void setInsuraceIsSet(bool tOrf) { _insuranceBetIsSet = tOrf; }
