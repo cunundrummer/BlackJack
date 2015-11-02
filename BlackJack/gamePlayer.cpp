@@ -52,7 +52,7 @@ void GamePlayer::print() {
     if ( isInSession() == true)
         std::cout << _name << ": " << "$" << std::fixed << std::setprecision(2) << getMoney() << "  Insurance Flag:" << getInsuranceFlag();
     else
-        std::cout << _name << ": " << "[out]";
+        std::cout << _name << ": " << "$" << std::fixed << std::setprecision(2) << getMoney() << "[out]";
     std::cout << std::endl;
     displayHand();
 }
@@ -75,12 +75,12 @@ void GamePlayer::implementInsuranceBet() {
     _insuranceBetIsSet = true;
 }
 
-void GamePlayer::hit(Card card) {
+/*void GamePlayer::hit(Card card) {
     
     //std::cout << "Before handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
     addCardToHandFromDeck(card);
     //std::cout << "After handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
-}
+}*/
 
 void GamePlayer::doubleDown(Card card, int handIndex = 0) {
     //set to return boolean? Might be better for error checking
@@ -93,6 +93,7 @@ void GamePlayer::doubleDown(Card card, int handIndex = 0) {
         _money -= _bet;
         std::cout << "Adding card to hand, and disabling rest of session..." << std::endl;
         hands_[handIndex].addCard(card);
+        setDoubledFlag(true);
         setInSession(false);
     }
     else {

@@ -45,7 +45,7 @@ public:
     /*void getHand(std::vector<Hand>& hands) {
         hands = hands_;
     }*/
-    void hit(Card card);
+    //void hit(Card card);
     void doubleDown(Card card, int handIndex);
     
 };

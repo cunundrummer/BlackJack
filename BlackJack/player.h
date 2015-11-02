@@ -28,7 +28,16 @@ protected:
     const size_t MAX_HANDS_ALLOWED_TO_HOLD_;
     std::vector<Hand> hands_;
     void setMAX_CARDS_TO_HOLD(const size_t NUMBER_OF_HANDS);
-    //bool _inSession;
+    bool bustedFlag_;
+    bool pushFlag_;
+    bool surrenderFlag_;
+    bool inSessionFlag_;
+    bool doubledFlag_;
+    bool standFlag_;
+    bool splitFlag_;
+    bool blackjackFlag_;
+    
+    virtual void init(bool bustedFlag = false, bool pushFlag = false, bool surrenderFlag = false, bool inSessionFlag = true, bool doubledFlag = false, bool standFlag = false, bool splitFlag = false, bool blackjackFlag = false);
     
 public:
     static int _playerCount;
@@ -42,10 +51,24 @@ public:
     void setPlayerCount(int count);
     
     virtual void setName(std::string&, const int  MAX_CHARACTERS);
-    std::string getName(bool showErrMsg); //bool for showing error message
+    std::string getName(bool showErrMsg = false); //bool for showing error message
+        
+    virtual void setBustedFlag(bool flag)       { bustedFlag_ = flag; }
+    virtual void setpushFlag(bool flag)         { pushFlag_ = flag; }
+    virtual void setSurrenderFlag(bool flag)    { surrenderFlag_ = flag; }
+    virtual void setInSession(bool flag)        { inSessionFlag_ = _inSession = flag; } //remove reudundant _inSession
+    virtual void setDoubledFlag(bool flag)         { doubledFlag_ = flag; }
+    virtual void setStandFlag(bool flag)           { standFlag_ = flag; }
+    virtual void setSplitFlag(bool flag)            { splitFlag_ = flag; }
+    virtual void setBlackjackFlag(bool flag)            { blackjackFlag_ = flag; }
     
-    //void setNameIsSet(bool TrueOrFalse);
-    //bool getNameIsSet() { return _nameIsSet; }
+    virtual bool getBustedFlag()    { return bustedFlag_; }
+    virtual bool getPushFlag()      { return pushFlag_; }
+    virtual bool getSurrenderFlag() { return surrenderFlag_; }
+    virtual bool getDoubledFlag()   { return doubledFlag_; }
+    virtual bool getStandFlag()     { return standFlag_; }
+    virtual bool getSplitFlag()     { return splitFlag_; }
+    virtual bool getBlackJackFlag()   { return blackjackFlag_; }
     
     virtual void setMoney(double money);
     virtual double getMoney();
@@ -54,18 +77,10 @@ public:
     void removeCardsFromHand(int numCards, size_t index);
     
     std::vector<Hand>& getHand() { return hands_ ; }
-    Hand getHand(const int index = 0)
-    {
-        if (hands_.empty()) {
-            Hand hand;
-            hands_.push_back(hand);
-        }
-        return hands_.at(index);
-    }
+    Hand getHand(const int index = 0);
     void displayHand();
     
     bool isInSession() { return _inSession; }
-    void setInSession(bool session) { _inSession = session; }
     
     virtual void print();
     virtual void hit(Card card);

@@ -25,15 +25,18 @@
 int Player::_playerCount = 0;
 //int Player::_player2Count = 0;
 enum PLAY_OPTIONS {HIT, STAND, DOUBLE_DOWN, SPLIT};
+enum PLAY_RESULTS {BUSTED, BLACKJACK};
 //const int MIN_AMOUNT_OF_MONEY = 5;
 //const int BLACKJACK_FLAG = 21;
 const int GAME_GOES_ON_FLAG = 0;
+const int NEXT_GAME = 99;
 //const int ASK_FOR_INSURANCE_FLAG = 1;
 
 void testMenu();
 void testPlayer();
 void testAskForInsurance();
 void showAllPlayers(std::vector<Player*> players);
+int calculatePlayerResult(GamePlayer g);
 
 int main(int argc, const char * argv[]) {
 
@@ -88,42 +91,72 @@ int main(int argc, const char * argv[]) {
         std::cout << "Gameflag is " << printFlag(gameFlag) << std::endl;
         
         if (gameFlag == GAME_GOES_ON_FLAG) {
-            //build options for players still in session
-        
-            std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
-            int choice = game.buildPlayOptionForPlayerAndReturnChoice(*gPlayers[0]);
-
-            switch (choice) {
-                case PLAY_OPTIONS::HIT:
-                    //add card from deck to players hand
-                    std::cout << "Player chose to hit." << std::endl;
-                    gPlayers[0]->hit(game.getDeck().removeLastCard()); //test deck to see if there is another card to give(end of the deck?)
-                    break;
-                case PLAY_OPTIONS::STAND:
-                    std::cout << "Player chose to stand." << std::endl;
-                    //pause players session
-                    gPlayers[0]->stand();
-                    break;
-                case PLAY_OPTIONS::DOUBLE_DOWN:
-                    //bet equivalent of another bet and pause players session
-                    std::cout << "Player chose to double down." << std::endl;
-                    gPlayers[0]->doubleDown(game.getDeck().removeLastCard(), 0);
-                    break;
-                case PLAY_OPTIONS::SPLIT:
-                    // create another hand from players second card and bet equivalent of another bet.  play hand to completion then play other hand splits allowed upto 4 times.  optional: allow double after splits
-                    std::cout << "Player chose to split." << std::endl;
-                    break;
-                default:
-                    std::cout << "Unknown error in switch(choice)...exiting";
-                    exit(9);
-                    break;
-            }
+            do {
+                //build options for players still in session
+                std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
+                std::cout << *gPlayers[0] << std::endl;
+                int choice = game.buildPlayOptionForPlayerAndReturnChoice(*gPlayers[0]);
+                
+                switch (choice) {
+                    case PLAY_OPTIONS::HIT:
+                        //add card from deck to players hand
+                        std::cout << "Player chose to hit." << std::endl;
+                        gPlayers[0]->hit(game.getDeck().removeLastCard());
+                        break;
+                    case PLAY_OPTIONS::STAND:
+                        std::cout << "Player chose to stand." << std::endl;
+                        //pause players session
+                        gPlayers[0]->stand();
+                        break;
+                    case PLAY_OPTIONS::DOUBLE_DOWN:
+                        //bet equivalent of another bet and pause players session
+                        std::cout << "Player chose to double down." << std::endl;
+                        gPlayers[0]->doubleDown(game.getDeck().removeLastCard(), 0);
+                        break;
+                    case PLAY_OPTIONS::SPLIT:
+                        // create another hand from players second card and bet equivalent of another bet.  play hand to completion then play other hand splits allowed upto 4 times.  optional: allow double after splits
+                        std::cout << "Player chose to split." << std::endl;
+                        break;
+                    default:
+                        std::cout << "Unknown error in switch(choice)...exiting";
+                        exit(9);
+                        break;
+                }
+                //set appropriate actions here
+                
+                std::cout << "@END OF DO WHILE LOOP" << std::endl;
+            } while (gPlayers[0]->isInSession() == true);
+        }
+        else { //gameflag == BLACKJACK_FLAG
+            //reinit players, if players are out of session, they are out
+            
         }
     }
 
-
+    std::cout << std::endl << std::endl << "****************************" << std::endl;
     showAllPlayers(players);
+    std::cout << "****************************" << std::endl;
     return 0;
+}
+
+int calculatePlayerResult(GamePlayer g) {
+    int total = g.getHand(0).calculate();
+    
+    if (total > 21) {
+        //g.setBustedFlag(true);
+        //g.setInSession(false);
+        return BUSTED;
+    }
+    else if (total == 21) {
+        //g.setBlackjackFlag(true);
+        //g.setInSession(false);
+        return BLACKJACK;
+    }
+    else {
+        return GAME_GOES_ON_FLAG;
+    }
+
+    //return 0;
 }
 
 void showAllPlayers(std::vector<Player*> players) {

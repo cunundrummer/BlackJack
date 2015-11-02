@@ -8,6 +8,14 @@
 
 #include "dealerPlayer.h"
 
+void DealerPlayer::init(bool bustedFlag, bool pushFlag, bool inSessionFlag, bool standFlag, bool blackjackFlag) {
+    bustedFlag_ = bustedFlag;
+    pushFlag_ = pushFlag;
+    inSessionFlag_ = inSessionFlag;
+    standFlag_ = standFlag;
+    blackjackFlag_ = blackjackFlag;
+}
+
 void DealerPlayer::print() {
     std::cout << getName(false) << ": " << "$" << std::fixed << std::setprecision(2) << getMoney() << std::endl ;
     displayHand();

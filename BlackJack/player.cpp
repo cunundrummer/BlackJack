@@ -40,12 +40,33 @@ _inSession(inSession)
     
 }
 
+void Player::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool inSessionFlag, bool doubledFlag, bool standFlag, bool splitFlag, bool blackjackFlag) {
+    bustedFlag_ = bustedFlag;
+    pushFlag_ = pushFlag;
+    surrenderFlag_ = surrenderFlag;
+    inSessionFlag_ = inSessionFlag;
+    doubledFlag_ = doubledFlag;
+    standFlag_ = standFlag;
+    splitFlag_ = splitFlag;
+    blackjackFlag_ = blackjackFlag;
+}
+
 std::ostream& operator<< (std::ostream &os, Player &p) {
     //int maxSpaces = p._MAX_CHARACTERS_ALLOWED;
     /*if (p.getInSession())
      os << p._name << ": " << "$" << std::fixed << std::setprecision(2) << p._money;
      else
      os << p._name << ": " << "[out]";*/
+    std::cout << "*****" << p.getName() << " STATUS DISPLAY START" << "*****" << std::endl;
+    std::cout << "bustedFlag: " <<  "[" << p.getBustedFlag() << "] " <<
+                 "pushFlag: " << "[" << p.getPushFlag() << "] " <<
+                 "surrenderFlag: " << "[" << p.getSurrenderFlag() << "] " <<
+                 "inSessionFlag: " << "[" << p.isInSession() << "] " << std::endl <<
+                 "doubleFlag: " << "[" << p.getDoubledFlag() << "] " <<
+                 "standFlag: " << "[" << p.getStandFlag() << "] " <<
+                 "splitFlag: " << "[" << p.getSplitFlag() << "] " <<
+                 "blackJackFlag"  << "[" << p.getBlackJackFlag() << "] " << std::endl;
+    std::cout << "*****" << p.getName() << " STATUS DISPLAY END" << "*****" << std::endl;
     p.print();
     return os ;
 }
@@ -99,6 +120,14 @@ std::string Player::getName(bool showErrMsg) {
     }
     else
         return _name;
+}
+
+Hand Player::getHand(const int index) {
+    if (hands_.empty()) {
+        Hand hand;
+        hands_.push_back(hand);
+    }
+    return hands_.at(index);
 }
 
 int Player::getPlayerCount() {
@@ -161,14 +190,29 @@ void Player::print() {
 
 void Player::hit(Card card) {
     
-    //std::cout << "Before handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
+    std::cout << "DEBUG: IN HIT" << std::endl;
+    std::cout << _name << " hits" << std::endl;
     addCardToHandFromDeck(card);
-    //std::cout << "After handing card to player, there are " << _deck->pileSize() << " cards in deck" << std::endl;
+    int total = getHand(0).calculate();
+    
+    if (total > 21) {
+        setBustedFlag(true);
+        setInSession(false);
+    }
+    else if (total == 21) {
+        setBlackjackFlag(true);
+        setInSession(false);
+    }
+    else {
+        //default case: break?
+    }
+     std::cout << "DEBUG: END OF HIT" << std::endl;
 }
 
 void Player::stand() {
     std::cout << _name << " stands" << std::endl;
-    //setInSession(false);
+    setStandFlag(true);
+    setInSession(false);
 }
 
 void Player::doubleDown() {

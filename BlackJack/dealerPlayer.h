@@ -22,8 +22,11 @@ private:
 
 public:
     DealerPlayer(double money = 2000, const size_t MAX_NUMBER_HAND_TO_HOLD = ONE_HAND, bool toIncludeInCount = true):
-    Player(DEALERS_NAME, MAX_CHARACTERS_FOR_NAME, money, MAX_NUMBER_HAND_TO_HOLD, toIncludeInCount, IN_SESSION) {}
+    Player(DEALERS_NAME, MAX_CHARACTERS_FOR_NAME, money, MAX_NUMBER_HAND_TO_HOLD, toIncludeInCount, IN_SESSION) {
+        init();
+    }
     
+    void init(bool bustedFlag = false, bool pushFlag = false, bool inSessionFlag = true, bool standFlag = false, bool blackjackFlag = false);
     void hit(Card card);
     
     void print();

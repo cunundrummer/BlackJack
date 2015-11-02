@@ -199,8 +199,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
      */
 }
 
-int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {  //change the name of method!!!!
-    //testing win conditions
+int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
     
     const int BLACKJACK_FLAG = 21;
     const int GAME_GOES_ON_FLAG = 0;
