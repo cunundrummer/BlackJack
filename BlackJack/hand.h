@@ -24,6 +24,7 @@ public:
     int calculate();
     void handToIndividualCards();//std::vector<Card>);
     Card getIndividualCard(int index);
+    Hand& clearHand();
     
     
 };

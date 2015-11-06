@@ -23,7 +23,7 @@ public:
     CardPile(std::vector<Card>& cards);
     void addCard(Card);
     void addCard(int, Suits);
-    Card removeLastCard();
+    virtual Card removeLastCard();
     void shuffle();
     int pileSize();
     virtual void print();

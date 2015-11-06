@@ -65,7 +65,8 @@ public:
         hands = hands_;
     }*/
     //void hit(Card card);
-    void doubleDown(Card card, int handIndex);
+    void doubleDown(Card card, int handIndex = 0);
+    void split(); //return number of times was split
     
 };
 

@@ -87,3 +87,8 @@ int Hand::calculate() {
 Card Hand::getIndividualCard(int index) {
     return _cardPile[index];
 }
+
+Hand& Hand::clearHand() {
+    _cardPile.empty();
+    return *this;
+}

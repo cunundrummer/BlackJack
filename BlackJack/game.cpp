@@ -351,10 +351,10 @@ int Game::buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer) {
         options.push_back("Stand");
         
         if (gPlayer.getMoney() >= gPlayer.getBet()) {  //double down/splitting requires at least same amount as bet
-            if (gPlayer.getHand(0).pileSize() == TWO_CARDS) {
+            if (gPlayer.getHand(0).pileSize() == TWO_CARDS) { //handIsDoubleable
                 options.push_back("Double down");
             }
-            if (gPlayer.getHand(0).getIndividualCard(0) == gPlayer.getHand(0).getIndividualCard(1) && gPlayer.getHand(0).pileSize() == TWO_CARDS) {
+            if (gPlayer.getHand(0).getIndividualCard(0) == gPlayer.getHand(0).getIndividualCard(1) && gPlayer.getHand(0).pileSize() == TWO_CARDS) { //handIsSplittable
                 options.push_back("Split");
             }
         

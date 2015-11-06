@@ -110,7 +110,7 @@ void GamePlayer::printBetReport() {
     std::cout << "END OF BET REPORT" << std::endl << std::endl;
 }
 
-void GamePlayer::doubleDown(Card card, int handIndex = 0) {
+void GamePlayer::doubleDown(Card card, int handIndex) {
     //set to return boolean? Might be better for error checking
 
     std::cout << _name << " doubleing down" << std::endl;
@@ -127,4 +127,27 @@ void GamePlayer::doubleDown(Card card, int handIndex = 0) {
     else {
         std::cout << _name << " cannot double down, not enough money. " << std::endl;
     }
+}
+
+void GamePlayer::split() { //possible vector of hands to return
+    static int splitCount = 0; //count the number times splits for current player have been made/reset to 0 a the end of round
+    std::cout << "DEBUG: Splitcount before splitting is " << splitCount << std::endl;
+    
+    size_t numCurrentHands = hands_.size();
+    std::cout << "DEBUG: numCurrentHands = " << numCurrentHands << std::endl;
+    const int NUM_MAX_HANDS_ALLOWED_FOR_SPLITTING = 4;
+    
+    //seperate hands ->
+    if (splitCount == 0) {
+        do {
+            Hand handOne = hands_[0];
+            Hand handTwo;
+            handTwo.addCard(hands_[0].removeLastCard());
+            splitCount++;
+            //resolve each hand
+        } while (splitCount < NUM_MAX_HANDS_ALLOWED_FOR_SPLITTING);
+        
+    }
+    std::cout << "DEBUG: Splitcount after splitting is " << splitCount << std::endl;
+    //return splitCount;
 }

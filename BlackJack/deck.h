@@ -17,10 +17,12 @@ private:
     const int MAX_CARDS_IN_A_DECK = 52;
 public:
     
-    Deck(int);
-    /*void print() { for (auto d: _cardPile) {
+    Deck(int numDecks = 0);
+    /*void print() {
+        for (auto d: _cardPile) {
         std::cout << d;
-    }};*/
+        }
+    }*/
 };
 
 

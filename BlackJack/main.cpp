@@ -39,7 +39,7 @@ void showAllPlayers(std::vector<Player*> players, bool showOnePlayer = true, int
 int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
-
+    
     Game game; // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;
@@ -95,6 +95,12 @@ int main(int argc, const char * argv[]) {
                 //build options for players still in session
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
                 std::cout << *gPlayers[0] << std::endl;
+            
+                gPlayers[0]->removeCardsFromHand(2, 0); //temp to test splits
+                gPlayers[0]->addCardToHandFromDeck(Card(5, spades));//temp to test splits
+                gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test splits
+                Hand h(gPlayers[0]->getHand(0));
+                std::cout << h << std::endl;
                 int choice = game.buildPlayOptionForPlayerAndReturnChoice(*gPlayers[0]);
                 
                 switch (choice) {
@@ -116,6 +122,10 @@ int main(int argc, const char * argv[]) {
                     case PLAY_OPTIONS::SPLIT:
                         // create another hand from players second card and bet equivalent of another bet.  play hand to completion then play other hand splits allowed upto 4 times.  optional: allow double after splits
                         std::cout << "Player chose to split." << std::endl;
+                        gPlayers[0]->split();
+                        std::cout << "DEBUG: in main, after splitting, the hands are " << std::endl;
+                        gPlayers[0]->displayHand();
+                                                
                         break;
                     default:
                         std::cout << "Unknown error in switch(choice)...exiting";
@@ -124,7 +134,10 @@ int main(int argc, const char * argv[]) {
                 }
                 //set appropriate actions here
                 calculatePlayerResult(*gPlayers[0]);
+                //calculateDealerResult();
                 //reset flags?
+                gPlayers[0]->setInSession(false);
+                std::cout << gPlayers[0]->isInSession();
                 std::cout << "@END OF DO WHILE LOOP" << std::endl;
             } while (gPlayers[0]->isInSession() == true);
         }
@@ -135,8 +148,9 @@ int main(int argc, const char * argv[]) {
     }
 
     std::cout << std::endl << std::endl << "****************************" << std::endl;
-    showAllPlayers(players);
+    showAllPlayers(players, false);
     std::cout << "****************************" << std::endl;
+    
     return 0;
 }
 
@@ -206,11 +220,13 @@ void testPlayer() {
     //player->setInSession(true);
 
     std::vector<Card> cards { {5, spades}, {8, diamonds}, {4, clubs}, {10, hearts} };
-    std::cout << "<Player pre card assignment: " << *player << std::endl;
+    std::cout << "<Player pre card assignment: " << std::endl << *player << std::endl;
     player->addCardToHandFromDeck(cards[0]);
     player->addCardToHandFromDeck(cards[1]);
     player->addCardToHandFromDeck(cards[2], 1);
     player->addCardToHandFromDeck(cards[3], 2);
+    std::cout << "Now clearing players hands with clearHand(): " << std::endl;
+    player->removeCardsFromHand(2, 0);
     std::cout << std::endl << *player << "!!!!!!!!!!End Player!!!!!!!!!! > " << std::endl << std::endl;
 
     std::cout << "gPlayer: " << gPlayer << std::endl;

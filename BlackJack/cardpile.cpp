@@ -28,11 +28,13 @@ Card CardPile::removeLastCard() {
     
     if (!(_cardPile.empty())) {
         Card lastCard = _cardPile.back();
+        //std::cout << "PILRSIZE before removing card is " << pileSize() <<std::endl;
         _cardPile.pop_back();
+        //std::cout << "PILRSIZE after removing card is " << pileSize() <<std::endl;
         return lastCard;
     }
     else if (_cardPile.empty()) {
-        std::cout << "CardPile::removecard error, cannot remove from empty deck." << std::endl;
+        std::cout << "CardPile::remove card error, cannot remove from empty deck." << std::endl;
         return Card(0, error);
     }
     else {

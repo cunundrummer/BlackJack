@@ -121,13 +121,14 @@ std::string Player::getName(bool showErrMsg) {
         return _name;
 }
 
-Hand Player::getHand(const int index) {
+Hand& Player::getHand(const int index) {
     if (hands_.empty()) {
         Hand hand;
         hands_.push_back(hand);
     }
     return hands_.at(index);
 }
+
 
 int Player::getPlayerCount() {
     return  _playerCount;
