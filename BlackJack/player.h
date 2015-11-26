@@ -70,7 +70,7 @@ public:
     
     Hand& getHand(int index = 0);/* { return hands_[index] ; }*/
     //Hand getHand(/*const int index = 0*/);
-    std::vector<Hand> getHands() { return hands_; }
+    std::vector<Hand>& getHands() { return hands_; }
     void displayHand();
     virtual void printFlags();
     virtual void print();
@@ -78,7 +78,7 @@ public:
     virtual void hit(Card card);
     virtual void stand();
     virtual void doubleDown();
-    virtual void split();
+    //virtual void split();
     
 };
 

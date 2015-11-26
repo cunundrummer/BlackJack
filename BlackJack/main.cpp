@@ -24,8 +24,7 @@
 
 int Player::_playerCount = 0;
 //int Player::_player2Count = 0;
-enum PLAY_OPTIONS {HIT, STAND, DOUBLE_DOWN, SPLIT};
-enum PLAY_RESULTS {BUSTED, BLACKJACK};
+
 //const int MIN_AMOUNT_OF_MONEY = 5;
 //const int BLACKJACK_FLAG = 21;
 const int GAME_GOES_ON_FLAG = 0;
@@ -101,42 +100,10 @@ int main(int argc, const char * argv[]) {
                 gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test splits
                 Hand h(gPlayers[0]->getHand(0));
                 std::cout << h << std::endl;
-                int choice = game.buildPlayOptionForPlayerAndReturnChoice(*gPlayers[0]);
+                int choice = gPlayers[0]->buildPlayOptionForPlayerAndReturnChoice();
+                //playout choice selection
+                game.resolveChoice(choice, *gPlayers[0]);
                 
-                switch (choice) {
-                    case PLAY_OPTIONS::HIT:
-                        //add card from deck to players hand
-                        std::cout << "Player chose to hit." << std::endl;
-                        gPlayers[0]->hit(game.getDeck().removeLastCard());
-                        break;
-                    case PLAY_OPTIONS::STAND:
-                        std::cout << "Player chose to stand." << std::endl;
-                        //pause players session
-                        gPlayers[0]->stand();
-                        break;
-                    case PLAY_OPTIONS::DOUBLE_DOWN:
-                        //bet equivalent of another bet and pause players session
-                        std::cout << "Player chose to double down." << std::endl;
-                        gPlayers[0]->doubleDown(game.getDeck().removeLastCard(), 0);
-                        break;
-                    case PLAY_OPTIONS::SPLIT:
-                        // create another hand from players second card and bet equivalent of another bet.  play hand to completion then play other hand splits allowed upto 4 times.  optional: allow double after splits
-                        std::cout << "Player chose to split." << std::endl;
-                        gPlayers[0]->split();
-                        std::cout << "DEBUG: in main, after splitting, the hands are " << std::endl;
-                        gPlayers[0]->displayHand();
-                                                
-                        break;
-                    default:
-                        std::cout << "Unknown error in switch(choice)...exiting";
-                        exit(9);
-                        break;
-                }
-                //set appropriate actions here
-                calculatePlayerResult(*gPlayers[0]);
-                //calculateDealerResult();
-                //reset flags?
-                gPlayers[0]->setInSession(false);
                 std::cout << gPlayers[0]->isInSession();
                 std::cout << "@END OF DO WHILE LOOP" << std::endl;
             } while (gPlayers[0]->isInSession() == true);
@@ -148,7 +115,7 @@ int main(int argc, const char * argv[]) {
     }
 
     std::cout << std::endl << std::endl << "****************************" << std::endl;
-    showAllPlayers(players, false);
+    showAllPlayers(players, true);
     std::cout << "****************************" << std::endl;
     
     return 0;

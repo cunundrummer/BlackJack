@@ -110,6 +110,56 @@ void GamePlayer::printBetReport() {
     std::cout << "END OF BET REPORT" << std::endl << std::endl;
 }
 
+int GamePlayer::buildPlayOptionForPlayerAndReturnChoice() {
+    const int TWO_CARDS = 2;
+    
+    Menu optionsMenu;
+    std::string header = "Here are your options: ";
+    std::vector<std::string> options;
+    int choice;
+    
+    if (isInSession() == true) { //default values as long as player is still in the game(hit, stand)
+        options.push_back("Hit");
+        options.push_back("Stand");
+        
+        if (getMoney() >= getBet()) {  //double down/splitting requires at least same amount as bet
+            if (getHand(0).pileSize() == TWO_CARDS) { //handIsDoubleable
+                options.push_back("Double down");
+            }
+            if (getHand(0).getIndividualCard(0) == getHand(0).getIndividualCard(1) && getHand(0).pileSize() == TWO_CARDS) { //handIsSplittable
+                options.push_back("Split");
+            }
+            
+        } //else player does not have enough money to make any addition bets/plays
+        optionsMenu.setHeader(header);
+        optionsMenu.setOptions(options);
+        choice = optionsMenu.displayAndGetChoice();
+    }
+    
+    return choice;
+}
+
+void GamePlayer::hit(Card card, int handIndex) {
+    std::cout << "DEBUG: IN HIT" << std::endl;
+    std::cout << _name << " hits" << std::endl;
+    addCardToHandFromDeck(card, handIndex);
+    int total = getHand(handIndex).calculate();
+    
+    if (total > 21) {
+        setBustedFlag(true);
+        setInSession(false);
+    }
+    else if (total == 21) {
+        setBlackjackFlag(true);
+        setInSession(false);
+    }
+    else {
+        //default case: break?
+    }
+    std::cout << "DEBUG: END OF HIT" << std::endl;
+
+}
+
 void GamePlayer::doubleDown(Card card, int handIndex) {
     //set to return boolean? Might be better for error checking
 
@@ -129,25 +179,44 @@ void GamePlayer::doubleDown(Card card, int handIndex) {
     }
 }
 
-void GamePlayer::split() { //possible vector of hands to return
+int GamePlayer::split() { //possible vector of hands to return
     static int splitCount = 0; //count the number times splits for current player have been made/reset to 0 a the end of round
-    std::cout << "DEBUG: Splitcount before splitting is " << splitCount << std::endl;
+    const int MAX_SPLITS_ALLOWED = 3;
+    
+    std::cout << "DEBUG GamePlayer:Split, splitCount before splitting is " << splitCount << std::endl;
     
     size_t numCurrentHands = hands_.size();
-    std::cout << "DEBUG: numCurrentHands = " << numCurrentHands << std::endl;
-    const int NUM_MAX_HANDS_ALLOWED_FOR_SPLITTING = 4;
+    std::cout << "DEBUG GamePlayer:Split: numCurrentHands = " << numCurrentHands << std::endl;
     
     //seperate hands ->
-    if (splitCount == 0) {
-        do {
-            Hand handOne = hands_[0];
-            Hand handTwo;
-            handTwo.addCard(hands_[0].removeLastCard());
-            splitCount++;
-            //resolve each hand
-        } while (splitCount < NUM_MAX_HANDS_ALLOWED_FOR_SPLITTING);
+    if (splitCount < MAX_SPLITS_ALLOWED) {
+        Hand h1;
+        Hand h2;
         
+        h2.addCard(hands_[0].removeLastCard());
+        h1.addCard(hands_[0].removeLastCard());
+        hands_.pop_back();
+        hands_.push_back(h1);
+        hands_.push_back(h2);
+        splitCount++;
+    }
+    else {
+        std::cout << "Cannot split anymore hands." << std::endl;
     }
     std::cout << "DEBUG: Splitcount after splitting is " << splitCount << std::endl;
-    //return splitCount;
+    //return unresolved splitCount;
+    return splitCount;
 }
+
+int GamePlayer::indexOfSplitHand() {
+    int numUnresolvedSplitHands = 0;
+    for (auto h: hands_) {
+        if (h.pileSize() == 1) {
+            return numUnresolvedSplitHands;
+        }
+        else
+            numUnresolvedSplitHands++;
+    }
+    return numUnresolvedSplitHands;
+}
+

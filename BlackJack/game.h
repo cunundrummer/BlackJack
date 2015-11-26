@@ -19,6 +19,7 @@
 #include "deck.h"
 #include "menu.h"
 
+enum PLAY_RESULTS {BUSTED, BLACKJACK, GAME_GOES_ON};
 
 class Game {
 private:
@@ -37,6 +38,8 @@ private:
     
     Deck *_deck;
     std::vector<Player*> _players;
+    
+    std::string displayResult(const int resultOfHand);
 
 public:
     std::string generateName(std::string); //private
@@ -47,7 +50,7 @@ public:
     std::string getGameTitle()      { return _GAME_TITLE; }
     int getMinDecksToUse()          { return _MIN_DECKS_TO_USE; }
     int getMaxDecksToUse()          { return _MAX_DECKS_TO_USE; }
-    Deck getDeck()                  { return *_deck; }
+    Deck& getDeck()                  { return *_deck; }
     bool getIsInDemoMode()          { return _isDemoMode; }
     void setIsDemoMode(bool);
     
@@ -73,12 +76,10 @@ public:
     void getInsuranceFromPlayer(GamePlayer &);
     
     int insurancePayout(std::vector<GamePlayer*> &players, const Hand dealersHand); // returns 0 for game goes on; 1 ask for insurance; 2 dealer has blackjack
-    int buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer);
+    //int buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer);  //moved to gamePlayer
     
-    void hit(Player &p);
-    void stand();
-    void double_down();
-    void split();
+    int resolveChoice(int choice, GamePlayer& player);
+    int calculatePlayerResult(GamePlayer& g, int index = 0);
     
     void printGame(std::vector<GamePlayer*> &, DealerPlayer) const;
     void showDebug();

@@ -25,6 +25,7 @@ public:
     void addCard(int, Suits);
     virtual Card removeLastCard();
     void shuffle();
+    void getCardPile(CardPile &cardPile) { cardPile = _cardPile; }
     int pileSize();
     virtual void print();
 };

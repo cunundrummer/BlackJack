@@ -11,6 +11,9 @@
 
 #include <iostream>
 #include "player.h"
+#include "menu.h"
+
+enum PLAY_OPTIONS {HIT, STAND, DOUBLE_DOWN, SPLIT};
 
 class GamePlayer : public Player {
 private:
@@ -61,12 +64,16 @@ public:
     void setInsuraceIsSet(bool tOrf) { _insuranceBetIsSet = tOrf; }
     bool getInsuranceIsSet() { return _insuranceBetIsSet; }
     
+    int buildPlayOptionForPlayerAndReturnChoice();
+    
+    int indexOfSplitHand();
     /*void getHand(std::vector<Hand>& hands) {
         hands = hands_;
     }*/
     //void hit(Card card);
+    void hit(Card card, int handIndex = 0);
     void doubleDown(Card card, int handIndex = 0);
-    void split(); //return number of times was split
+    int split(); //return number of unresolved splits
     
 };
 

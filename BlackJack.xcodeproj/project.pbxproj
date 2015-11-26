@@ -148,6 +148,9 @@
 		0DD62F0C1AF04EBF00671A2F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					New,
+				);
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Compulsive Gamblers inc.";
 				TargetAttributes = {

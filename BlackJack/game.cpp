@@ -337,6 +337,7 @@ void Game::printGame(std::vector<GamePlayer*> &gPlayers, DealerPlayer dealer) co
     std::cout << dealer << std::endl;
 }
 
+/*  //moved to gamePlayer
 int Game::buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer) {
     
     const int TWO_CARDS = 2;
@@ -365,7 +366,7 @@ int Game::buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer) {
     }
     
     return choice;
-}
+}*/
 
 bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
     bool askForInsurance = false;
@@ -389,4 +390,101 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
         askForInsurance = false;
     
     return askForInsurance;
+}
+
+int Game::resolveChoice(int choice, GamePlayer& player) {
+    static int index = 0;
+    
+    switch (choice) {
+        case PLAY_OPTIONS::HIT:
+            //add card from deck to players hand
+            std::cout << "Player chose to hit to hand of index:" << index << std::endl;
+            player.hit(getDeck().removeLastCard(), index);
+            player.displayHand();
+            std::cout << "END OF PLAY_OPTIONS::HIT" << std::endl;
+            if (calculatePlayerResult(player, index) == GAME_GOES_ON) {
+                std::cout << "DEBUG Game::resolveChoice | SPLIT, calculated result is " << displayResult(calculatePlayerResult(player, index)) << std::endl;
+                resolveChoice(player.buildPlayOptionForPlayerAndReturnChoice(), player);
+            }
+            break;
+        case PLAY_OPTIONS::STAND:
+            std::cout << "Player chose to stand." << std::endl;
+            //pause players session
+            player.stand();
+            break;
+        case PLAY_OPTIONS::DOUBLE_DOWN:
+            //bet equivalent of another bet and pause players session
+            std::cout << "Player chose to double down." << std::endl;
+            player.doubleDown(getDeck().removeLastCard(), index);
+            return choice;
+            break;
+        case PLAY_OPTIONS::SPLIT:
+            std::cout << "Player chose to split" << std::endl;
+            player.split();
+            
+            for (auto handIter = player.getHands().begin(); handIter != player.getHands().end(); handIter++) {
+                int curHand = static_cast<int>(std::distance(player.getHands().begin(), handIter));
+                index = curHand;
+                std::cout << "DEBUG Game::resolveChoice | SPLIT, beginning of for loop " << std::endl;
+                std::cout << "HAND" << curHand << ": " << *handIter << std::endl;
+                std::cout << "DEBUG Game::resolveChoice | SPLIT, adding card from deck... " << std::endl;
+                handIter->addCard(_deck->removeLastCard());
+                std::cout << "DEBUG Game::resolveChoice | SPLIT,card added from deck. " << std::endl;
+                std::cout << "*HAND" << curHand << ": " << *handIter << std::endl;
+                
+                if (calculatePlayerResult(player, curHand) == GAME_GOES_ON) {
+                    std::cout << "DEBUG Game::resolveChoice | SPLIT, calculated result is " << displayResult(calculatePlayerResult(player, curHand)) << std::endl;
+                    resolveChoice(player.buildPlayOptionForPlayerAndReturnChoice(), player);
+                }
+            }
+            
+            break;
+        default:
+            std::cout << "Unknown error in game.resolveChoice switch(choice)...exiting";
+            exit(9);
+            break;
+    }
+    
+    std::cout << "Game::resolveChoice: returning choice " << choice << std::endl;
+    return choice;
+}
+
+int Game::calculatePlayerResult(GamePlayer &g, int index) {
+    int total = g.getHand(index).calculate();
+    
+    if (total > 21) {
+        g.setBustedFlag(true);
+        g.setInSession(false);
+        return BUSTED;
+    }
+    else if (total == 21) {
+        //g.setBlackjackFlag(true);
+        //g.setInSession(false);
+        return BLACKJACK;
+    }
+    else {
+        //check if player has enough money to play
+        g.setInSession(true);
+        return GAME_GOES_ON;
+    }
+    
+    //return 0;
+
+}
+
+std::string Game::displayResult(const int resultOfHand)  {
+    switch (resultOfHand) {
+        case BUSTED:
+            return "BUSTED";
+            break;
+        case BLACKJACK:
+            return  "BLACKJACK";
+            break;
+        case GAME_GOES_ON:
+            return "GAME_GOES_ON";
+        default:
+            return "UNKOWN result returned in GAME::displayResult";
+            break;
+    }
+    
 }
