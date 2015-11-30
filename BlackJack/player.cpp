@@ -40,12 +40,13 @@ _inSession(inSession)
     
 }
 
-void Player::init(bool bustedFlag, bool pushFlag, bool inSessionFlag, bool standFlag, bool blackjackFlag) {
-    bustedFlag_ = bustedFlag;
-    pushFlag_ = pushFlag;
+void Player::init(bool inSessionFlag) {
+    
     inSessionFlag_ = inSessionFlag;
-    standFlag_ = standFlag;
-    blackjackFlag_ = blackjackFlag;
+    //bustedFlag_ = bustedFlag;
+    //pushFlag_ = pushFlag;
+    //standFlag_ = standFlag;
+    //blackjackFlag_ = blackjackFlag;
 }
 
 std::ostream& operator<< (std::ostream &os, Player &p) {
@@ -63,11 +64,14 @@ std::ostream& operator<< (std::ostream &os, Player &p) {
 }
 
 void Player::printFlags() {
+   /*
     std::cout << "bustedFlag: " <<  "[" << bustedFlag_ << "] " <<
     "pushFlag: " << "[" << pushFlag_ << "] " <<
     "inSessionFlag: " << "[" << inSessionFlag_ << "] " << std::endl <<
     "standFlag: " << "[" << standFlag_ << "] " <<
     "blackJackFlag"  << "[" << blackjackFlag_ << "] " << std::endl;
+    */
+    std::cout << "FLAGS currently being moved to Hands.h/cpp" << std::endl;
 }
 
 /*!
@@ -196,11 +200,11 @@ void Player::hit(Card card) {
     int total = getHand(0).calculate();
     
     if (total > 21) {
-        setBustedFlag(true);
+        //setBustedFlag(true);
         setInSession(false);
     }
     else if (total == 21) {
-        setBlackjackFlag(true);
+        //setBlackjackFlag(true);
         setInSession(false);
     }
     else {
@@ -211,7 +215,7 @@ void Player::hit(Card card) {
 
 void Player::stand() {
     std::cout << _name << " stands" << std::endl;
-    setStandFlag(true);
+    //setStandFlag(true);
     setInSession(false);
 }
 

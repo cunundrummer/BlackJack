@@ -23,15 +23,15 @@ GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED, doubl
     _insuranceBet = 0;
 }
 
-void GamePlayer::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool inSessionFlag, bool doubledFlag, bool standFlag, bool splitFlag, bool blackjackFlag) {
-    bustedFlag_ = bustedFlag;
-    pushFlag_ = pushFlag;
-    surrenderFlag_ = surrenderFlag;
+void GamePlayer::init(bool inSessionFlag) {
+    //bustedFlag_ = bustedFlag;
+    //pushFlag_ = pushFlag;
+    //surrenderFlag_ = surrenderFlag;
     inSessionFlag_ = inSessionFlag;
-    doubledFlag_ = doubledFlag;
-    standFlag_ = standFlag;
-    splitFlag_ = splitFlag;
-    blackjackFlag_ = blackjackFlag;
+    //doubledFlag_ = doubledFlag;
+    //standFlag_ = standFlag;
+    //splitFlag_ = splitFlag;
+    //blackjackFlag_ = blackjackFlag;
 }
 
 void GamePlayer::setBet(double bet = 0) {
@@ -88,6 +88,7 @@ void GamePlayer::implementInsuranceBet() {
 }
 
 void GamePlayer::printFlags() {
+    /*
     std::cout << "bustedFlag: " <<  "[" << bustedFlag_ << "] " <<
     "pushFlag: " << "[" << pushFlag_ << "] " <<
     "surrenderFlag: " << "[" << surrenderFlag_ << "] " <<
@@ -96,6 +97,8 @@ void GamePlayer::printFlags() {
     "standFlag: " << "[" << standFlag_ << "] " <<
     "splitFlag: " << "[" << splitFlag_ << "] " <<
     "blackJackFlag"  << "[" << blackjackFlag_ << "] " << std::endl;
+     */
+    std::cout << "DEBUG: Gamplayer::printFlags, FLAGS being move to hands" << std::endl;
 }
 
 void GamePlayer::printBetReport() {
@@ -105,7 +108,7 @@ void GamePlayer::printBetReport() {
     std::cout << "Bet: -$" << _bet << std::endl;
     std::cout << "Insurance bet: -$" << _insuranceBet << std::endl;
     std::cout << "Resolved insurance bet: $" << resolvedInsurancePayout_ << std::endl;
-    std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;
+    //std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;
     std::cout << "Total: $" << _money << std::endl;
     std::cout << "END OF BET REPORT" << std::endl << std::endl;
 }
@@ -146,11 +149,11 @@ void GamePlayer::hit(Card card, int handIndex) {
     int total = getHand(handIndex).calculate();
     
     if (total > 21) {
-        setBustedFlag(true);
+        //setBustedFlag(true);
         setInSession(false);
     }
     else if (total == 21) {
-        setBlackjackFlag(true);
+        //setBlackjackFlag(true);
         setInSession(false);
     }
     else {
@@ -170,9 +173,11 @@ void GamePlayer::doubleDown(Card card, int handIndex) {
         std::cout << "Removing $" << _bet << " from $" << _money << ": " << "$" << _money << " - $" << _bet << " = $" << _money - _bet << std::endl;
         _money -= _bet;
         std::cout << "Adding card to hand, and disabling rest of session..." << std::endl;
+        //maybe make call to hit instead?
+        
         hands_[handIndex].addCard(card);
-        setDoubledFlag(true);
-        setInSession(false);
+        //setDoubledFlag(true);
+        //setInSession(false);
     }
     else {
         std::cout << _name << " cannot double down, not enough money. " << std::endl;

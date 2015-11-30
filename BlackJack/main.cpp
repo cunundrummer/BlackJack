@@ -55,7 +55,7 @@ int main(int argc, const char * argv[]) {
     game.setUpPlayers(gPlayers);
     
     DealerPlayer dealer;
-    std::cout << "Dealers name is " << dealer << std::endl;
+    std::cout << "Dealers name is " << std::endl << dealer << std::endl;
     
     ////////Making a vector for all player objects for ease of use in certain methods/functions
     std::vector<Player*> players(gPlayers.begin(), gPlayers.end());
@@ -104,7 +104,9 @@ int main(int argc, const char * argv[]) {
                 //playout choice selection
                 game.resolveChoice(choice, *gPlayers[0]);
                 
-                std::cout << gPlayers[0]->isInSession();
+                std::cout << gPlayers[0]->getName() << " 's session: " << gPlayers[0]->isInSession();
+                
+                
                 std::cout << "@END OF DO WHILE LOOP" << std::endl;
             } while (gPlayers[0]->isInSession() == true);
         }
@@ -125,7 +127,7 @@ int calculatePlayerResult(GamePlayer& g) {
     int total = g.getHand(0).calculate();
     
     if (total > 21) {
-        g.setBustedFlag(true);
+        //g.setBustedFlag(true);
         g.setInSession(false);
         return BUSTED;
     }

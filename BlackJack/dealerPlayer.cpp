@@ -8,12 +8,12 @@
 
 #include "dealerPlayer.h"
 
-void DealerPlayer::init(bool bustedFlag, bool pushFlag, bool inSessionFlag, bool standFlag, bool blackjackFlag) {
-    bustedFlag_ = bustedFlag;
-    pushFlag_ = pushFlag;
+void DealerPlayer::init(bool inSessionFlag) {
+    //bustedFlag_ = bustedFlag;
+    //pushFlag_ = pushFlag;
     inSessionFlag_ = inSessionFlag;
-    standFlag_ = standFlag;
-    blackjackFlag_ = blackjackFlag;
+    //standFlag_ = standFlag;
+    //blackjackFlag_ = blackjackFlag;
 }
 
 void DealerPlayer::print() {

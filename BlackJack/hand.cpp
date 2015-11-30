@@ -8,6 +8,20 @@
 
 #include "hand.h"
 
+Hand::Hand() {
+    init();
+}
+
+void Hand::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool doubledFlag, bool standFlag, bool splitFlag, bool blackjackFlag) {
+    bustedFlag_ = bustedFlag;
+    pushFlag_ = pushFlag;
+    surrenderFlag_ = surrenderFlag;
+    doubledFlag_ = doubledFlag;
+    standFlag_ = standFlag;
+    splitFlag_ = splitFlag;
+    blackjackFlag_ = blackjackFlag;
+}
+
 std::ostream& operator<< (std::ostream &os, Hand &h) {
     std::vector<Card> cVector;
     
@@ -22,6 +36,16 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
         }
     
     os << ": " << h.calculate();
+    os << std::endl;
+    
+    os << "HAND FLAGS:" << std::endl << "bustedFlag: " <<  "[" << h.bustedFlag_ << "] " <<
+    "pushFlag: " << "[" << h.pushFlag_ << "] " <<
+    "surrenderFlag: " << "[" << h.surrenderFlag_ << "] " <<
+    //"inSessionFlag: " << "[" << inSessionFlag_ << "] " << std::endl <<
+    "doubleFlag: " << "[" << h.doubledFlag_ << "] " <<
+    "standFlag: " << "[" << h.standFlag_ << "] " <<
+    "splitFlag: " << "[" << h.splitFlag_ << "] " <<
+    "blackJackFlag"  << "[" << h.blackjackFlag_ << "] " << std::endl;;
     
     return os;
 }

@@ -28,13 +28,9 @@ protected:
     const size_t MAX_HANDS_ALLOWED_TO_HOLD_;
     std::vector<Hand> hands_;
     void setMAX_CARDS_TO_HOLD(const size_t NUMBER_OF_HANDS);
-    bool bustedFlag_;
-    bool pushFlag_;
-    bool inSessionFlag_;
-    bool standFlag_;
-    bool blackjackFlag_;
+    bool inSessionFlag_;    //togo: might place in hands | might also need one for player instance
     
-    virtual void init(bool bustedFlag = false, bool pushFlag = false, bool inSessionFlag = true, bool standFlag = false, bool blackjackFlag = false);
+    virtual void init(bool inSessionFlag = true);
     
 public:
     static int _playerCount;
@@ -50,16 +46,7 @@ public:
     virtual void setName(std::string&, const int  MAX_CHARACTERS);
     std::string getName(bool showErrMsg = false); //bool for showing error message
         
-    virtual void setBustedFlag(bool flag)       { bustedFlag_ = flag; }
-    virtual void setpushFlag(bool flag)         { pushFlag_ = flag; }
     virtual void setInSession(bool flag)        { inSessionFlag_ = _inSession = flag; } //remove reudundant _inSession
-    virtual void setStandFlag(bool flag)        { standFlag_ = flag; }
-    virtual void setBlackjackFlag(bool flag)    { blackjackFlag_ = flag; }
-    
-    virtual bool getBustedFlag()    { return bustedFlag_; }
-    virtual bool getPushFlag()      { return pushFlag_; }
-    virtual bool getStandFlag()     { return standFlag_; }
-    virtual bool getBlackJackFlag() { return blackjackFlag_; }
     bool isInSession()              { return _inSession; } //should be renamed getSessionFlag/fast ugly hack: make method and call it?
     
     virtual void setMoney(double money);

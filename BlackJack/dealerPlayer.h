@@ -26,7 +26,7 @@ public:
         init();
     }
     
-    void init(bool bustedFlag = false, bool pushFlag = false, bool inSessionFlag = true, bool standFlag = false, bool blackjackFlag = false);
+    void init(bool inSessionFlag = true);
     void hit(Card card);
     
     void print();

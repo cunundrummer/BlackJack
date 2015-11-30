@@ -157,7 +157,7 @@ void Game::dealCardToAllPlayers(std::vector<Player*> players, bool faceUp = true
 void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
     
     //do demo mode a.i. here for determining bets?
-    std::cout << "DEBUG: getBetsFromAllPlayers" << std::endl;
+    std::cout << "DEBUG: Game::getBetsFromAllPlayers start" << std::endl;
     
     std::cout << "Players size is " << p.size() << std::endl;
 
@@ -337,37 +337,6 @@ void Game::printGame(std::vector<GamePlayer*> &gPlayers, DealerPlayer dealer) co
     std::cout << dealer << std::endl;
 }
 
-/*  //moved to gamePlayer
-int Game::buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer) {
-    
-    const int TWO_CARDS = 2;
-    
-    Menu optionsMenu;
-    std::string header = "Here are your options: ";
-    std::vector<std::string> options;
-    int choice;
-    
-    if (gPlayer.isInSession() == true) { //default values as long as player is still in the game(hit, stand)
-        options.push_back("Hit");
-        options.push_back("Stand");
-        
-        if (gPlayer.getMoney() >= gPlayer.getBet()) {  //double down/splitting requires at least same amount as bet
-            if (gPlayer.getHand(0).pileSize() == TWO_CARDS) { //handIsDoubleable
-                options.push_back("Double down");
-            }
-            if (gPlayer.getHand(0).getIndividualCard(0) == gPlayer.getHand(0).getIndividualCard(1) && gPlayer.getHand(0).pileSize() == TWO_CARDS) { //handIsSplittable
-                options.push_back("Split");
-            }
-        
-        } //else player does not have enough money to make any addition bets/plays
-        optionsMenu.setHeader(header);
-        optionsMenu.setOptions(options);
-        choice = optionsMenu.displayAndGetChoice();
-    }
-    
-    return choice;
-}*/
-
 bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
     bool askForInsurance = false;
     
@@ -399,7 +368,8 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
         case PLAY_OPTIONS::HIT:
             //add card from deck to players hand
             std::cout << "Player chose to hit to hand of index:" << index << std::endl;
-            player.hit(getDeck().removeLastCard(), index);
+            player.hit(getDeck().removeLastCard(), index); //should just add card, nothing else!
+            calculatePlayerResult(player, index);
             player.displayHand();
             std::cout << "END OF PLAY_OPTIONS::HIT" << std::endl;
             if (calculatePlayerResult(player, index) == GAME_GOES_ON) {
@@ -410,13 +380,17 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
         case PLAY_OPTIONS::STAND:
             std::cout << "Player chose to stand." << std::endl;
             //pause players session
-            player.stand();
+            player.getHand(index).setStandFlag(true);
+            calculatePlayerResult(player, index);
+            player.stand();  //pause player session? or use hands status to determine session
             break;
         case PLAY_OPTIONS::DOUBLE_DOWN:
             //bet equivalent of another bet and pause players session
             std::cout << "Player chose to double down." << std::endl;
-            player.doubleDown(getDeck().removeLastCard(), index);
-            return choice;
+            player.doubleDown(getDeck().removeLastCard(), index);  //adds a card if there is enough money
+            calculatePlayerResult(player, index);
+            player.getHand(index).setDoubledFlag(true);
+            //return choice;
             break;
         case PLAY_OPTIONS::SPLIT:
             std::cout << "Player chose to split" << std::endl;
@@ -453,12 +427,12 @@ int Game::calculatePlayerResult(GamePlayer &g, int index) {
     int total = g.getHand(index).calculate();
     
     if (total > 21) {
-        g.setBustedFlag(true);
-        g.setInSession(false);
+        g.getHand(index).setBustedFlag(true);
+        //g.setInSession(false); //maybe check in main
         return BUSTED;
     }
     else if (total == 21) {
-        //g.setBlackjackFlag(true);
+        g.getHand(index).setBlackjackFlag(true);
         //g.setInSession(false);
         return BLACKJACK;
     }
