@@ -104,10 +104,13 @@ int main(int argc, const char * argv[]) {
                 //playout choice selection
                 game.resolveChoice(choice, *gPlayers[0]);
                 
-                std::cout << gPlayers[0]->getName() << " 's session: " << gPlayers[0]->isInSession();
+                std::cout << gPlayers[0]->getName() << " 's session: ";
+                (gPlayers[0]->isInSession())?  std::cout << "TRUE" << std::endl :  std::cout << "FALSE"  << std::endl;
                 
                 
                 std::cout << "@END OF DO WHILE LOOP" << std::endl;
+                //start from here next programming session!!!!
+                
             } while (gPlayers[0]->isInSession() == true);
         }
         else { //gameflag == BLACKJACK_FLAG

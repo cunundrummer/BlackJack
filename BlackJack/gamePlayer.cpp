@@ -121,15 +121,36 @@ int GamePlayer::buildPlayOptionForPlayerAndReturnChoice() {
     std::vector<std::string> options;
     int choice;
     
+    /* 
+     * this block of code should be made into a function ( getCurrentHandIndex )
+     */
+    int playerNumberOfHandsInHand = static_cast<int>(getHands().size()); //used for getting last hands index
+    int index = 0;
+    
+    for (int i = 0; i < playerNumberOfHandsInHand - 1; i++) {
+        if (getHand(i).getStandFlag() == false && getHand(i).getDoubledFlag() == false && getHand(i).getStandFlag() == false && getHand(i).getBustedFlag() == false && getHand(i).getBlackJackFlag() == false && getHand(i).getPushFlag() == false) {
+            index = i;
+        }
+        else
+            index++;
+    }
+    /*/////////////////////////////////////////////////////////////////////////*/
+    
+    std::cout << "DEBUG:GamePlayer::buildPlayoptions..., number of hands are: " << playerNumberOfHandsInHand << std::endl;
+    std::cout << "DEBUG:GamePlayer::buildPlayoptions..., index = " << index << std::endl;
     if (isInSession() == true) { //default values as long as player is still in the game(hit, stand)
         options.push_back("Hit");
         options.push_back("Stand");
         
         if (getMoney() >= getBet()) {  //double down/splitting requires at least same amount as bet
-            if (getHand(0).pileSize() == TWO_CARDS) { //handIsDoubleable
+            if (getHand(index).pileSize() == TWO_CARDS) { //handIsDoubleable
                 options.push_back("Double down");
             }
-            if (getHand(0).getIndividualCard(0) == getHand(0).getIndividualCard(1) && getHand(0).pileSize() == TWO_CARDS) { //handIsSplittable
+            else {
+                std::cout << "DEBUG: Gameplayer::buildplayOptionsForPlayer..., Hand[" << index << "] is not doubleable" << std::endl;
+                std::cout << " because there are " << getHand(index).pileSize() << " cards in hand[" << index <<std::endl;
+            }
+            if (getHand(index).getIndividualCard(0) == getHand(index).getIndividualCard(1) && getHand(index).pileSize() == TWO_CARDS) { //handIsSplittable
                 options.push_back("Split");
             }
             
