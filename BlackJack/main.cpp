@@ -34,11 +34,14 @@ const int NEXT_GAME = 99;
 void testMenu();
 void testPlayer();
 void testAskForInsurance();
+void testInsurance();
 void showAllPlayers(std::vector<Player*> players, bool showOnePlayer = true, int playerToShowIndex = 0);
 int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
     
+    testInsurance();
+    exit(0);
     Game game; // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;
@@ -88,32 +91,34 @@ int main(int argc, const char * argv[]) {
         game.setDealStart(false); //game started, must be reset to false when round is over
         int gameFlag = game.insurancePayout(gPlayers, dealersHand); //detects and pays/deducts insurance if players chose insurance
         std::cout << "Gameflag is " << printFlag(gameFlag) << std::endl;
-        
+
         if (gameFlag == GAME_GOES_ON_FLAG) {
-            do { //move do to better location after implementing split
+          //  do { //move do to better location after implementing split
                 //build options for players still in session
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
                 std::cout << *gPlayers[0] << std::endl;
             
-                gPlayers[0]->removeCardsFromHand(2, 0); //temp to test splits
-                gPlayers[0]->addCardToHandFromDeck(Card(5, spades));//temp to test splits
-                gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test splits
+                //gPlayers[0]->removeCardsFromHand(2, 0); //temp to test splits
+                //gPlayers[0]->addCardToHandFromDeck(Card(5, spades));//temp to test splits
+                //gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test splits
                 Hand h(gPlayers[0]->getHand(0));
                 std::cout << h << std::endl;
                 int choice = gPlayers[0]->buildPlayOptionForPlayerAndReturnChoice();
                 //playout choice selection
                 game.resolveChoice(choice, *gPlayers[0]);
-                
+            
                 std::cout << gPlayers[0]->getName() << " 's session: ";
                 (gPlayers[0]->isInSession())?  std::cout << "TRUE" << std::endl :  std::cout << "FALSE"  << std::endl;
-                
-                
+                std::cout << "Player has " << gPlayers[0]->getHands().size() << " hands." << std::endl;
+            
                 std::cout << "@END OF DO WHILE LOOP" << std::endl;
                 //start from here next programming session!!!!
                 
-            } while (gPlayers[0]->isInSession() == true);
+           // } while (gPlayers[0]->isInSession() == true);
         }
         else { //gameflag == BLACKJACK_FLAG
+            std::cout << "DEBUG: main, if*else*: Blackjackflag" << std::endl;
+            std:: cout << "DEBUG: Dealer: " << dealer << std::endl;
             //reinit players, if players are out of session, they are out
             
         }
@@ -276,9 +281,40 @@ void testAskForInsurance() {
     Game game;
     std::vector<GamePlayer*> gPlayers;
     DealerPlayer dealer;
-    dealer.addCardToHandFromDeck(Card(9, spades));
-    dealer.addCardToHandFromDeck(Card(9, spades));
+    dealer.addCardToHandFromDeck(Card(1, spades));
+    dealer.addCardToHandFromDeck(Card(10, spades));
     std::cout << (game.isInsuranceRequired(gPlayers, dealer.getHand(0)) ? "DEBUG isInsuranceRequired: TRUE" : "DEBUG isInsuranceRequired: FALSE") << std::endl;
+}
+
+void testInsurance() {
+    Game game;
+    std::vector<GamePlayer*> gPlayers;
+    DealerPlayer dealer;
+    dealer.addCardToHandFromDeck(Card(1, spades));
+    dealer.addCardToHandFromDeck(Card(10, spades));
+    std::cout << (game.isInsuranceRequired(gPlayers, dealer.getHand(0)) ? "DEBUG testInsurance: TRUE" : "DEBUG isInsuranceRequired: FALSE") << std::endl;
+    
+    gPlayers.push_back(new GamePlayer());
+    gPlayers[0]->setPreBetMoney();
+    std::cout << "PLAYER CREATED" << std::endl << *gPlayers[0] << std::endl;
+    
+    
+    gPlayers[0]->addCardToHandFromDeck(Card(2, spades));
+    gPlayers[0]->addCardToHandFromDeck(Card(10, hearts));
+    game.getBetsFromAllPlayers(gPlayers);
+    
+    std::cout << "Testing bets: " << std::endl;
+    //gPlayers[0]->setMoney(500);
+    //gPlayers[0]->setBet(450);
+    std::cout << "Players name is " << gPlayers[0]->getName() << std::endl;
+    std::cout << "Players money set to " << gPlayers[0]->getMoney() << std::endl;
+    std::cout << "Players bet set to " << gPlayers[0]->getBet() << std::endl;
+    
+    std::cout << "Printing player: \n" <<  *gPlayers[0] << std::endl;
+    game.getInsuranceFromPlayer(*gPlayers[0]);
+    std::cout << game.insurancePayout(gPlayers, dealer.getHand(0)) << std::endl;
+    
+    std::cout << "Printing player after insurance payout: \n" <<  *gPlayers[0] << std::endl;
 }
 
 void testMenu() {

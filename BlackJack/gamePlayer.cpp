@@ -24,14 +24,7 @@ GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED, doubl
 }
 
 void GamePlayer::init(bool inSessionFlag) {
-    //bustedFlag_ = bustedFlag;
-    //pushFlag_ = pushFlag;
-    //surrenderFlag_ = surrenderFlag;
     inSessionFlag_ = inSessionFlag;
-    //doubledFlag_ = doubledFlag;
-    //standFlag_ = standFlag;
-    //splitFlag_ = splitFlag;
-    //blackjackFlag_ = blackjackFlag;
 }
 
 void GamePlayer::setBet(double bet = 0) {
@@ -106,6 +99,7 @@ void GamePlayer::printBetReport() {
     std::cout << "BET REPORT:" << std::endl;
     std::cout << "Money @ start of round: " << getPreBetMoney() << std::endl;
     std::cout << "Bet: -$" << _bet << std::endl;
+    std::cout << "Current money: $" << getMoney() << std::endl;
     std::cout << "Insurance bet: -$" << _insuranceBet << std::endl;
     std::cout << "Resolved insurance bet: $" << resolvedInsurancePayout_ << std::endl;
     //std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;

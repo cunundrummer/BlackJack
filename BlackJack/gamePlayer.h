@@ -36,7 +36,9 @@ public:
     double getBet() { return _bet; }
     void setPreBetMoney() { preBetMoney_ = _money; }
     double getPreBetMoney() { return preBetMoney_; }
-    void setResolvedInsurancePayout(double payout = 0) { resolvedInsurancePayout_ = payout; }
+    void setResolvedInsurancePayout(double payout = 0) {
+        std::cout << "Payout is " << payout << std::endl;
+        resolvedInsurancePayout_ = payout; }
     double getResolvedInsurancePayout() { return resolvedInsurancePayout_; }
     
     double getMaxBetAllowed(double, double);

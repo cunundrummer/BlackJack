@@ -208,25 +208,30 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
     
     if (dealersHand.calculate() == BLACKJACK_FLAG) {
         for (auto gP: gPlayers) {
-            if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer and player have BJ
+            if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer and player have BJ (push w/ins.)
                 if (gP->getInsuranceFlag() == true) {
                     std::cout << gP->getName(false) << " took insurance and wins even money! (2:1)" << std::endl;
                     std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
                     gP->setResolvedInsurancePayout(gP->getBet() + gP->getInsuranceBet());
                     gP->setMoney(gP->getMoney() + gP->getBet() + gP->getInsuranceBet());
+                    gP->getHand(0).setPushFlag(true);
+                    gP->getHand(0).setBlackjackFlag(true);
                     std::cout << "AFTER $" << gP->getMoney() << std::endl;
+                    
                 }
                 else {
-                    std::cout << gP->getName(false) << " did not take insurance, therefore it's a push! (1:1)" << std::endl;
+                    std::cout << gP->getName(false) << " did not take insurance, therefore it's a push! (1:1)" << std::endl; //dealer and player have BJ (push/ not ins.)
                     std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
                     gP->setResolvedInsurancePayout(gP->getBet());
                     gP->setMoney(gP->getMoney() + gP->getBet());
                     std::cout << "AFTER $" << gP->getMoney() << std::endl;
+                    gP->getHand(0).setPushFlag(true);
+                    gP->getHand(0).setBlackjackFlag(true);
                 }
             }
             else { //dealer has BJ but player does not
                 if (gP->getInsuranceFlag() == true) {
-                    std::cout << gP->getName(false) << " took insurance, therefore " << gP->getName(false) << " loses bet, but get back insurance! (2:1)" << std::endl;
+                    std::cout << gP->getName(false) << " took insurance, therefore " << gP->getName(false) << " loses bet, but gets back insurance! (2:1)" << std::endl;
                     std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
                     gP->setResolvedInsurancePayout((gP->getInsuranceBet() * 2));
                     gP->setMoney(gP->getMoney() + (gP->getInsuranceBet() * 2));
@@ -238,7 +243,7 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
                     std::cout << "MONEY: $" << gP->getMoney() << std::endl;
                 }
             }
-        }
+        } 
         return BLACKJACK_FLAG;
     }
     else { //dealer does not have BJ
@@ -270,11 +275,11 @@ void Game::getInsuranceFromPlayers(std::vector<GamePlayer*> &gPlayers) {
     
     for (auto gp: gPlayers) {
 
-        if (gp->isInSession() == true) {
+        if (gp->isInSession() == true && gp->getMoney() >= gp->getBet() ) {
             std::cout << std::endl;
             std::cout << gp->getName(false) << ": " << std::endl;
             std::string question = "Would you like insurance? ";
-            std::cout << "Your insurance will be 1/2 of your bet. i.e.";
+            std::cout << "Your insurance will be 1/2 of your bet. i.e.\n";
             std::cout << "BET: $" << gp->getBet() << " | " << "INSURANCE BET: $" << gp->getBet() / 2 << std::endl;
             std::string answer = getYNFromQuestion(question);
             if (answer == "y") {
@@ -284,20 +289,35 @@ void Game::getInsuranceFromPlayers(std::vector<GamePlayer*> &gPlayers) {
             else
                 gp->setInsuranceFlag(false);
         }
+        else {
+            std::cout << gp->getName() << " cannot get insurance.  He/she has $" << gp->getMoney() << " and has a current bet of $" << gp->getBet() << std::endl;
+        }
     }
 }
 
 void Game::getInsuranceFromPlayer(GamePlayer &p) {
-    std::string question = p.getName(false) + ", would you like insurance? ";
-    std::string answer = getYNFromQuestion(question);
-    if (answer == "y") {
-        std::cout << p.getName(false) << " wants insurance.";
-        p.setInsuranceFlag(true);
+    if (p.isInSession() == true && p.getMoney() >= p.getBet()) {
+        std::string question = p.getName(false) + ", would you like insurance? ";
+        std::cout << "Your insurance will be 1/2 of your bet. i.e.\n";
+        std::cout << "BET: $" << p.getBet() << " | " << "INSURANCE BET: $" << p.getBet() / 2 << std::endl;
+        std::string answer = getYNFromQuestion(question);
+        if (std::tolower(answer[0]) == 'y') {
+            std::cout << p.getName(false) << " wants insurance.";
+            p.setInsuranceFlag(true);
+            p.implementInsuranceBet();
+        }
+        else {
+            std::cout << p.getName(false) << " does not want insurance.";
+            p.setInsuranceFlag(false);
+        }
     }
     else {
-        std::cout << p.getName(false) << " does not want insurance.";
-        p.setInsuranceFlag(false);
+        std::cout << p.getName() << " cannot get insurance.  He/she has $" << p.getMoney() << " and has a current bet of $" << p.getBet() << std::endl;
     }
+
+    
+    
+    
 }
 
 void Game::getBetFromPlayer(GamePlayer &p) {
