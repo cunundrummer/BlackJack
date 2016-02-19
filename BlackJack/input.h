@@ -14,9 +14,11 @@
 #include <locale>
 #include "utilities.h"
 
+enum STRING_CASE { upper, lower };
 
 char getDigitInput(const int biggest_allowable_number);
 std::string getAlphaNumInput(const int, bool);
 std::string getYNFromQuestion(std::string const &);
 double getDoubleInput(bool allowDecimal = false);
+std::string stringToUpperLower(std::string, STRING_CASE c = STRING_CASE::lower);
 #endif /* defined(__BlackJack__input__) */

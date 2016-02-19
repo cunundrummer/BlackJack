@@ -39,9 +39,8 @@ void showAllPlayers(std::vector<Player*> players, bool showOnePlayer = true, int
 int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
+    //std::cout << stringToUpperLower("uppercase", STRING_CASE::upper) <<  std::endl;
     
-    testInsurance();
-    exit(0);
     Game game; // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;
@@ -55,6 +54,7 @@ int main(int argc, const char * argv[]) {
     }
     
     std::vector<GamePlayer*> gPlayers;
+    std::cout << "DEBUG: Main: Entering player setup..." << std::endl;
     game.setUpPlayers(gPlayers);
     
     DealerPlayer dealer;
@@ -74,6 +74,7 @@ int main(int argc, const char * argv[]) {
     
     game.setupDeck(2);
     std::cout << std::endl;
+    //do {
     std::cout << "GAME BEGINS, asking players for bets..." << std::endl;
 
     game.getBetsFromAllPlayers(gPlayers);
@@ -89,10 +90,13 @@ int main(int argc, const char * argv[]) {
         }
         
         game.setDealStart(false); //game started, must be reset to false when round is over
-        int gameFlag = game.insurancePayout(gPlayers, dealersHand); //detects and pays/deducts insurance if players chose insurance
-        std::cout << "Gameflag is " << printFlag(gameFlag) << std::endl;
-
-        if (gameFlag == GAME_GOES_ON_FLAG) {
+        int gameFlag = game.insurancePayout(gPlayers, dealersHand); //1. detects and pays/deducts insurance if players chose insurance. 2.Returns blackjack for quick startover in case no game can be played.
+        std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
+        if (gameFlag == BLACKJACK) {
+            std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;
+        }
+        else { //GAME_GOES_ON
+        
           //  do { //move do to better location after implementing split
                 //build options for players still in session
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
@@ -116,14 +120,8 @@ int main(int argc, const char * argv[]) {
                 
            // } while (gPlayers[0]->isInSession() == true);
         }
-        else { //gameflag == BLACKJACK_FLAG
-            std::cout << "DEBUG: main, if*else*: Blackjackflag" << std::endl;
-            std:: cout << "DEBUG: Dealer: " << dealer << std::endl;
-            //reinit players, if players are out of session, they are out
-            
-        }
     }
-
+    //while (Find test case to continue game)
     std::cout << std::endl << std::endl << "****************************" << std::endl;
     showAllPlayers(players, true);
     std::cout << "****************************" << std::endl;

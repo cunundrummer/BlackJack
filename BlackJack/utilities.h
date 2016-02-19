@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cmath>
 
 bool stringIsAlphaNumOnly(const std::string &);
 bool is_digits(const std::string &str);
@@ -18,6 +19,7 @@ bool is_digits(const std::string &str);
 std::string convert_SizeT_toString(size_t);
 int convertStringToInt(std::string);
 int convertSizeTtoInt(size_t);
+bool isDoubleEqual(const double num1, const double num2, const double accuracy = 0.00001);
 
 std::string printFlag(int flag);
 

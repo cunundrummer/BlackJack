@@ -175,8 +175,8 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
             /*
              player will be allowed to input 0 in order to not play round.  min. bet should be five and max should be 500(or 50)
             */
-            while ( (bet = getDoubleInput(false)) > MAX_ALLOWABLE_BET_FROM_PLAYER || (bet < 5 && bet > 0) ) {
-                std::cout << "Type 0 to skip round or input a bet not more then " << MAX_ALLOWABLE_BET_FROM_PLAYER << ": ";
+            while ( (bet = getDoubleInput(false)) > MAX_ALLOWABLE_BET_FROM_PLAYER || (bet > 0 && bet < 5) ) {
+                std::cout << "Type 0 to skip round or input a bet more then $" << MIN_ALLOWABLE_BET << " and upto $" << MAX_ALLOWABLE_BET_FROM_PLAYER << ": ";
             }
             
             p[pCounter]->setBet(bet);
@@ -244,7 +244,7 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
                 }
             }
         } 
-        return BLACKJACK_FLAG;
+        return BLACKJACK_FLAG; //game will start next round after payout
     }
     else { //dealer does not have BJ
         std::cout << "Dealer does not have BlackJack..." << std::endl;

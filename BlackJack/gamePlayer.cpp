@@ -21,6 +21,9 @@ GamePlayer::GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED, doubl
     setName(name, 15);
     _name = getName(false);
     _insuranceBet = 0;
+    setBet(0);
+    setPreBetMoney();
+    setResolvedInsurancePayout();
 }
 
 void GamePlayer::init(bool inSessionFlag) {
@@ -101,7 +104,7 @@ void GamePlayer::printBetReport() {
     std::cout << "Bet: -$" << _bet << std::endl;
     std::cout << "Current money: $" << getMoney() << std::endl;
     std::cout << "Insurance bet: -$" << _insuranceBet << std::endl;
-    std::cout << "Resolved insurance bet: $" << resolvedInsurancePayout_ << std::endl;
+    std::cout << "Resolved insurance bet: $" << getResolvedInsurancePayout() << std::endl;
     //std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;
     std::cout << "Total: $" << _money << std::endl;
     std::cout << "END OF BET REPORT" << std::endl << std::endl;

@@ -57,7 +57,7 @@ std::string getYNFromQuestion(std::string const &question) {
     std::cout << question << "y or n: " << std::endl;
     std::string answer = "";
 
-    while (!getline(std::cin, answer) || answer.empty() || (answer != "y" && answer != "n")) { //check for capitals and convert?
+    while (!getline(std::cin, answer) || answer.empty() || answer.length() > 1 || (stringToUpperLower(answer) != "y" && stringToUpperLower(answer) != "n")) { //check for capitals and convert?
         
         std::cout << "You must input y or n only! " << std::endl;
         std::cout << question << "y or n: " << std::endl;
@@ -67,16 +67,29 @@ std::string getYNFromQuestion(std::string const &question) {
     return answer;
 }
 
+std::string stringToUpperLower(std::string str, STRING_CASE c) {
+    
+    for (int i = 0; i < str.length(); i++) {
+        if (c == STRING_CASE::lower) {
+            str[i] = std::tolower(str[i]);
+        }
+        else {
+            str[i] = std::toupper(str[i]);
+        }
+    }
+    return str;
+}
+
 double getDoubleInput(bool allowDecimal) {
     
     std::string input;
-    while ( !(getline(std::cin, input) )) {
+    
+    while ( !(getline(std::cin, input) ) || is_digits(input) == false) {
         
-        std::cout << "" <<  std::endl;
+        std::cout << "Please enter numbers only!" <<  std::endl;
         
     }
     
-
     return atof(input.c_str());
 }
 

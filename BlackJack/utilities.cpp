@@ -66,3 +66,7 @@ bool is_digits(const std::string &str)
 {
     return std::all_of(str.begin(), str.end(), ::isdigit); // C++11
 }
+
+bool isDoubleEqual(const double num1, const double num2, const double accuracy){
+    return std::abs(num1 - num2) < accuracy; //must #include <cmath>,otherwise ambiguouty error
+}
