@@ -125,6 +125,11 @@ std::string Player::getName(bool showErrMsg) {
         return _name;
 }
 
+/**
+ Gets hand at index
+ @param index
+ @return hand(index)
+ */
 Hand& Player::getHand(const int index) {
     if (hands_.empty()) {
         Hand hand;

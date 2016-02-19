@@ -22,14 +22,10 @@
 #include "menu.h"
 #include "player.h"
 
+const int GAME_GOES_ON_FLAG = 0;
+
 int Player::_playerCount = 0;
 //int Player::_player2Count = 0;
-
-//const int MIN_AMOUNT_OF_MONEY = 5;
-//const int BLACKJACK_FLAG = 21;
-const int GAME_GOES_ON_FLAG = 0;
-const int NEXT_GAME = 99;
-//const int ASK_FOR_INSURANCE_FLAG = 1;
 
 void testMenu();
 void testPlayer();
@@ -39,7 +35,6 @@ void showAllPlayers(std::vector<Player*> players, bool showOnePlayer = true, int
 int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
-    //std::cout << stringToUpperLower("uppercase", STRING_CASE::upper) <<  std::endl;
     
     Game game; // default is demo mode(false)
 
@@ -74,54 +69,81 @@ int main(int argc, const char * argv[]) {
     
     game.setupDeck(2);
     std::cout << std::endl;
-    //do {
-    std::cout << "GAME BEGINS, asking players for bets..." << std::endl;
-
-    game.getBetsFromAllPlayers(gPlayers);
     
-    if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked
-        game.dealCardToAllPlayers(players, true);
-        game.dealCardToAllPlayers(players, true);
+    do {
+        std::cout << "GAME BEGINS, asking players for bets..." << std::endl;
 
+        game.getBetsFromAllPlayers(gPlayers);
+    
+        if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked    /////Important, test if this is changing during the game
+            game.dealCardToAllPlayers(players, true);
+            game.dealCardToAllPlayers(players, true);
+        }
+        else {
+            game.dealCardToAllPlayers(players, true);
+        }
+        
         //phase1 is the start of the game; with checking dealers hand, and insurance phase
         Hand dealersHand = dealer.getHand(0);
         if (game.isInsuranceRequired(gPlayers, dealersHand)) {
             game.getInsuranceFromPlayers(gPlayers);
         }
         
+        //        gPlayers[0]->removeCardsFromHand(2, 0); //temporary to test hands
+        //        gPlayers[0]->addCardToHandFromDeck(Card(10, spades));//temp to test hands
+        //        gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test hands
+        
         game.setDealStart(false); //game started, must be reset to false when round is over
         int gameFlag = game.insurancePayout(gPlayers, dealersHand); //1. detects and pays/deducts insurance if players chose insurance. 2.Returns blackjack for quick startover in case no game can be played.
         std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
         if (gameFlag == BLACKJACK) {
             std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;
+            
+            game.getQuitAnswer();
+            
         }
         else { //GAME_GOES_ON
-        
-          //  do { //move do to better location after implementing split
+            //start for loop for all players here
+            if (gPlayers[0]->isInSession()) {
                 //build options for players still in session
-                std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;
+                std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;  //maybe check if player has bj first
                 std::cout << *gPlayers[0] << std::endl;
             
-                //gPlayers[0]->removeCardsFromHand(2, 0); //temp to test splits
-                //gPlayers[0]->addCardToHandFromDeck(Card(5, spades));//temp to test splits
-                //gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test splits
-                Hand h(gPlayers[0]->getHand(0));
+                Hand h(gPlayers[0]->getHand());
                 std::cout << h << std::endl;
                 int choice = gPlayers[0]->buildPlayOptionForPlayerAndReturnChoice();
                 //playout choice selection
                 game.resolveChoice(choice, *gPlayers[0]);
             
                 std::cout << gPlayers[0]->getName() << " 's session: ";
-                (gPlayers[0]->isInSession())?  std::cout << "TRUE" << std::endl :  std::cout << "FALSE"  << std::endl;
+                (gPlayers[0]->isInSession()) ?  std::cout << "TRUE" << std::endl :  std::cout << "FALSE"  << std::endl;
                 std::cout << "Player has " << gPlayers[0]->getHands().size() << " hands." << std::endl;
-            
-                std::cout << "@END OF DO WHILE LOOP" << std::endl;
-                //start from here next programming session!!!!
-                
-           // } while (gPlayers[0]->isInSession() == true);
+                //compare hands here
+                switch (game.comparePlayerHands(gPlayers[0]->getHand(), dealer.getHand())) {
+                    case 0: //push
+                        std::cout << "PUSH!!!" << std::endl;
+                        gPlayers[0]->setMoney(gPlayers[0]->getMoney() + gPlayers[0]->getBet());
+                        break;
+                    case 1: //pay player
+                        std::cout << gPlayers[0]->getName() << " 's hand is >" << std::endl;
+                        gPlayers[0]->setMoney(gPlayers[0]->getMoney() + (gPlayers[0]->getBet() * 2));
+                        break;
+                    case 2:  //remove bet from player
+                        std::cout << dealer.getName() << " 's hand is >" << std::endl;
+                        //money already deducted with bet
+                        break;
+                    default:
+                        std::cout << "An oddity occurred, mostly and error." << std::endl;
+                        break;
+                }
+            }
+            //remove cards from hand, also in a loop in case of splits
+            //reset player sessions
         }
-    }
-    //while (Find test case to continue game)
+            
+        game.getQuitAnswer();
+    } while (game.getQuitSentinal() == false);
+        
     std::cout << std::endl << std::endl << "****************************" << std::endl;
     showAllPlayers(players, true);
     std::cout << "****************************" << std::endl;

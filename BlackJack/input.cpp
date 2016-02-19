@@ -47,8 +47,6 @@ char getDigitInput(const int biggest_allowable_number) {
     return input;
 }
 
-
-
 /**
  *@abstract Asks a question and returns a Y or N only
  **/
