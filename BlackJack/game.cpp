@@ -496,20 +496,28 @@ std::string Game::displayResult(const int resultOfHand)  {
     @return 2: if 1st hand is < 2nd hand.
     @return 0: if 1st hand is = 2nd hand.
  */
-int Game::comparePlayerHands(Hand hand1, Hand hand2) {
+int Game::comparePlayerHands(Hand playersHand, Hand DealersHand) {
     const int HAND1_IS_GREATER = 1;
     const int HAND2_IS_GREATER = 2;
+    const int HAND1_IS_BUSTED = 3;
     const int HANDS_ARE_EQUAL = 0;
+    const int TWENTY_ONE = 21;
+    int h1 = playersHand.calculate();
+    int h2 = DealersHand.calculate();
     
-    int h1 = hand1.calculate();
-    int h2 = hand2.calculate();
-    if (h1 > h2) {
+    if (h1 > TWENTY_ONE  ) {
+        return HAND1_IS_BUSTED;
+    }
+    else if (h1 > h2) {
         return HAND1_IS_GREATER;
+    }
+    else if (h1 == h2) {
+        return HANDS_ARE_EQUAL;
     }
     else if (h1 < h2) {
         return HAND2_IS_GREATER;
     }
-    else { //hand1 == hand2
-        return HANDS_ARE_EQUAL;
+    else {
+        return TWENTY_ONE;
     }
 }

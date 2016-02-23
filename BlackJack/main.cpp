@@ -125,22 +125,35 @@ int main(int argc, const char * argv[]) {
                         gPlayers[0]->setMoney(gPlayers[0]->getMoney() + gPlayers[0]->getBet());
                         break;
                     case 1: //pay player
-                        std::cout << gPlayers[0]->getName() << " 's hand is >" << std::endl;
+                        std::cout << gPlayers[0]->getName() << " 's hand is > then dealer" << std::endl;
                         gPlayers[0]->setMoney(gPlayers[0]->getMoney() + (gPlayers[0]->getBet() * 2));
                         break;
                     case 2:  //remove bet from player
                         std::cout << dealer.getName() << " 's hand is >" << std::endl;
+                        std::cout << "DEBUG: MAIN: swCASE 2: money is $" << gPlayers[0]->getMoney() << std::endl;
                         //money already deducted with bet
                         break;
+                    case 3:
+                        std::cout << "Player busted!" << std::endl;
+                        std::cout << "DEBUG: MAIN: swCASE 3: money is $" << gPlayers[0]->getMoney() << std::endl;
+                        //money already deducted with bet
+                        break;
+                    case 21:
+                        std::cout << "Blackjack!!!, paying at 3:2!" << std::endl;
+                        gPlayers[0]->setMoney(gPlayers[0]->getMoney() + (gPlayers[0]->getMoney() * 2.5));
                     default:
                         std::cout << "An oddity occurred, mostly and error." << std::endl;
                         break;
                 }
             }
-            //remove cards from hand, also in a loop in case of splits
             //reset player sessions
         }
-            
+        for (int i = 0; i < gPlayers[0]->getHands().size(); i++)  { //remove cards from hand, also in a loop in case of splits
+            //gPlayers[0]->removeCardsFromHand(2, i); //temporary to test hands
+            gPlayers[0]->getHand(i).clearHand();
+            gPlayers[0]->getHands().erase(gPlayers[0]->getHands().begin(), gPlayers[0]->getHands().end());
+        }
+    
         game.getQuitAnswer();
     } while (game.getQuitSentinal() == false);
         

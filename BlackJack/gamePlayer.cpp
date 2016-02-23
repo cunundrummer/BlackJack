@@ -103,10 +103,10 @@ void GamePlayer::printBetReport() {
     std::cout << "Money @ start of round: " << getPreBetMoney() << std::endl;
     std::cout << "Bet: -$" << _bet << std::endl;
     std::cout << "Current money: $" << getMoney() << std::endl;
-    std::cout << "Insurance bet: -$" << _insuranceBet << std::endl;
+    std::cout << "Insurance bet: -$" << getInsuranceBet() << std::endl;
     std::cout << "Resolved insurance bet: $" << getResolvedInsurancePayout() << std::endl;
     //std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;
-    std::cout << "Total: $" << _money << std::endl;
+    std::cout << "Total: $" << getMoney() << std::endl;
     std::cout << "END OF BET REPORT" << std::endl << std::endl;
 }
 

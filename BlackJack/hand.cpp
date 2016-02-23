@@ -101,7 +101,6 @@ int Hand::calculate() {
             if (total > BLACKJACK)  {
                 total -= 10;
             }
-            
         }
         return total;
     }
@@ -113,6 +112,6 @@ Card Hand::getIndividualCard(int index) {
 }
 
 Hand& Hand::clearHand() {
-    _cardPile.empty();
+    _cardPile.erase(_cardPile.begin(), _cardPile.end());
     return *this;
 }
