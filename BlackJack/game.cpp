@@ -191,7 +191,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
             p[pCounter]->setMoney(p[pCounter]->getMoney() - bet);
         }
         else {
-            std::cout << p[pCounter]->getName(false) << " cannot bet less then min bet and is out." << std::endl;
+            std::cout << p[pCounter]->getName(false) << "is not in session and therefore cannot participate." << std::endl;
             p[pCounter]->setInSession(false);
         }
     }
@@ -521,3 +521,34 @@ int Game::comparePlayerHands(Hand playersHand, Hand DealersHand) {
         return TWENTY_ONE;
     }
 }
+
+/**
+    Prepares players for new round.  Checks players money to see if player can be in game, resests status based on sessions. Also removes all hands.
+*/
+void Game::preparePlayersForNewRound(std::vector<Player*> gPlayer) {
+    size_t index = 0;
+   
+    for (int i = 0; i < gPlayer[0]->getHands().size(); i++)  { //remove cards from hand, also in a loop in case of splits
+        //gPlayers[0]->removeCardsFromHand(2, i); //temporary to test hands
+        //gPlayer[0]->getHand(i).clearHand();
+       // gPlayer[0]->getHands().erase(gPlayer[0]->getHands().begin(), gPlayer[0]->getHands().end());
+    }
+    
+    for (auto p: gPlayer) {
+        if (p->isInSession() == false) {
+            if (p->getMoney() < 5) {
+                std::cout << p->getName() << " does not have enough money to participate. Deleting player..." << std::endl;
+                std::cout << "DEBUG: GAME: preparePlayersForNewRound: Before player deletion, player count is " << gPlayer.size() << std::endl;
+                std::vector<Player*>::iterator it = ( gPlayer.begin() + index );
+                gPlayer.erase(it);
+                std::cout << "Player deleted, player count is : " << gPlayer.size() << std::endl;
+            }
+        }
+        else {
+            std::cout << p->getName() << " is all good, continuing game." << std::endl;
+            p->getHands().erase(p->getHands().begin(), p->getHands().end());
+            p->setInSession(true);
+        }
+    }
+}
+

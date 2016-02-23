@@ -59,7 +59,7 @@ int main(int argc, const char * argv[]) {
     std::vector<Player*> players(gPlayers.begin(), gPlayers.end());
     players.push_back(&dealer);
     std::cout << "DEBUG: Testing all players including dealer..." << std::endl;
-    //showAllPlayers(players);
+    
     std::cout << "END OF DEBUG: Testing all players including dealer..." << std::endl;
     ///////////////////////////////////////////////////////////////////////////////////////////
     
@@ -146,20 +146,19 @@ int main(int argc, const char * argv[]) {
                         break;
                 }
             }
-            //reset player sessions
+            
         }
-        for (int i = 0; i < gPlayers[0]->getHands().size(); i++)  { //remove cards from hand, also in a loop in case of splits
-            //gPlayers[0]->removeCardsFromHand(2, i); //temporary to test hands
-            gPlayers[0]->getHand(i).clearHand();
-            gPlayers[0]->getHands().erase(gPlayers[0]->getHands().begin(), gPlayers[0]->getHands().end());
-        }
-    
+        
+        game.preparePlayersForNewRound(players);
+        game.setDealStart(true);
         game.getQuitAnswer();
     } while (game.getQuitSentinal() == false);
         
     std::cout << std::endl << std::endl << "****************************" << std::endl;
     showAllPlayers(players, true);
     std::cout << "****************************" << std::endl;
+    
+    showAllPlayers(players, false);
     
     return 0;
 }
@@ -186,6 +185,15 @@ int calculatePlayerResult(GamePlayer& g) {
     //return 0;
 }
 
+/**
+    Shows player information.
+ 
+    @param players players is All player types
+ 
+    @param showOnePlayer Option to display all players or just one with optional index. Default is true.
+
+    @param index if showing just one players, show player at index. Default is 0.
+*/
 void showAllPlayers(std::vector<Player*> players, bool showOnePlayer, int index) {
     
     if (showOnePlayer == true) {

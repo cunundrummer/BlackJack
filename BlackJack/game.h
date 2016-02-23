@@ -88,6 +88,7 @@ public:
     int calculatePlayerResult(GamePlayer& g, int index = 0);
     int comparePlayerHands(Hand, Hand);
     
+    void preparePlayersForNewRound(std::vector<Player*>);
     void printGame(std::vector<GamePlayer*> &, DealerPlayer) const;
     bool getQuitAnswer();
     void showDebug();
