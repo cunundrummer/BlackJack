@@ -202,7 +202,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
 }
 
 int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
-    
+    //Player shouldn't be asked for insurance if he has BJ because it is unnessacary according to most forums/wikipedia
     const int BLACKJACK_FLAG = 21;
     const int GAME_GOES_ON_FLAG = 0;
     
@@ -523,8 +523,8 @@ int Game::comparePlayerHands(Hand playersHand, Hand DealersHand) {
 }
 
 /**
-    Prepares players for new round.  Checks players money to see if player can be in game, resests status based on sessions. Also removes all hands including dealers hand.
-*/
+ Prepares players for new round.  Checks players money to see if player can be in game, resests status based on sessions. Also removes all hands including dealers hand.
+ */
 void Game::preparePlayersForNewRound(std::vector<GamePlayer*>& gPlayer, DealerPlayer& dealer) {
     
     for (auto p: gPlayer) {
@@ -557,3 +557,58 @@ void Game::preparePlayersForNewRound(std::vector<GamePlayer*>& gPlayer, DealerPl
     dealer.getHands().erase(dealer.getHands().begin(), dealer.getHands().end());
 }
 
+/**
+ Payouts dependant on type of bet
+ Player wasn't asked for insurance if he had BJ because it is unnessacary according to most forums/wikipedia
+ */
+void payout(PAYOUT_TYPE payoutType, GamePlayer gPlayer) {
+    //try making payouts outside of this method, this method should probably just set appropriate flags
+    std::string name = gPlayer.getName();
+    switch (payoutType) {
+        case INSURANCE_PUSH:  //Dealer and player have BJ
+            std::cout << name << " took insurance and has a 21 as does the dealer. Even money (2:1 payout)" << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2));
+            gPlayer.getHand().setPushFlag(true);
+            gPlayer.getHand().setBlackjackFlag(true);
+            gPlayer.setInsuranceBet(0);
+            break;
+        case NO_INSURANCE_PUSH: PUSH:  //Dealer and player have BJ, player did not take insurance
+            std::cout << name << " did not take insurance and has 21 as does the dealer. (1:1 payout)" << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet becaue of push
+            gPlayer.getHand().setPushFlag(true);
+            break;
+        case INSURANCE_BJ: //dealer has BJ and player does not
+            std::cout << name << " took insurance and doesn't have BJ but dealer does. Lose bet but get back insurance. (2:1 payout)" << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2));
+            gPlayer.getHand().setBlackjackFlag(true);
+            gPlayer.setInsuranceBet(0);
+        case NO_INSURANCE_BJ: //dealer has BJ but player does not
+            std::cout << name << " did not take insurance and doesn'y have BJ, but dealer does. Lose bet." << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getBet());
+            gPlayer.getHand().setSimpleLossFlag(true);
+            break;
+        case INSURANCE_NO_BJ://dealer doesn't have blackjack, neither does player, player has insurance
+            std::cout << name << " took insurance, but no-one has BJ (lose insurance bet)" << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getInsuranceBet());
+            //set flag?
+            gPlayer.setInsuranceBet(0);
+            break;
+        case BLACK_JACK: //player has BJ
+            std::cout << name << " has BJ. Dealer does not. (3:2 payout)" << std::endl;
+            gPlayer.getHand().setBlackjackFlag(true);
+            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet()*2));
+            break;
+        case LOSE:
+            std::cout << name << " did not win. Lose bet." << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getBet());
+            gPlayer.getHand().setSimpleLossFlag(true);
+            break;
+        case WIN:
+            std::cout << name << " wins. Win back bet. (2:1 payout)" << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet());
+            gPlayer.getHand().setSimpleWinFlag(true);
+            break;
+        default:
+            break;
+    }
+}

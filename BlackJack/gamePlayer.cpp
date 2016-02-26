@@ -64,7 +64,10 @@ void GamePlayer::print() {
     printBetReport();
     displayHand();
 }
-
+/** 
+ Implements the insurance bet as long as the player has more money then the required minimum bet. Also sets the insuranceBetIsSet flag accordingly.
+ At the moment, this method also alters the money amount.
+*/
 void GamePlayer::implementInsuranceBet() {
     if (_insuranceBetIsSet == false) {
         if (getMoney() >= 5) {

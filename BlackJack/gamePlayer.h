@@ -52,6 +52,7 @@ public:
     bool getInsuranceFlag() { return _wantsInsuranceFlag; }
     
     void implementInsuranceBet();
+    void setInsuranceBet(double value = 0) { _insuranceBet = value; }
     double getInsuranceBet() { return _insuranceBet; }
     void setInsuraceIsSet(bool tOrf) { _insuranceBetIsSet = tOrf; }
     bool getInsuranceIsSet() { return _insuranceBetIsSet; }

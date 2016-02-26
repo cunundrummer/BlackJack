@@ -21,6 +21,20 @@
 
 enum PLAY_RESULTS {BUSTED, BLACKJACK, GAME_GOES_ON};
 
+enum PAYOUT_TYPE {
+    INSURANCE_PUSH,     //dealer and player have BJ (push w/ insurance.)
+    NO_INSURANCE_PUSH,  //dealer and player have BJ (push w/o insurance.)
+    INSURANCE_BJ,       //dealer has BJ but player does not w/insurance
+    NO_INSURANCE_BJ,    //dealer has BJ but player does not w/o insurance
+    INSURANCE_NO_BJ,    //dealer doesn't have blackjack, neither does player, player has insurance
+    NO_INSURANCE_NO_BJ, //dealer doesn't have blackjack, neither does player, player doesn't have insurance
+    BLACK_JACK,
+    TWENTY_ONE,
+    LOSE,
+    WIN,
+    PUSH
+};
+
 
 class Game {
 private:
@@ -83,7 +97,9 @@ public:
     int resolveChoice(int choice, GamePlayer& player);
     int calculatePlayerResult(GamePlayer& g, int index = 0);
     int comparePlayerHands(Hand, Hand);
-    
+
+    void payout(PAYOUT_TYPE, GamePlayer);
+
     void preparePlayersForNewRound(std::vector<GamePlayer*>&, DealerPlayer&);
     void printGame(std::vector<GamePlayer*> &, DealerPlayer) const;
     bool getQuitAnswer();

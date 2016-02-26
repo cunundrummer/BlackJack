@@ -69,7 +69,7 @@ int main(int argc, const char * argv[]) {
     game.setupDeck(2);
     std::cout << std::endl;
     
-    do {
+    //do {
         std::cout << "GAME BEGINS, asking players for bets..." << std::endl;
 
         game.getBetsFromAllPlayers(gPlayers);
@@ -83,6 +83,11 @@ int main(int argc, const char * argv[]) {
         }
         
         Hand dealersHand = dealer.getHand();
+    dealersHand.removeLastCard();
+    dealersHand.removeLastCard();
+    dealersHand.addCard(1, spades);
+    dealersHand.addCard(5, clubs);
+
         if (game.isInsuranceRequired(gPlayers, dealersHand)) {
             game.getInsuranceFromPlayers(gPlayers);
         }
@@ -90,7 +95,7 @@ int main(int argc, const char * argv[]) {
         //        gPlayers[0]->removeCardsFromHand(2, 0); //temporary to test hands
         //        gPlayers[0]->addCardToHandFromDeck(Card(10, spades));//temp to test hands
         //        gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test hands
-        
+    
         game.setDealStart(false); //game started, must be reset to false when round is over
         int gameFlag = game.insurancePayout(gPlayers, dealersHand); //1. detects and pays/deducts insurance if players chose insurance. 2.Returns blackjack for quick startover in case no game can be played.
         std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
@@ -99,7 +104,7 @@ int main(int argc, const char * argv[]) {
             
             game.getQuitAnswer();
             
-        }
+        }/*
         else { //GAME_GOES_ON
             //start for loop for all players here
             if (gPlayers[0]->isInSession()) {
@@ -160,10 +165,9 @@ int main(int argc, const char * argv[]) {
     std::cout << *gPlayers[0] << std::endl;
     std::cout << "END OF DEBUG MAIN" << std::endl;
     std::cout << "****************************" << std::endl;
-    
+    */
     showAllPlayers(players, false);
-    
-    return 0;
+        return 0;
 }
 
 int calculatePlayerResult(GamePlayer& g) {

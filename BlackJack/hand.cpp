@@ -12,7 +12,7 @@ Hand::Hand() {
     init();
 }
 
-void Hand::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool doubledFlag, bool standFlag, bool splitFlag, bool blackjackFlag) {
+void Hand::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool doubledFlag, bool standFlag, bool splitFlag, bool blackjackFlag, bool simpleLossFlag, bool simpleWinFlag) {
     bustedFlag_ = bustedFlag;
     pushFlag_ = pushFlag;
     surrenderFlag_ = surrenderFlag;
@@ -20,6 +20,8 @@ void Hand::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool doubled
     standFlag_ = standFlag;
     splitFlag_ = splitFlag;
     blackjackFlag_ = blackjackFlag;
+    simpleLossFlag_ = simpleLossFlag;
+    simpleWinFlag_ = simpleWinFlag;
 }
 
 std::ostream& operator<< (std::ostream &os, Hand &h) {
@@ -45,7 +47,8 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
     "doubleFlag: " << "[" << h.doubledFlag_ << "] " <<
     "standFlag: " << "[" << h.standFlag_ << "] " <<
     "splitFlag: " << "[" << h.splitFlag_ << "] " <<
-    "blackJackFlag"  << "[" << h.blackjackFlag_ << "] " << std::endl;;
+    "blackJackFlag"  << "[" << h.blackjackFlag_ << "] " <<
+    "simpleLossFlag" << "[" << h.simpleLossFlag_ << "]" << std::endl;
     
     return os;
 }
