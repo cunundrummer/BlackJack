@@ -47,8 +47,6 @@ public:
     std::string generateName(std::string); //private
     Game(bool isDemoMode = true, int numPlayers = 5) : _isDemoMode(isDemoMode), _numPlayers(numPlayers) {};
     
-    //void retrievePlayers(std::vector<Player*> &p) {  p = _players; }
-    
     std::string getGameTitle()      { return _GAME_TITLE; }
     int getMinDecksToUse()          { return _MIN_DECKS_TO_USE; }
     int getMaxDecksToUse()          { return _MAX_DECKS_TO_USE; }
@@ -58,7 +56,6 @@ public:
     
     void setIsDemoMode(bool);
     void setQuitSentinel(bool sentinel = false) { _quitSentinel = sentinel; }
-    
     
     int getMaxCharactersForName()   { return _MAX_CHARACTERS_FOR_NAME; }
     void setUpPlayers(std::vector<GamePlayer*> &);
@@ -82,18 +79,15 @@ public:
     void getInsuranceFromPlayer(GamePlayer &);
     
     int insurancePayout(std::vector<GamePlayer*> &players, const Hand dealersHand); // returns 0 for game goes on; 1 ask for insurance; 2 dealer has blackjack
-    //int buildPlayOptionForPlayerAndReturnChoice(GamePlayer &gPlayer);  //moved to gamePlayer
     
     int resolveChoice(int choice, GamePlayer& player);
     int calculatePlayerResult(GamePlayer& g, int index = 0);
     int comparePlayerHands(Hand, Hand);
     
-    void preparePlayersForNewRound(std::vector<Player*>);
+    void preparePlayersForNewRound(std::vector<GamePlayer*>&, DealerPlayer&);
     void printGame(std::vector<GamePlayer*> &, DealerPlayer) const;
     bool getQuitAnswer();
     void showDebug();
-    //~Game() { delete _dealer; }
-
 };
 
 #endif /* defined(__BlackJack__game__) */

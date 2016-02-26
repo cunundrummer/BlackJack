@@ -361,13 +361,13 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
     Card dealersUpCard = dealersHand.getIndividualCard(0);      //LEARN HOW TO PROGRAM WITH CONSTS!!!
     Card dealersHoleCard = dealersHand.getIndividualCard(1);   //LEARN HOW TO PROGRAM WITH CONSTS!!!
     
-    const int TEN_CARD = 10;
+    //removed because of rule clarification const int TEN_CARD = 10;
     const int ACE = 1;
     
-    std::cout << "Dealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
+    std::cout << "DEBUG: Game::isInsuranceRequired: Dealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
     std::cout << "Dealers hole card is " << dealersHoleCard << ". And its value is " << dealersHoleCard.getCardValue() << std::endl;
     
-    if (dealersUpCard.getCardValue() == TEN_CARD || dealersUpCard.getCardValue() == ACE)  { //if dealer has 10 or ACE as UP card
+    if (dealersUpCard.getCardValue() == ACE)  { //if dealer has ACE as UP card
         std::cout << "Dealer might have a BlackJack! Dealer will ask for insurance." << std::endl;
         askForInsurance = true;
     }
@@ -523,25 +523,27 @@ int Game::comparePlayerHands(Hand playersHand, Hand DealersHand) {
 }
 
 /**
-    Prepares players for new round.  Checks players money to see if player can be in game, resests status based on sessions. Also removes all hands.
+    Prepares players for new round.  Checks players money to see if player can be in game, resests status based on sessions. Also removes all hands including dealers hand.
 */
-void Game::preparePlayersForNewRound(std::vector<Player*> gPlayer) {
-    size_t index = 0;
-   
-    for (int i = 0; i < gPlayer[0]->getHands().size(); i++)  { //remove cards from hand, also in a loop in case of splits
-        //gPlayers[0]->removeCardsFromHand(2, i); //temporary to test hands
-        //gPlayer[0]->getHand(i).clearHand();
-       // gPlayer[0]->getHands().erase(gPlayer[0]->getHands().begin(), gPlayer[0]->getHands().end());
-    }
+void Game::preparePlayersForNewRound(std::vector<GamePlayer*>& gPlayer, DealerPlayer& dealer) {
     
     for (auto p: gPlayer) {
+        p->setInsuranceFlag(false);
+        p->setPreBetMoney();
+        p->setResolvedInsurancePayout(0);
+        
         if (p->isInSession() == false) {
             if (p->getMoney() < 5) {
                 std::cout << p->getName() << " does not have enough money to participate. Deleting player..." << std::endl;
                 std::cout << "DEBUG: GAME: preparePlayersForNewRound: Before player deletion, player count is " << gPlayer.size() << std::endl;
-                std::vector<Player*>::iterator it = ( gPlayer.begin() + index );
-                gPlayer.erase(it);
+                //std::vector<Player>::iterator it = ( gPlayer.begin() + index );
+                
                 std::cout << "Player deleted, player count is : " << gPlayer.size() << std::endl;
+            }
+            else {
+                std::cout << p->getName() << " has enough money to continue." << std::endl;
+                p->getHands().erase(p->getHands().begin(), p->getHands().end());
+                p->setInSession(true);
             }
         }
         else {
@@ -549,6 +551,9 @@ void Game::preparePlayersForNewRound(std::vector<Player*> gPlayer) {
             p->getHands().erase(p->getHands().begin(), p->getHands().end());
             p->setInSession(true);
         }
+
     }
+
+    dealer.getHands().erase(dealer.getHands().begin(), dealer.getHands().end());
 }
 

@@ -25,7 +25,6 @@
 const int GAME_GOES_ON_FLAG = 0;
 
 int Player::_playerCount = 0;
-//int Player::_player2Count = 0;
 
 void testMenu();
 void testPlayer();
@@ -75,7 +74,7 @@ int main(int argc, const char * argv[]) {
 
         game.getBetsFromAllPlayers(gPlayers);
     
-        if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked    /////Important, test if this is changing during the game
+        if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked
             game.dealCardToAllPlayers(players, true);
             game.dealCardToAllPlayers(players, true);
         }
@@ -83,8 +82,7 @@ int main(int argc, const char * argv[]) {
             game.dealCardToAllPlayers(players, true);
         }
         
-        //phase1 is the start of the game; with checking dealers hand, and insurance phase
-        Hand dealersHand = dealer.getHand(0);
+        Hand dealersHand = dealer.getHand();
         if (game.isInsuranceRequired(gPlayers, dealersHand)) {
             game.getInsuranceFromPlayers(gPlayers);
         }
@@ -149,13 +147,18 @@ int main(int argc, const char * argv[]) {
             
         }
         
-        game.preparePlayersForNewRound(players);
+        //players = game.preparePlayersForNewRound(players);
+        game.preparePlayersForNewRound(gPlayers, dealer);
         game.setDealStart(true);
         game.getQuitAnswer();
     } while (game.getQuitSentinal() == false);
         
     std::cout << std::endl << std::endl << "****************************" << std::endl;
-    showAllPlayers(players, true);
+    std::cout << "DEBUG: MAIN: showing all players..." << std::endl;
+    showAllPlayers(players);
+    std::cout << "DEBUG: MAIN: showing player1" << std::endl;
+    std::cout << *gPlayers[0] << std::endl;
+    std::cout << "END OF DEBUG MAIN" << std::endl;
     std::cout << "****************************" << std::endl;
     
     showAllPlayers(players, false);
