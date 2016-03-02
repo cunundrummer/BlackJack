@@ -56,7 +56,7 @@ void Game::setUpPlayers(std::vector<GamePlayer*> &gPlayers){
                 std::string compName = generateName("COMP");
                 gPlayers.push_back(new GamePlayer(compName, _MAX_CHARACTERS_FOR_NAME, 500, true));
             }
-        } while (GamePlayer::_playerCount < _MAX_GAMEPLAYERS_ALLOWED);
+        } while (GamePlayer::_playerCount < _numPlayers);
     }
     std::cout << "DEBUG: GAME::setUpPlayers" << std::endl;
     std::cout << "After adding players in setUpPlayers(), player count is " << Player::_playerCount <<std::endl;
@@ -72,7 +72,7 @@ void Game::setIsDemoMode(bool val) {
 }
 
 void Game::setNumPlayers(int numPlayers = 5) {
-    //_numPlayers = players.size();
+    _numPlayers = numPlayers;
 }
 
 /*!
@@ -188,7 +188,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
             }
             std::cout << p[pCounter]->getName(false) << " before bet had " << p[pCounter]->getMoney() << " and after bet has ";
             std::cout << p[pCounter]->getMoney() << " - " << p[pCounter]->getBet() << " = " << p[pCounter]->getMoney() - p[pCounter]->getBet() << std::endl;
-            p[pCounter]->setMoney(p[pCounter]->getMoney() - bet);
+            p[pCounter]->setMoney(p[pCounter]->getMoney() - p[pCounter]->getBet());
         }
         else {
             std::cout << p[pCounter]->getName(false) << "is not in session and therefore cannot participate." << std::endl;
@@ -199,75 +199,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
     /* this method probably does too much.  It probably shouldn't change the session but return an error sentinel per player?
      May change getting all players bets to getting individual players bets, like a loop in main or from a fuction in main
      */
-}
-
-int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
-    //Player shouldn't be asked for insurance if he has BJ because it is unnessacary according to most forums/wikipedia
-    const int BLACKJACK_FLAG = 21;
-    const int GAME_GOES_ON_FLAG = 0;
-    
-    if (dealersHand.calculate() == BLACKJACK_FLAG) {
-        for (auto gP: gPlayers) {
-            if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer and player have BJ (push w/ins.)
-                if (gP->getInsuranceFlag() == true) {
-                    std::cout << gP->getName(false) << " took insurance and wins even money! (2:1)" << std::endl;
-                    std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
-                    gP->setResolvedInsurancePayout(gP->getBet() + gP->getInsuranceBet());
-                    gP->setMoney(gP->getMoney() + gP->getBet() + gP->getInsuranceBet());
-                    gP->getHand(0).setPushFlag(true);
-                    gP->getHand(0).setBlackjackFlag(true);
-                    std::cout << "AFTER $" << gP->getMoney() << std::endl;
-                    
-                }
-                else {
-                    std::cout << gP->getName(false) << " did not take insurance, therefore it's a push! (1:1)" << std::endl; //dealer and player have BJ (push/ not ins.)
-                    std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
-                    gP->setResolvedInsurancePayout(gP->getBet());
-                    gP->setMoney(gP->getMoney() + gP->getBet());
-                    std::cout << "AFTER $" << gP->getMoney() << std::endl;
-                    gP->getHand(0).setPushFlag(true);
-                    gP->getHand(0).setBlackjackFlag(true);
-                }
-            }
-            else { //dealer has BJ but player does not
-                if (gP->getInsuranceFlag() == true) {
-                    std::cout << gP->getName(false) << " took insurance, therefore " << gP->getName(false) << " loses bet, but gets back insurance! (2:1)" << std::endl;
-                    std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
-                    gP->setResolvedInsurancePayout((gP->getInsuranceBet() * 2));
-                    gP->setMoney(gP->getMoney() + (gP->getInsuranceBet() * 2));
-                    std::cout << "AFTER $" << gP->getMoney() << std::endl;
-                }
-                else {
-                    std::cout << gP->getName(false) << " did not take insurance, and loses bet as a result." << std::endl;
-                    gP->setResolvedInsurancePayout(0);
-                    std::cout << "MONEY: $" << gP->getMoney() << std::endl;
-                }
-            }
-        } 
-        return BLACKJACK_FLAG; //game will start next round after payout
-    }
-    else { //dealer does not have BJ
-        std::cout << "Dealer does not have BlackJack..." << std::endl;
-        for (auto gP: gPlayers) {
-            if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer does not have BJ, player does have BJ
-                std::cout << gP->getName(false) << " has BlackJack and wins bet at 3:2 payout" << std::endl;
-                std::cout << "BEFORE: $" << gP->getMoney() << std::endl;
-                gP->setMoney(gP->getMoney() + (gP->getBet() * 2 ));
-                std::cout << "AFTER $" << gP->getMoney() << std::endl;
-                //set player session to false because he already won, other players can continue
-                gP->setInSession(false);
-            }
-            else { //neither dealer or player have BJ
-                if (gP->isInSession()) {
-                    std::cout << gP->getName(false) << " and Dealer do not have BlackJack, checking for special plays..." << std::endl;
-                }
-                else
-                    std::cout << gP->getName(false) << " not in play" << std::endl;
-            }
-        }
-    }
-        //game goes on
-    return GAME_GOES_ON_FLAG;
+    //std::cout << "DEBUG: game::getBetsFromAllPlayers: at the end of getbetsfromallplayers, money is " << p[0]->getMoney() << std::endl;
 }
 
 void Game::getInsuranceFromPlayers(std::vector<GamePlayer*> &gPlayers) {
@@ -284,7 +216,7 @@ void Game::getInsuranceFromPlayers(std::vector<GamePlayer*> &gPlayers) {
             std::string answer = getYNFromQuestion(question);
             if (answer == "y") {
                 gp->setInsuranceFlag(true);
-                gp->implementInsuranceBet();
+                gp->implementInsuranceBet(); //does not alter player.money
             }
             else
                 gp->setInsuranceFlag(false);
@@ -364,7 +296,7 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
     //removed because of rule clarification const int TEN_CARD = 10;
     const int ACE = 1;
     
-    std::cout << "DEBUG: Game::isInsuranceRequired: Dealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
+    std::cout << "DEBUG: Game::isInsuranceRequired: \nDealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
     std::cout << "Dealers hole card is " << dealersHoleCard << ". And its value is " << dealersHoleCard.getCardValue() << std::endl;
     
     if (dealersUpCard.getCardValue() == ACE)  { //if dealer has ACE as UP card
@@ -557,46 +489,113 @@ void Game::preparePlayersForNewRound(std::vector<GamePlayer*>& gPlayer, DealerPl
     dealer.getHands().erase(dealer.getHands().begin(), dealer.getHands().end());
 }
 
+int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
+    //Player shouldn't be asked for insurance if he has BJ because it is unnessacary according to most forums/wikipedia
+    const int BLACKJACK_FLAG = 21;
+    const int GAME_GOES_ON_FLAG = 0;
+    
+    if (dealersHand.calculate() == BLACKJACK_FLAG) {
+        for (auto gP: gPlayers) {
+            if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer and player have BJ (push w/ins.)
+                if (gP->getInsuranceFlag() == true) {
+                    payout(INSURANCE_PUSH, *gP);
+                    //std::cout << gP->getName(false) << " took insurance and wins even money! (2:1)" << std::endl;
+                    
+                }
+                else {
+                    payout(NO_INSURANCE_PUSH, *gP);
+                    //std::cout << gP->getName(false) << " did not take insurance, therefore it's a push! (1:1)" << std::endl; //dealer and player have BJ (push/no ins.)
+                }
+            }
+            else { //dealer has BJ but player does not
+                if (gP->getInsuranceFlag() == true) {
+                    payout(INSURANCE_BJ, *gP);
+                    //std::cout << gP->getName(false) << " took insurance, therefore " << gP->getName(false) << " loses bet, but gets back insurance! (2:1)" << std::endl;
+                }
+                else {
+                    payout(NO_INSURANCE_BJ, *gP);
+                    //std::cout << gP->getName(false) << " did not take insurance, and loses bet as a result." << std::endl;
+                    
+                }
+            }
+        }
+        return BLACKJACK_FLAG; //game will start next round after payout
+    }
+    else { //dealer does not have BJ
+        std::cout << "Dealer does not have BlackJack..." << std::endl;
+        for (auto gP: gPlayers) {
+            if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer does not have BJ, player does have BJ
+                std::cout << gP->getName(false) << " has BlackJack and wins bet at 3:2 payout" << std::endl;
+                payout(BLACK_JACK, *gP);
+            }
+            else { //neither dealer or player have BJ
+                if (gP->isInSession()) {
+                    std::cout << gP->getName(false) << " and Dealer do not have BlackJack" << std::endl;//, checking for special plays..." << std::endl;
+                }
+                else
+                    std::cout << gP->getName(false) << " not in play" << std::endl;
+            }
+        }
+    }
+    //game goes on
+    return GAME_GOES_ON_FLAG;
+}
+
 /**
  Payouts dependant on type of bet
  Player wasn't asked for insurance if he had BJ because it is unnessacary according to most forums/wikipedia
+ 
+ "The dealer will check to see if he has a 10-value card underneath his Ace, and if he does have Blackjack, your winning Insurance bet will be paid at odds of 2:1. You will still lose your original bet (unless you also have a Blackjack), so the net effect is that you break even (assuming you bet the full half bet for insurance.) This is why the bet is described as “insurance”, since it seems to protect your original bet against a dealer blackjack. Of course, if the dealer does not have blackjack, you’ll lose the insurance bet, and still have to play the original bet out."
  */
-void payout(PAYOUT_TYPE payoutType, GamePlayer gPlayer) {
-    //try making payouts outside of this method, this method should probably just set appropriate flags
+void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer) {
+    //try making payouts outside of this method, this method should probably just set appropriate flags, called set payoutflags
+    //also, probably don't need so many cases.  Put conditional statements for insurance.  
     std::string name = gPlayer.getName();
     switch (payoutType) {
         case INSURANCE_PUSH:  //Dealer and player have BJ
+            std::cout << "DEBUG: INSURANCE_PUSH" << std::endl;
             std::cout << name << " took insurance and has a 21 as does the dealer. Even money (2:1 payout)" << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2));
+            gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet() + gPlayer.getInsuranceBet()); //gets back bet + insurance bet
             gPlayer.getHand().setPushFlag(true);
             gPlayer.getHand().setBlackjackFlag(true);
-            gPlayer.setInsuranceBet(0);
+            gPlayer.setInSession(false);
             break;
         case NO_INSURANCE_PUSH: PUSH:  //Dealer and player have BJ, player did not take insurance
-            std::cout << name << " did not take insurance and has 21 as does the dealer. (1:1 payout)" << std::endl;
+            std::cout << "DEBUG: NO_INSURANCE_PUSH: PUSH" << std::endl;
+            
+            if (payoutType == NO_INSURANCE_PUSH)
+                std::cout << name << " did not take insurance and has 21 as does the dealer. Push(1:1 payout)" << std::endl;
+            else
+                std::cout << name << " has 21 as does the dealer. Push.(1:1 payout)" << std::endl;
+            
             gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet becaue of push
+            gPlayer.getHand().setBlackjackFlag(true);
             gPlayer.getHand().setPushFlag(true);
             break;
         case INSURANCE_BJ: //dealer has BJ and player does not
-            std::cout << name << " took insurance and doesn't have BJ but dealer does. Lose bet but get back insurance. (2:1 payout)" << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2));
-            gPlayer.getHand().setBlackjackFlag(true);
+            std::cout << "DEBUG: INSURANCE_BJ" << std::endl;
+            std::cout << name << " took insurance and doesn't have BJ but dealer does. Lose bet but get back insurance @ (2:1 payout)" << std::endl;
+            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2)); //see method documentation
+            gPlayer.getHand().setSimpleLossFlag(true);
             gPlayer.setInsuranceBet(0);
+            break;
         case NO_INSURANCE_BJ: //dealer has BJ but player does not
-            std::cout << name << " did not take insurance and doesn'y have BJ, but dealer does. Lose bet." << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getBet());
+            std::cout << "DEBUG: NO_INSURANCE_BJ" << std::endl;
+            std::cout << name << " did not take insurance and doesn't have BJ, but dealer does. Lose bet." << std::endl;
+            //money already set
             gPlayer.getHand().setSimpleLossFlag(true);
             break;
         case INSURANCE_NO_BJ://dealer doesn't have blackjack, neither does player, player has insurance
+            std::cout << "DEBUG: INSURANCE_NO_BJ" << std::endl;
             std::cout << name << " took insurance, but no-one has BJ (lose insurance bet)" << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getInsuranceBet());
+            //No need to remove money, as it is already removed when implementing insurance
             //set flag?
             gPlayer.setInsuranceBet(0);
             break;
         case BLACK_JACK: //player has BJ
             std::cout << name << " has BJ. Dealer does not. (3:2 payout)" << std::endl;
             gPlayer.getHand().setBlackjackFlag(true);
-            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet()*2));
+            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() * 2.5));
             break;
         case LOSE:
             std::cout << name << " did not win. Lose bet." << std::endl;
@@ -611,4 +610,6 @@ void payout(PAYOUT_TYPE payoutType, GamePlayer gPlayer) {
         default:
             break;
     }
+    std::cout << name << " now has " << gPlayer.getMoney() << std::endl;
+    std::cout << "DEBUG: END OF Game::payout()" << std::endl;
 }

@@ -48,7 +48,8 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
     "standFlag: " << "[" << h.standFlag_ << "] " <<
     "splitFlag: " << "[" << h.splitFlag_ << "] " <<
     "blackJackFlag"  << "[" << h.blackjackFlag_ << "] " <<
-    "simpleLossFlag" << "[" << h.simpleLossFlag_ << "]" << std::endl;
+    "simpleLossFlag" << "[" << h.simpleLossFlag_ << "] " <<
+    "simpleWinFlag" << "[" << h.simpleWinFlag_ << "]" << std::endl;
     
     return os;
 }

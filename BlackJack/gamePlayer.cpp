@@ -66,41 +66,34 @@ void GamePlayer::print() {
 }
 /** 
  Implements the insurance bet as long as the player has more money then the required minimum bet. Also sets the insuranceBetIsSet flag accordingly.
- At the moment, this method also alters the money amount.
 */
 void GamePlayer::implementInsuranceBet() {
     if (_insuranceBetIsSet == false) {
         if (getMoney() >= 5) {
             //std::cout << "In GamePlayer::implementInsurnceBet, _bet = " << _bet << std::endl;
             _insuranceBet = _bet / 2;
-            _money -= _insuranceBet;
-            std::cout << "After implementing insurance bet, money is: " << _money << std::endl;
+            // _money -= _insuranceBet;
+            std::cout << "After implementing insurance bet, money will be: " << std::endl << "Money $" <<
+            getPreBetMoney() << std::endl << " - bet $" << _bet << std::endl << " - insurance bet $" << _insuranceBet << std::endl << " = $" << getPreBetMoney() - _bet -_insuranceBet << std::endl;
+            
+            _insuranceBetIsSet = true;
+            setMoney(getPreBetMoney() - _bet -_insuranceBet);
         }
         else {
             std::cout << getName(false) << " does not have enough money for insurance. Aborting insurance bet." << std::endl;
             _insuranceBet = 0;
+            _insuranceBetIsSet = false;
         }
-        std::cout << "Bet: " << _bet << std::endl;
-        std::cout << "Insurance bet: " << _insuranceBet << std::endl;
+        //std::cout << "Bet: " << _bet << std::endl;
+        //std::cout << "Insurance bet: " << _insuranceBet << std::endl;
     }
-    _insuranceBetIsSet = true;
-}
-
-void GamePlayer::printFlags() {
-    /*
-    std::cout << "bustedFlag: " <<  "[" << bustedFlag_ << "] " <<
-    "pushFlag: " << "[" << pushFlag_ << "] " <<
-    "surrenderFlag: " << "[" << surrenderFlag_ << "] " <<
-    "inSessionFlag: " << "[" << inSessionFlag_ << "] " << std::endl <<
-    "doubleFlag: " << "[" << doubledFlag_ << "] " <<
-    "standFlag: " << "[" << standFlag_ << "] " <<
-    "splitFlag: " << "[" << splitFlag_ << "] " <<
-    "blackJackFlag"  << "[" << blackjackFlag_ << "] " << std::endl;
-     */
-    std::cout << "DEBUG: Gamplayer::printFlags, FLAGS being move to hands" << std::endl;
+    else {
+        //error
+    }
 }
 
 void GamePlayer::printBetReport() {
+    /*
     std::cout << std::endl;
     std::cout << "BET REPORT:" << std::endl;
     std::cout << "Money @ start of round: " << getPreBetMoney() << std::endl;
@@ -110,6 +103,17 @@ void GamePlayer::printBetReport() {
     std::cout << "Resolved insurance bet: $" << getResolvedInsurancePayout() << std::endl;
     //std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;
     std::cout << "Total: $" << getMoney() << std::endl;
+    std::cout << "END OF BET REPORT" << std::endl << std::endl;
+    */
+    
+    std::cout << std::endl;
+    std::cout << "BET REPORT:" << std::endl;
+    std::cout << "Money @ start of round: " << getPreBetMoney() << std::endl;
+    std::cout << "Bet: -$" << _bet << std::endl;
+    if (_insuranceBetIsSet == true) {
+        std::cout << "Insurance bet: -$" << getInsuranceBet() << std::endl;
+    }
+    //std::cout << "Total: $" << getMoney() << std::endl;
     std::cout << "END OF BET REPORT" << std::endl << std::endl;
 }
 

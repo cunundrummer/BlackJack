@@ -42,7 +42,7 @@ private:
     const int _MIN_DECKS_TO_USE = 1;
     const int _MAX_DECKS_TO_USE = 8;
     const int _MAX_CHARACTERS_FOR_NAME = 15;
-    const int _MAX_GAMEPLAYERS_ALLOWED = 2;
+    const int _MAX_GAMEPLAYERS_ALLOWED = 5;
     const int MIN_ALLOWABLE_BET = 5;
     const int MAX_ALLOWABLE_BET = 500;
     int _quitSentinel;
@@ -98,7 +98,7 @@ public:
     int calculatePlayerResult(GamePlayer& g, int index = 0);
     int comparePlayerHands(Hand, Hand);
 
-    void payout(PAYOUT_TYPE, GamePlayer);
+    void payout(PAYOUT_TYPE, GamePlayer&);
 
     void preparePlayersForNewRound(std::vector<GamePlayer*>&, DealerPlayer&);
     void printGame(std::vector<GamePlayer*> &, DealerPlayer) const;

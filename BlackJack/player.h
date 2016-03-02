@@ -59,7 +59,6 @@ public:
     //Hand getHand(/*const int index = 0*/);
     std::vector<Hand>& getHands() { return hands_; }
     void displayHand();
-    virtual void printFlags();
     virtual void print();
     
     virtual void hit(Card card);

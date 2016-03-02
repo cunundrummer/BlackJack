@@ -45,17 +45,17 @@ public:
     void setMaxAllowableBet(double, double);
     
     virtual void print();
-    virtual void printFlags();
+    
     void printBetReport();
     
     void setInsuranceFlag(bool flag) { _wantsInsuranceFlag = flag; }
-    bool getInsuranceFlag() { return _wantsInsuranceFlag; }
+    bool getInsuranceFlag() { return _wantsInsuranceFlag; }         //possible redundancy
     
     void implementInsuranceBet();
     void setInsuranceBet(double value = 0) { _insuranceBet = value; }
     double getInsuranceBet() { return _insuranceBet; }
-    void setInsuraceIsSet(bool tOrf) { _insuranceBetIsSet = tOrf; }
-    bool getInsuranceIsSet() { return _insuranceBetIsSet; }
+    void setInsuraceIsSet(bool tOrf) { _insuranceBetIsSet = tOrf; } //possible redundancy, used in implementInsuranceBet
+    bool getInsuranceIsSet() { return _insuranceBetIsSet; }         //possible redundancy, used in implementInsuranceBet
     
     int buildPlayOptionForPlayerAndReturnChoice();
     

@@ -55,24 +55,11 @@ std::ostream& operator<< (std::ostream &os, Player &p) {
      os << p._name << ": " << "$" << std::fixed << std::setprecision(2) << p._money;
      else
      os << p._name << ": " << "[out]";*/
-    std::cout << "*****" << p.getName() << " STATUS DISPLAY START" << "*****" << std::endl;
-    p.printFlags();
-    std::cout << "*****" << p.getName() << " STATUS DISPLAY END" << "*****" << std::endl;
    
     p.print();
     return os ;
 }
 
-void Player::printFlags() {
-   /*
-    std::cout << "bustedFlag: " <<  "[" << bustedFlag_ << "] " <<
-    "pushFlag: " << "[" << pushFlag_ << "] " <<
-    "inSessionFlag: " << "[" << inSessionFlag_ << "] " << std::endl <<
-    "standFlag: " << "[" << standFlag_ << "] " <<
-    "blackJackFlag"  << "[" << blackjackFlag_ << "] " << std::endl;
-    */
-    std::cout << "FLAGS currently being moved to Hands.h/cpp" << std::endl;
-}
 
 /*!
  * @discussion Sets the name manually. Sets _nameIsSet appropriatly.  Sets _playerCount if all is well.

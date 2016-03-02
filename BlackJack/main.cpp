@@ -35,7 +35,7 @@ int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
     
-    Game game; // default is demo mode(false)
+    Game game(false, 1); // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;
     game.setIsDemoMode(promptUserForDemoMode());
@@ -86,22 +86,24 @@ int main(int argc, const char * argv[]) {
     dealersHand.removeLastCard();
     dealersHand.removeLastCard();
     dealersHand.addCard(1, spades);
-    dealersHand.addCard(5, clubs);
+    dealersHand.addCard(9, clubs);
+    
+    gPlayers[0]->removeCardsFromHand(2, 0); //temporary to test hands
+    gPlayers[0]->addCardToHandFromDeck(Card(10, spades));//temp to test hands
+    gPlayers[0]->addCardToHandFromDeck(Card(1, hearts));//temp to test hands
 
         if (game.isInsuranceRequired(gPlayers, dealersHand)) {
             game.getInsuranceFromPlayers(gPlayers);
         }
         
-        //        gPlayers[0]->removeCardsFromHand(2, 0); //temporary to test hands
-        //        gPlayers[0]->addCardToHandFromDeck(Card(10, spades));//temp to test hands
-        //        gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test hands
+    
     
         game.setDealStart(false); //game started, must be reset to false when round is over
         int gameFlag = game.insurancePayout(gPlayers, dealersHand); //1. detects and pays/deducts insurance if players chose insurance. 2.Returns blackjack for quick startover in case no game can be played.
         std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
+    showAllPlayers(players, false);
         if (gameFlag == BLACKJACK) {
             std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;
-            
             game.getQuitAnswer();
             
         }/*
@@ -166,7 +168,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "END OF DEBUG MAIN" << std::endl;
     std::cout << "****************************" << std::endl;
     */
-    showAllPlayers(players, false);
+    
         return 0;
 }
 
