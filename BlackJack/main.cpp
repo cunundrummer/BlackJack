@@ -5,7 +5,9 @@
 //  Created by Leeran Pinckovich on 2015-04-28.
 //  Copyright (c) 2015 Compulsive Gamblers inc. All rights reserved.
 //
-
+/*
+ -consider using a debug flag, so if there is an if DEBUG then all debug statements would be shown
+ */
 #include <iostream>
 #include <vector>
 #include <map>
@@ -22,6 +24,7 @@
 #include "menu.h"
 #include "player.h"
 
+const bool DEBUGGING = false;  //this will be used for debug statements, not yet incorporated
 const int GAME_GOES_ON_FLAG = 0;
 
 int Player::_playerCount = 0;
@@ -73,7 +76,8 @@ int main(int argc, const char * argv[]) {
         std::cout << "GAME BEGINS, asking players for bets..." << std::endl;
 
         game.getBetsFromAllPlayers(gPlayers);
-    
+        std::cout << "Bets have been taken, dealing cards to players..." << std::endl;
+        
         if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked
             game.dealCardToAllPlayers(players, true);
             game.dealCardToAllPlayers(players, true);
@@ -83,14 +87,14 @@ int main(int argc, const char * argv[]) {
         }
         
         Hand dealersHand = dealer.getHand();
-//    dealersHand.removeLastCard();
-//    dealersHand.removeLastCard();
-//    dealersHand.addCard(1, spades);
-//    dealersHand.addCard(9, clubs);
+    dealersHand.removeLastCard();
+    dealersHand.removeLastCard();
+    dealersHand.addCard(10, spades);
+    dealersHand.addCard(9, clubs);
     
-//    gPlayers[0]->removeCardsFromHand(2, 0); //temporary to test hands
-//    gPlayers[0]->addCardToHandFromDeck(Card(10, spades));//temp to test hands
-//    gPlayers[0]->addCardToHandFromDeck(Card(1, hearts));//temp to test hands
+    gPlayers[0]->removeCardsFromHand(2, 0); //temporary to test hands
+    gPlayers[0]->addCardToHandFromDeck(Card(10, spades));//temp to test hands
+    gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test hands
 
         if (game.isInsuranceRequired(gPlayers, dealersHand)) {
             game.getInsuranceFromPlayers(gPlayers);
@@ -110,10 +114,12 @@ int main(int argc, const char * argv[]) {
             if (gPlayers[0]->isInSession()) {
                 //build options for players still in session
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;  //maybe check if player has bj first
-                std::cout << *gPlayers[0] << std::endl;
-            
+                //std::cout << *gPlayers[0] << std::endl;
+                std::cout << "Dealers hand is " << /*dealer.getHand()*/dealersHand << std::endl;
+                std::cout << gPlayers[0]->getName() << "'s hand is " << std::endl;
                 Hand h(gPlayers[0]->getHand());
                 std::cout << h << std::endl;
+                
                 int choice = gPlayers[0]->buildPlayOptionForPlayerAndReturnChoice();
                 //playout choice selection
                 game.resolveChoice(choice, *gPlayers[0]);
@@ -122,28 +128,30 @@ int main(int argc, const char * argv[]) {
                 (gPlayers[0]->isInSession()) ?  std::cout << "TRUE" << std::endl :  std::cout << "FALSE"  << std::endl;
                 std::cout << "Player has " << gPlayers[0]->getHands().size() << " hands." << std::endl;
                 //compare hands here
-                switch (game.comparePlayerHands(gPlayers[0]->getHand(), dealer.getHand())) {
-                    case 0: //push
+                switch (game.comparePlayerHands(gPlayers[0]->getHand(), dealersHand /*dealer.getHand()*/)) {
+                    case 0: //push //HANDS_ARE_EQUAL
+                        game.payout(PUSH, *gPlayers[0]);
                         std::cout << "PUSH!!!" << std::endl;
-                        gPlayers[0]->setMoney(gPlayers[0]->getMoney() + gPlayers[0]->getBet());
                         break;
-                    case 1: //pay player
+                    case 1: //pay player  //HAND1_IS_GREATER
                         std::cout << gPlayers[0]->getName() << " 's hand is > then dealer" << std::endl;
-                        gPlayers[0]->setMoney(gPlayers[0]->getMoney() + (gPlayers[0]->getBet() * 2));
+                        game.payout(WIN, *gPlayers[0]);
                         break;
-                    case 2:  //remove bet from player
-                        std::cout << dealer.getName() << " 's hand is >" << std::endl;
-                        std::cout << "DEBUG: MAIN: swCASE 2: money is $" << gPlayers[0]->getMoney() << std::endl;
+                    case 2:  //remove bet from player //HAND2_IS_GREATER
+                        std::cout << gPlayers[0]->getName() << " 's hand is < dealers hand" << std::endl;
+                        //std::cout << "DEBUG: MAIN: swCASE 2: money is $" << gPlayers[0]->getMoney() << std::endl;
+                        game.payout(LOSE, *gPlayers[0]);
                         //money already deducted with bet
                         break;
-                    case 3:
+                    case 3: //HAND1_IS_BUSTED
                         std::cout << "Player busted!" << std::endl;
-                        std::cout << "DEBUG: MAIN: swCASE 3: money is $" << gPlayers[0]->getMoney() << std::endl;
+                       // std::cout << "DEBUG: MAIN: swCASE 3: money is $" << gPlayers[0]->getMoney() << std::endl;
+                        game.payout(BUST, *gPlayers[0]);
                         //money already deducted with bet
                         break;
-                    case 21:
+                    case 21: //TWENTY_ONE
                         std::cout << "Blackjack!!!, paying at 3:2!" << std::endl;
-                        gPlayers[0]->setMoney(gPlayers[0]->getMoney() + (gPlayers[0]->getMoney() * 2.5));
+                        game.payout(BLACK_JACK, *gPlayers[0]);
                     default:
                         std::cout << "An oddity occurred, mostly and error." << std::endl;
                         break;

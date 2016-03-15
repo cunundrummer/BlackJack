@@ -31,6 +31,7 @@ enum PAYOUT_TYPE {
     BLACK_JACK,
     TWENTY_ONE,
     LOSE,
+    BUST,
     WIN,
     PUSH
 };
