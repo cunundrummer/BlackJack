@@ -161,3 +161,19 @@ void testMenu() {
     std::cout << menu.displayAndGetChoice() << std::endl;
     
 }
+
+/**
+ Takes a player object and replaces hand.  Used for testing purposes
+ */
+void setPlayersHandForTesting(Player& player, int cardVal1, Suits suit1, int cardVal2, Suits suit2) {
+    //add possibiltiy of multiple hands
+    
+    if (player.getHand().pileSize() > 0) {
+        player.removeCardsFromHand(player.getHand().pileSize(), 0);
+    }
+    
+    Card card1(cardVal1, suit1);
+    Card card2(cardVal2, suit2);
+    player.addCardToHandFromDeck(card1);
+    player.addCardToHandFromDeck(card2);
+}

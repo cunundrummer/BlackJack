@@ -79,13 +79,13 @@ void Player::setName(std::string &name, const int MAX_CHARACTERS) {
     }
 }
 
-/*!
+/**
  * @discussion Removes a card from the hand
  * @param int numCards: number of cards to remove, index of hand vector
  * @param size_t index: index of hand vector
  * @warning
  * @return
- */
+ **/
 void Player::removeCardsFromHand(int numCards = 1, size_t index = 0) {
     if (numCards > hands_[index].pileSize()) {
         std::cout << "Invalid amount of cards to be removed in Player::removeCardsFromHand(...), making numCards = pilesize." << std::endl;

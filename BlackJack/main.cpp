@@ -21,8 +21,10 @@
 #include "hand.h"
 #include "deck.h"
 #include "gamePlayer.h"
+#include "dealerPlayer.h"
 #include "menu.h"
 #include "player.h"
+#include "testFunctions.hpp"
 
 const bool DEBUGGING = false;  //this will be used for debug statements, not yet incorporated
 const int GAME_GOES_ON_FLAG = 0;
@@ -82,22 +84,15 @@ int main(int argc, const char * argv[]) {
             game.dealCardToAllPlayers(players, true);
         }
         
-        Hand dealersHand = dealer.getHand();
-    dealersHand.removeLastCard();
-    dealersHand.removeLastCard();
-    dealersHand.addCard(10, spades);
-    dealersHand.addCard(9, clubs);
-    
-    gPlayers[0]->removeCardsFromHand(2, 0); //temporary to test hands
-    gPlayers[0]->addCardToHandFromDeck(Card(10, spades));//temp to test hands
-    gPlayers[0]->addCardToHandFromDeck(Card(5, hearts));//temp to test hands
-
-        if (game.isInsuranceRequired(gPlayers, dealersHand)) {
+        setPlayersHandForTesting(dealer, 5, Suits::clubs, 2, Suits::spades);
+        setPlayersHandForTesting(*gPlayers[0], 10, Suits::spades, 5, Suits::hearts);
+        
+        if (game.isInsuranceRequired(gPlayers, dealer.getHand()/* dealersHand*/)) {
             game.getInsuranceFromPlayers(gPlayers);
         }
     
         game.setDealStart(false); //game started, must be reset to false when round is over
-        int gameFlag = game.insurancePayout(gPlayers, dealersHand); //1. detects and pays/deducts insurance if players chose insurance. 2.Returns blackjack for quick startover in case no game can be played.
+        int gameFlag = game.insurancePayout(gPlayers, dealer.getHand()); //1. detects and pays/deducts insurance if players chose insurance. 2.Returns blackjack for quick startover in case no game can be played.
         std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
     
         if (gameFlag == BLACKJACK) {
@@ -111,7 +106,7 @@ int main(int argc, const char * argv[]) {
                 //build options for players still in session
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;  //maybe check if player has bj first
                 //std::cout << *gPlayers[0] << std::endl;
-                std::cout << "Dealers hand is " << /*dealer.getHand()*/dealersHand << std::endl;
+                std::cout << "Dealers hand is " << dealer.getHand() << std::endl;
                 std::cout << gPlayers[0]->getName() << "'s hand is " << std::endl;
                 Hand h(gPlayers[0]->getHand());
                 std::cout << h << std::endl;
@@ -124,7 +119,7 @@ int main(int argc, const char * argv[]) {
                 (gPlayers[0]->isInSession()) ?  std::cout << "TRUE" << std::endl :  std::cout << "FALSE"  << std::endl;
                 std::cout << "Player has " << gPlayers[0]->getHands().size() << " hands." << std::endl;
                 //compare hands here
-                switch (game.comparePlayerHands(gPlayers[0]->getHand(), dealersHand /*dealer.getHand()*/)) {
+                switch (game.comparePlayerHands(gPlayers[0]->getHand(), dealer.getHand())) {
                     case 0: //push //HANDS_ARE_EQUAL
                         game.payout(PUSH, *gPlayers[0]);
                         std::cout << "PUSH!!!" << std::endl;

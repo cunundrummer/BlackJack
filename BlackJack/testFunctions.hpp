@@ -23,6 +23,7 @@
 #include "hand.h"
 #include "deck.h"
 #include "gamePlayer.h"
+#include "dealerPlayer.h"
 #include "menu.h"
 #include "player.h"
 
@@ -30,6 +31,8 @@ void testMenu();
 void testPlayer();
 void testAskForInsurance();
 void testInsurance();
+
+void setPlayersHandForTesting(Player& hand, int cardVal1, Suits suit1, int cardVal2, Suits suit2);
 
 
 #endif /* testFunctions_hpp */
