@@ -53,7 +53,7 @@ private:
     int _numPlayers;
     int _insuranceFlags;
     
-    Deck *_deck;
+    Deck _deck;
     std::vector<Player*> _players;
     
     std::string displayResult(const int resultOfHand);
@@ -65,7 +65,7 @@ public:
     std::string getGameTitle()      { return _GAME_TITLE; }
     int getMinDecksToUse()          { return _MIN_DECKS_TO_USE; }
     int getMaxDecksToUse()          { return _MAX_DECKS_TO_USE; }
-    Deck& getDeck()                 { return *_deck; }
+    Deck& getDeck()                 { return _deck; }
     bool getIsInDemoMode()          { return _isDemoMode; }
     bool getQuitSentinal()          { return _quitSentinel; }
     
@@ -79,7 +79,7 @@ public:
     
     void displayHelp();
     
-    void setupDeck(int);
+    void setupDeck(int, bool);
     void dealCard(Player &, bool faceUp);
     void dealCardToAllPlayers(std::vector<Player*>, bool faceUp);
     

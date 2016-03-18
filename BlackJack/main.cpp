@@ -67,7 +67,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "Added dealer to players list." << std::endl;
     std::cout << "Building cards...deck(s)..." << std::endl;
     
-    game.setupDeck(2);
+    game.setupDeck(2,false);
     std::cout << std::endl;
     
     do {
@@ -84,8 +84,8 @@ int main(int argc, const char * argv[]) {
             game.dealCardToAllPlayers(players, true);
         }
         
-        setPlayersHandForTesting(dealer, 5, Suits::clubs, 2, Suits::spades);
-        setPlayersHandForTesting(*gPlayers[0], 10, Suits::spades, 5, Suits::hearts);
+        //setPlayersHandForTesting(dealer, 5, Suits::clubs, 2, Suits::spades);
+        //setPlayersHandForTesting(*gPlayers[0], 10, Suits::spades, 5, Suits::hearts);
         
         if (game.isInsuranceRequired(gPlayers, dealer.getHand()/* dealersHand*/)) {
             game.getInsuranceFromPlayers(gPlayers);
@@ -130,13 +130,11 @@ int main(int argc, const char * argv[]) {
                         break;
                     case 2:  //remove bet from player //HAND2_IS_GREATER
                         std::cout << gPlayers[0]->getName() << " 's hand is < dealers hand" << std::endl;
-                        //std::cout << "DEBUG: MAIN: swCASE 2: money is $" << gPlayers[0]->getMoney() << std::endl;
                         game.payout(LOSE, *gPlayers[0]);
                         //money already deducted with bet
                         break;
                     case 3: //HAND1_IS_BUSTED
                         std::cout << "Player busted!" << std::endl;
-                       // std::cout << "DEBUG: MAIN: swCASE 3: money is $" << gPlayers[0]->getMoney() << std::endl;
                         game.payout(BUST, *gPlayers[0]);
                         //money already deducted with bet
                         break;
@@ -148,13 +146,12 @@ int main(int argc, const char * argv[]) {
                         break;
                 }
             }
-            
         }
         
-        //players = game.preparePlayersForNewRound(players);
         game.preparePlayersForNewRound(gPlayers, dealer);
         game.setDealStart(true);
         game.getQuitAnswer();
+        
     } while (game.getQuitSentinal() == false);
         
     std::cout << std::endl << std::endl << "****************************" << std::endl;

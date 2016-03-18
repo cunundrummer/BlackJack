@@ -10,12 +10,18 @@
 #define __BlackJack__deck__
 
 #include <iostream>
+#include <algorithm>
 #include "cardpile.h"
 
 class Deck : public CardPile {
 private:
     const int MAX_CARDS_IN_A_DECK = 52;
 public:
+    Deck& operator=(Deck& other) {
+        this->_cardPile = other._cardPile;
+        
+        return *this;
+    }
     
     Deck(int numDecks = 0);
     /*void print() {

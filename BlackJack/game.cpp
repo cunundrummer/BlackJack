@@ -111,19 +111,26 @@ std::string Game::generateName(std::string name) {
     return  name;
 }
 
-void Game::setupDeck(int nDecks) {
+/**
+ Prepare the decks. 
+ @param nDecks (int) the number of decks to setup
+ @param randomize (bool) Defaults to true for actual release. Set to false for DEBUGGING
+*/
+void Game::setupDeck(int nDecks, bool randomize = true) {
     Deck d(nDecks);
-    Deck *ptrDeck = new Deck(d);
-    _deck = ptrDeck;
-    _deck->print();
-    std::cout << std::endl << "[InGame::setUpDeck]There are " << _deck->pileSize() << " cards in the deck" << std::endl;
+    _deck = d;
+    //Deck *deckPtr = new Deck(d);
+    //_deck = deckPtr;
+    _deck.print();
+    std::cout << std::endl << "[InGame::setUpDeck]There are " << _deck.pileSize() << " cards in the deck" << std::endl;
     
 }
+
 void Game::dealCard(Player &player, bool faceup = true) {
     
     //for (auto pl: players) {
         if (player.isInSession() == true) {
-            Card c = _deck->removeLastCard();
+            Card c = _deck.removeLastCard();
             //std::cout << "PILE SIZE is " << pl->getHand().pileSize();
             if (player.getHand(0).pileSize() == 1 && player.getName(false).compare("DEALER") == 0 ) //setting hidden card for dealing only!
                 c.setFaceUp(false);
@@ -143,7 +150,7 @@ void Game::dealCardToAllPlayers(std::vector<Player*> players, bool faceUp = true
     const int NO_CARDS = 0;
     for (auto p: players) {
         if (p->isInSession() == true) {
-            Card card = _deck->removeLastCard();
+            Card card = _deck.removeLastCard();
             Hand plyrHand = p->getHand(NO_CARDS); //check for errors!!!!!!
             int handSize = plyrHand.pileSize();
             if (handSize == ONE_CARD && p->getName(false).compare("DEALER") == NO_CARDS ) //setting hidden card for dealing only!
@@ -340,6 +347,7 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
             //bet equivalent of another bet and pause players session
             std::cout << "Player chose to double down." << std::endl;
             player.doubleDown(getDeck().removeLastCard(), index);  //adds a card if there is enough money
+            std::cout << player.getName() << "'s hand is :" << std::endl << player.getHand(index) << std::endl;
             calculatePlayerResult(player, index);
             player.getHand(index).setDoubledFlag(true);
             //return choice;
@@ -354,7 +362,7 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
                 std::cout << "DEBUG Game::resolveChoice | SPLIT, beginning of for loop " << std::endl;
                 std::cout << "HAND" << curHand << ": " << *handIter << std::endl;
                 std::cout << "DEBUG Game::resolveChoice | SPLIT, adding card from deck... " << std::endl;
-                handIter->addCard(_deck->removeLastCard());
+                handIter->addCard(_deck.removeLastCard());
                 std::cout << "DEBUG Game::resolveChoice | SPLIT,card added from deck. " << std::endl;
                 std::cout << "*HAND" << curHand << ": " << *handIter << std::endl;
                 
