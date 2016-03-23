@@ -55,6 +55,8 @@ public:
     bool getSimpleWinFlag() { return simpleWinFlag_; }
     
     friend std::ostream& operator<< (std::ostream &os, Hand &h);
+    void showHandFlags(const Hand& h);
+    
     int calculate();
     void handToIndividualCards();//std::vector<Card>);
     Card getIndividualCard(int index);

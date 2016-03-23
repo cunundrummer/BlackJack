@@ -40,7 +40,11 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
     os << ": " << h.calculate();
     os << std::endl;
     
-    os << "HAND FLAGS:" << std::endl << "bustedFlag: " <<  "[" << h.bustedFlag_ << "] " <<
+    return os;
+}
+
+void Hand::showHandFlags(const Hand& h) {
+    std::cout << "HAND FLAGS:" << std::endl << "bustedFlag: " <<  "[" << h.bustedFlag_ << "] " <<
     "pushFlag: " << "[" << h.pushFlag_ << "] " <<
     "surrenderFlag: " << "[" << h.surrenderFlag_ << "] " <<
     //"inSessionFlag: " << "[" << inSessionFlag_ << "] " << std::endl <<
@@ -50,8 +54,6 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
     "blackJackFlag"  << "[" << h.blackjackFlag_ << "] " <<
     "simpleLossFlag" << "[" << h.simpleLossFlag_ << "] " <<
     "simpleWinFlag" << "[" << h.simpleWinFlag_ << "]" << std::endl;
-    
-    return os;
 }
 
 void Hand::handToIndividualCards() {// std::vector<Card> c) {

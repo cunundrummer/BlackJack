@@ -55,13 +55,15 @@ public:
     void addCardToHandFromDeck(Card, size_t index = 0);
     void removeCardsFromHand(int numCards, size_t index);
     
+    void setHands(std::vector<Hand>& hands);
+    
     Hand& getHand(int index = 0);/* { return hands_[index] ; }*/
     //Hand getHand(/*const int index = 0*/);
     std::vector<Hand>& getHands() { return hands_; }
     void displayHand();
     virtual void print();
     
-    virtual void hit(Card card);
+    virtual void hit(Card card, int index);
     virtual void stand();
     virtual void doubleDown();
     //virtual void split();

@@ -66,7 +66,7 @@ public:
     //void hit(Card card);
     void hit(Card card, int handIndex = 0);
     void doubleDown(Card card, int handIndex = 0);
-    int split(); //return number of unresolved splits
+    int split(int index); //return number of unresolved splits
     
 };
 

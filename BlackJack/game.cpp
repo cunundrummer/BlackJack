@@ -321,58 +321,78 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
 }
 
 int Game::resolveChoice(int choice, GamePlayer& player) {
-    static int index = 0;
+    static int index = 0;  //index for players current hand
     
     switch (choice) {
-        case PLAY_OPTIONS::HIT:
+        case PLAY_OPTIONS::HIT: {
             //add card from deck to players hand
             std::cout << "Player chose to hit to hand of index:" << index << std::endl;
             player.hit(getDeck().removeLastCard(), index); //should just add card, nothing else!
-            calculatePlayerResult(player, index);
+            std::cout << "DEBUG: Game.resolvechoice: HITcase: After hitting, hand is: " << player.getHand(index);
             player.displayHand();
-            std::cout << "END OF PLAY_OPTIONS::HIT" << std::endl;
-            if (calculatePlayerResult(player, index) == GAME_GOES_ON) {
-                std::cout << "DEBUG Game::resolveChoice | SPLIT, calculated result is " << displayResult(calculatePlayerResult(player, index)) << std::endl;
+            
+            int result = player.getHand(index).calculate();
+            if (result < 21) {
+                std::cout << player.getName() << " can make more plays: " << std::endl;
                 resolveChoice(player.buildPlayOptionForPlayerAndReturnChoice(), player);
             }
+            else if (result > 21) {
+                std::cout << player.getName() << " busted!" << std::endl;
+                player.getHand(index).setBustedFlag(true);
+            }
+            else if (result == 21) { //soft 21
+                std::cout << player.getName() << " has a soft 21! Player will be set to stand!" << std::endl;
+                player.getHand(index).setStandFlag(true);
+            }
+            else {
+                std::cout << "UNKNOWN/FORGOTTEN POSSIBILITY GOES HERE"  <<std::endl;
+            }
+            
+            std::cout << "END OF PLAY_OPTIONS::HIT" << std::endl;
             break;
+        }
         case PLAY_OPTIONS::STAND:
-            std::cout << "Player chose to stand." << std::endl;
+            
+            std::cout << "Player chose to stand with " << player.getHand(index) << std::endl;
             //pause players session
             player.getHand(index).setStandFlag(true);
             calculatePlayerResult(player, index);
             player.stand();  //pause player session? or use hands status to determine session
+
             break;
         case PLAY_OPTIONS::DOUBLE_DOWN:
             //bet equivalent of another bet and pause players session
             std::cout << "Player chose to double down." << std::endl;
-            player.doubleDown(getDeck().removeLastCard(), index);  //adds a card if there is enough money
+            player.doubleDown(getDeck().removeLastCard(), index);  //adds a card if there is enough money, removes money = to bet amount
             std::cout << player.getName() << "'s hand is :" << std::endl << player.getHand(index) << std::endl;
             calculatePlayerResult(player, index);
             player.getHand(index).setDoubledFlag(true);
             //return choice;
             break;
         case PLAY_OPTIONS::SPLIT:
+            
             std::cout << "Player chose to split" << std::endl;
-            player.split();
             
-            for (auto handIter = player.getHands().begin(); handIter != player.getHands().end(); handIter++) {
-                int curHand = static_cast<int>(std::distance(player.getHands().begin(), handIter));
-                index = curHand;
-                std::cout << "DEBUG Game::resolveChoice | SPLIT, beginning of for loop " << std::endl;
-                std::cout << "HAND" << curHand << ": " << *handIter << std::endl;
-                std::cout << "DEBUG Game::resolveChoice | SPLIT, adding card from deck... " << std::endl;
-                handIter->addCard(_deck.removeLastCard());
-                std::cout << "DEBUG Game::resolveChoice | SPLIT,card added from deck. " << std::endl;
-                std::cout << "*HAND" << curHand << ": " << *handIter << std::endl;
+            for (int i = 0; i < player.getHands().size(); i++) {
+                player.split(i); //
+                player.getHand(i).addCard(_deck.removeLastCard()); //good
+                player.getHand(i).setSplitFlag(true);
+                player.getHand(i).showHandFlags(player.getHand(i));
                 
-                if (calculatePlayerResult(player, curHand) == GAME_GOES_ON) {
-                    std::cout << "DEBUG Game::resolveChoice | SPLIT, calculated result is " << displayResult(calculatePlayerResult(player, curHand)) << std::endl;
-                    resolveChoice(player.buildPlayOptionForPlayerAndReturnChoice(), player);
+                std::cout << "Players hands after splitting is: " << std::endl;
+                std::cout << player.getHand(i) << " at index " << i << std::endl;
+                
+                index = i;
+                const int EMPTY_CHOICE = 99;
+                int choice = EMPTY_CHOICE;
+                if (choice == EMPTY_CHOICE) {
+                    choice = player.buildPlayOptionForPlayerAndReturnChoice();
                 }
+                
+                resolveChoice(choice, player);
             }
-            
-            break;
+        
+        break;
         default:
             std::cout << "Unknown error in game.resolveChoice switch(choice)...exiting";
             exit(9);
@@ -564,77 +584,88 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer) {
     //try making payouts outside of this method, this method should probably just set appropriate flags, called set payoutflags
     //also, probably don't need so many cases.  Put conditional statements for insurance.  
     std::string name = gPlayer.getName();
-    switch (payoutType) {
-        case INSURANCE_PUSH:  //Dealer and player have BJ, player took insurance
-            std::cout << "DEBUG: INSURANCE_PUSH" << std::endl;
-            std::cout << name << " took insurance and has a 21 as does the dealer. Even money (2:1 payout)" << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet() + gPlayer.getInsuranceBet()); //gets back bet + insurance bet
-            gPlayer.getHand().setPushFlag(true);
-            gPlayer.getHand().setBlackjackFlag(true);
-            gPlayer.setInSession(false);
-            break;
-        case PUSH: //neither dealer or player have BJ, but both have same total
-            std::cout << "DEBUG: PUSH" << std::endl;
-            std::cout << name << " has " << gPlayer.getHand().calculate() << " as does the dealer. Push.(1:1 payout)" << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet because of push
-            gPlayer.getHand().setPushFlag(true);
-            gPlayer.setInSession(false);
-            break;
-        case NO_INSURANCE_PUSH:  //Dealer and player have BJ, player did not take insurance
-            std::cout << "DEBUG: NO_INSURANCE_PUSH" << std::endl;
-            std::cout << name << " did not take insurance and has 21 as does the dealer. Push(1:1 payout)" << std::endl;
+    for (int index = 0; index < gPlayer.getHands().size(); index++) {
+    
+        switch (payoutType) {
+            case INSURANCE_PUSH:  //Dealer and player have BJ, player took insurance
+                std::cout << "DEBUG: INSURANCE_PUSH" << std::endl;
+                std::cout << name << " took insurance and has a 21 as does the dealer. Even money (2:1 payout)" << std::endl;
+                gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet() + gPlayer.getInsuranceBet()); //gets back bet + insurance bet
+                gPlayer.getHand(index).setPushFlag(true);
+                gPlayer.getHand(index).setBlackjackFlag(true);
+                gPlayer.setInSession(false);
+                break;
+            case PUSH: //neither dealer or player have BJ, but both have same total
+                std::cout << "DEBUG: PUSH" << std::endl;
+                std::cout << name << " has " << gPlayer.getHand(index).calculate() << " as does the dealer. Push.(1:1 payout)" << std::endl;
+                gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet because of push
+                gPlayer.getHand().setPushFlag(true);
+                gPlayer.setInSession(false);
+                break;
+            case NO_INSURANCE_PUSH:  //Dealer and player have BJ, player did not take insurance
+                std::cout << "DEBUG: NO_INSURANCE_PUSH" << std::endl;
+                std::cout << name << " did not take insurance and has 21 as does the dealer. Push(1:1 payout)" << std::endl;
+                
+                gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet because of push
+                gPlayer.getHand(index).setBlackjackFlag(true);
+                gPlayer.getHand(index).setPushFlag(true);
+                gPlayer.setInSession(false);
+                break;
+            case INSURANCE_BJ: //dealer has BJ and player does not
+                std::cout << "DEBUG: INSURANCE_BJ" << std::endl;
+                std::cout << name << " took insurance and doesn't have BJ but dealer does. Lose bet but get back insurance @ (2:1 payout)" << std::endl;
+                gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2)); //see method documentation
+                gPlayer.getHand(index).setSimpleLossFlag(true);
+                gPlayer.setInSession(false);
+                gPlayer.setInsuranceBet(0);
+                break;
+            case NO_INSURANCE_BJ: //dealer has BJ but player does not
+                std::cout << "DEBUG: NO_INSURANCE_BJ" << std::endl;
+                std::cout << name << " did not take insurance and doesn't have BJ, but dealer does. Lose bet." << std::endl;
+                //money already set
+                gPlayer.setInSession(false);
+                gPlayer.getHand(index).setSimpleLossFlag(true);
+                break;
+            case INSURANCE_NO_BJ://dealer doesn't have blackjack, neither does player, player has insurance
+                std::cout << "DEBUG: INSURANCE_NO_BJ" << std::endl;
+                std::cout << name << " took insurance, but no-one has BJ (lose insurance bet)" << std::endl;
+                //No need to remove money, as it is already removed when implementing insurance
+                //set flag?
+                gPlayer.setInsuranceBet(0);
+                break;
+            case BLACK_JACK: //player has BJ
+                std::cout << name << " has BJ. Dealer does not. (3:2 payout)" << std::endl;
+                gPlayer.getHand(index).setBlackjackFlag(true);
+                gPlayer.setInSession(false);
+                gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() * 2.5));
+                break;
+            case LOSE:
+                std::cout << name << " did not win. Lose bet." << std::endl;
+                //gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getBet()); //player already has bet detucted
+                gPlayer.getHand(index).setSimpleLossFlag(true);
+                gPlayer.setInSession(false);
+                break;
+            case BUST:
+                std::cout << name << " busted, loses bet" << std::endl;
+                gPlayer.getHand(index).setSimpleLossFlag(true); //bust flag?
+                gPlayer.setInSession(false);
+                break;
+            case WIN:
+                
+                if (gPlayer.getHand(index).getDoubledFlag()) {
+                    std::cout << name << " wins with a doubled down hand for hand " << index << "  Win back bet. (3:1 payout)" << std::endl;
+                    gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() *2));
+                }
+                else {
+                    std::cout << name << " wins. Win back bet. (2:1 payout)" << std::endl;
+                    gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() * 2));
+                }
             
-            gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet because of push
-            gPlayer.getHand().setBlackjackFlag(true);
-            gPlayer.getHand().setPushFlag(true);
-            gPlayer.setInSession(false);
-            break;
-        case INSURANCE_BJ: //dealer has BJ and player does not
-            std::cout << "DEBUG: INSURANCE_BJ" << std::endl;
-            std::cout << name << " took insurance and doesn't have BJ but dealer does. Lose bet but get back insurance @ (2:1 payout)" << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2)); //see method documentation
-            gPlayer.getHand().setSimpleLossFlag(true);
-            gPlayer.setInSession(false);
-            gPlayer.setInsuranceBet(0);
-            break;
-        case NO_INSURANCE_BJ: //dealer has BJ but player does not
-            std::cout << "DEBUG: NO_INSURANCE_BJ" << std::endl;
-            std::cout << name << " did not take insurance and doesn't have BJ, but dealer does. Lose bet." << std::endl;
-            //money already set
-            gPlayer.setInSession(false);
-            gPlayer.getHand().setSimpleLossFlag(true);
-            break;
-        case INSURANCE_NO_BJ://dealer doesn't have blackjack, neither does player, player has insurance
-            std::cout << "DEBUG: INSURANCE_NO_BJ" << std::endl;
-            std::cout << name << " took insurance, but no-one has BJ (lose insurance bet)" << std::endl;
-            //No need to remove money, as it is already removed when implementing insurance
-            //set flag?
-            gPlayer.setInsuranceBet(0);
-            break;
-        case BLACK_JACK: //player has BJ
-            std::cout << name << " has BJ. Dealer does not. (3:2 payout)" << std::endl;
-            gPlayer.getHand().setBlackjackFlag(true);
-            gPlayer.setInSession(false);
-            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() * 2.5));
-            break;
-        case LOSE:
-            std::cout << name << " did not win. Lose bet." << std::endl;
-            //gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getBet()); //player already has bet detucted
-            gPlayer.getHand().setSimpleLossFlag(true);
-            gPlayer.setInSession(false);
-            break;
-        case BUST:
-            std::cout << name << " busted, loses bet" << std::endl;
-            gPlayer.getHand().setSimpleLossFlag(true); //bust flag?
-            gPlayer.setInSession(false);
-            break;
-        case WIN:
-            std::cout << name << " wins. Win back bet. (2:1 payout)" << std::endl;
-            gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() * 2));
-            gPlayer.getHand().setSimpleWinFlag(true);
-            break;
-        default:
-            break;
+                gPlayer.getHand(index).setSimpleWinFlag(true);
+                break;
+            default:
+                break;
+        }
     }
     std::cout << name << " now has " << gPlayer.getMoney() << std::endl;
     std::cout << "DEBUG: END OF Game::payout()" << std::endl;

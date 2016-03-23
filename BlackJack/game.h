@@ -97,7 +97,7 @@ public:
     
     int resolveChoice(int choice, GamePlayer& player);
     int calculatePlayerResult(GamePlayer& g, int index = 0);
-    int comparePlayerHands(Hand, Hand);
+    int comparePlayerHands(Hand playersHand, Hand DealersHand);
 
     void payout(PAYOUT_TYPE, GamePlayer&);
 

@@ -26,7 +26,6 @@
 #include "player.h"
 #include "testFunctions.hpp"
 
-const bool DEBUGGING = false;  //this will be used for debug statements, not yet incorporated
 const int GAME_GOES_ON_FLAG = 0;
 
 int Player::_playerCount = 0;
@@ -84,8 +83,8 @@ int main(int argc, const char * argv[]) {
             game.dealCardToAllPlayers(players, true);
         }
         
-        //setPlayersHandForTesting(dealer, 5, Suits::clubs, 2, Suits::spades);
-        //setPlayersHandForTesting(*gPlayers[0], 10, Suits::spades, 5, Suits::hearts);
+        setPlayersHandForTesting(dealer, 2, Suits::clubs, 10, Suits::spades);
+        setPlayersHandForTesting(*gPlayers[0], 5, Suits::spades, 5, Suits::hearts);
         
         if (game.isInsuranceRequired(gPlayers, dealer.getHand()/* dealersHand*/)) {
             game.getInsuranceFromPlayers(gPlayers);
@@ -102,52 +101,54 @@ int main(int argc, const char * argv[]) {
         }
         else { //GAME_GOES_ON
             //start for loop for all players here
+            //BLACKJACK flag already dealt with, it should be impossible for player to get paid for blackjack here
             if (gPlayers[0]->isInSession()) {
-                //build options for players still in session
+                
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;  //maybe check if player has bj first
-                //std::cout << *gPlayers[0] << std::endl;
+                
                 std::cout << "Dealers hand is " << dealer.getHand() << std::endl;
-                std::cout << gPlayers[0]->getName() << "'s hand is " << std::endl;
-                Hand h(gPlayers[0]->getHand());
-                std::cout << h << std::endl;
+                std::cout << gPlayers[0]->getName() << "'s hand is " << gPlayers[0]->getHand() << std::endl;
                 
                 int choice = gPlayers[0]->buildPlayOptionForPlayerAndReturnChoice();
-                //playout choice selection
                 game.resolveChoice(choice, *gPlayers[0]);
-            
-                std::cout << gPlayers[0]->getName() << " 's session: ";
-                (gPlayers[0]->isInSession()) ?  std::cout << "TRUE" << std::endl :  std::cout << "FALSE"  << std::endl;
-                std::cout << "Player has " << gPlayers[0]->getHands().size() << " hands." << std::endl;
-                //compare hands here
-                switch (game.comparePlayerHands(gPlayers[0]->getHand(), dealer.getHand())) {
-                    case 0: //push //HANDS_ARE_EQUAL
-                        game.payout(PUSH, *gPlayers[0]);
-                        std::cout << "PUSH!!!" << std::endl;
-                        break;
-                    case 1: //pay player  //HAND1_IS_GREATER
-                        std::cout << gPlayers[0]->getName() << " 's hand is > then dealer" << std::endl;
-                        game.payout(WIN, *gPlayers[0]);
-                        break;
-                    case 2:  //remove bet from player //HAND2_IS_GREATER
-                        std::cout << gPlayers[0]->getName() << " 's hand is < dealers hand" << std::endl;
+                
+                
+                for (int i = 0; i < gPlayers[0]->getHands().size(); i++) {
+                    //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
+                    if (gPlayers[0]->getHand(i).getBustedFlag() == true || gPlayers[0]->getHand(i).getSimpleLossFlag() == true) {
                         game.payout(LOSE, *gPlayers[0]);
-                        //money already deducted with bet
-                        break;
-                    case 3: //HAND1_IS_BUSTED
-                        std::cout << "Player busted!" << std::endl;
-                        game.payout(BUST, *gPlayers[0]);
-                        //money already deducted with bet
-                        break;
-                    case 21: //TWENTY_ONE
-                        std::cout << "Blackjack!!!, paying at 3:2!" << std::endl;
-                        game.payout(BLACK_JACK, *gPlayers[0]);
-                    default:
-                        std::cout << "An oddity occurred, mostly and error." << std::endl;
-                        break;
+                    }
+                    else if (gPlayers[0]->getHand(i).getStandFlag() == true) {
+                        const int HAND1_IS_GREATER = 1;
+                        const int HAND2_IS_GREATER = 2;
+                        const int HANDS_ARE_EQUAL = 0;
+                        
+                        switch (game.comparePlayerHands(gPlayers[0]->getHand(i), dealer.getHand())) {
+                            case HAND1_IS_GREATER:
+                                game.payout(WIN, *gPlayers[0]);
+                                break;
+                            case HAND2_IS_GREATER:
+                                game.payout(LOSE, *gPlayers[0]);
+                                break;
+                            case HANDS_ARE_EQUAL:
+                                game.payout(PUSH, *gPlayers[0]);
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        //other case
+                    }
+                    
                 }
             }
+            
         }
         
+        std::cout << "DEBUG: MAIN: showing player1" << std::endl;
+        std::cout << *gPlayers[0] << std::endl;
+        std::cout << "END OF DEBUG MAIN" << std::endl;
+        std::cout << "****************************" << std::endl;
         game.preparePlayersForNewRound(gPlayers, dealer);
         game.setDealStart(true);
         game.getQuitAnswer();
@@ -157,10 +158,7 @@ int main(int argc, const char * argv[]) {
     std::cout << std::endl << std::endl << "****************************" << std::endl;
     std::cout << "DEBUG: MAIN: showing all players..." << std::endl;
     showAllPlayers(players);
-    std::cout << "DEBUG: MAIN: showing player1" << std::endl;
-    std::cout << *gPlayers[0] << std::endl;
-    std::cout << "END OF DEBUG MAIN" << std::endl;
-    std::cout << "****************************" << std::endl;
+    
 
     
         return 0;

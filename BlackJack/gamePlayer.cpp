@@ -147,12 +147,13 @@ int GamePlayer::buildPlayOptionForPlayerAndReturnChoice() {
         options.push_back("Stand");
         
         if (getMoney() >= getBet()) {  //double down/splitting requires at least same amount as bet
+            std::cout << "HHHAAAANNNDD is " << getHand(index) << std::endl;
             if (getHand(index).pileSize() == TWO_CARDS) { //handIsDoubleable
                 options.push_back("Double down");
             }
             else {
                 std::cout << "DEBUG: Gameplayer::buildplayOptionsForPlayer..., Hand[" << index << "] is not doubleable" << std::endl;
-                std::cout << " because there are " << getHand(index).pileSize() << " cards in hand[" << index <<std::endl;
+                std::cout << " because there are " << getHand(index).pileSize() << " cards in hand[" << index << "]" << std::endl;
             }
             if (getHand(index).getIndividualCard(0) == getHand(index).getIndividualCard(1) && getHand(index).pileSize() == TWO_CARDS) { //handIsSplittable
                 options.push_back("Split");
@@ -171,23 +172,17 @@ void GamePlayer::hit(Card card, int handIndex) {
     std::cout << "DEBUG: IN HIT" << std::endl;
     std::cout << _name << " hits" << std::endl;
     addCardToHandFromDeck(card, handIndex);
-    int total = getHand(handIndex).calculate();
+    //int total = getHand(handIndex).calculate();
     
-    if (total > 21) {
-        //setBustedFlag(true);
-        setInSession(false);
-    }
-    else if (total == 21) {
-        //setBlackjackFlag(true);
-        setInSession(false);
-    }
-    else {
-        //default case: break?
-    }
     std::cout << "DEBUG: END OF HIT" << std::endl;
 
 }
-
+/**
+ *  This method checks if player has enough money to make a bet (hence the doubling).  Then proceeds to remove the bet from players money.  Last thing it does is add a card to the hand.
+ *  @param Card: Takes a card for insertion into hand
+ *  @param handIndex: The index of players hand to place card in
+ *  @warning ATM this method does not set the doubleFlag/handInSessionFlag
+ */
 void GamePlayer::doubleDown(Card card, int handIndex) {
     //set to return boolean? Might be better for error checking
 
@@ -197,6 +192,7 @@ void GamePlayer::doubleDown(Card card, int handIndex) {
         std::cout << "Player can double down." << std::endl;
         std::cout << "Removing $" << _bet << " from $" << _money << ": " << "$" << _money << " - $" << _bet << " = $" << _money - _bet << std::endl;
         _money -= _bet;
+        _bet *= 2;
         std::cout << "Adding card to hand, and disabling rest of session..." << std::endl;
         //maybe make call to hit instead?
         
@@ -209,9 +205,14 @@ void GamePlayer::doubleDown(Card card, int handIndex) {
     }
 }
 
-int GamePlayer::split() { //possible vector of hands to return
+int GamePlayer::split(int index = 0) { //possible vector of hands to return
     static int splitCount = 0; //count the number times splits for current player have been made/reset to 0 a the end of round
     const int MAX_SPLITS_ALLOWED = 3;
+    
+    if ( !(getHand(index).getIndividualCard(0) == getHand(index).getIndividualCard(1))) {
+        std::cout << "Cannot split hands, cards 1 & 2 are not equal." << std::endl;
+        return splitCount;
+    }
     
     std::cout << "DEBUG GamePlayer:Split, splitCount before splitting is " << splitCount << std::endl;
     
@@ -223,8 +224,8 @@ int GamePlayer::split() { //possible vector of hands to return
         Hand h1;
         Hand h2;
         
-        h2.addCard(hands_[0].removeLastCard());
-        h1.addCard(hands_[0].removeLastCard());
+        h2.addCard(hands_[index].removeLastCard());
+        h1.addCard(hands_[index].removeLastCard());
         hands_.pop_back();
         hands_.push_back(h1);
         hands_.push_back(h2);

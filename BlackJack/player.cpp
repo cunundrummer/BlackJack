@@ -160,6 +160,17 @@ void Player::addCardToHandFromDeck(Card cardToAdd, size_t index) {
         hands_.at(index).addCard(cardToAdd);
 }
 
+/**
+ *  Copies a vector of hands after clearing players hands. Pretty much a hand swap
+ *  @param Hands:  an vector of hands to overwrite players previous hands
+*/
+void Player::setHands(std::vector<Hand>& hands) {
+    if (hands_.size() > 0) {
+        hands_.clear();
+    }
+    hands_ = hands;
+}
+
 void Player::displayHand() {
     if (hands_.size() == 0) {
         std::cout << "Hand(s) N/A" << std::endl;
@@ -184,31 +195,19 @@ void Player::print() {
     
 }
 
-void Player::hit(Card card) {
+void Player::hit(Card card, int index = 0) {
     
     std::cout << "DEBUG: IN HIT" << std::endl;
     std::cout << _name << " hits" << std::endl;
     addCardToHandFromDeck(card);
-    int total = getHand(0).calculate();
     
-    if (total > 21) {
-        //setBustedFlag(true);
-        setInSession(false);
-    }
-    else if (total == 21) {
-        //setBlackjackFlag(true);
-        setInSession(false);
-    }
-    else {
-        //default case: break?
-    }
-     std::cout << "DEBUG: END OF HIT" << std::endl;
+    std::cout << "DEBUG: END OF HIT" << std::endl;
 }
 
 void Player::stand() {
     std::cout << _name << " stands" << std::endl;
     //setStandFlag(true);
-    setInSession(false);
+    //setInSession(false);
 }
 
 void Player::doubleDown() {
