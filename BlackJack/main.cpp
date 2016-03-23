@@ -115,13 +115,14 @@ int main(int argc, const char * argv[]) {
                 
                 for (int i = 0; i < gPlayers[0]->getHands().size(); i++) {
                     //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
+                    const int HAND1_IS_GREATER = 1;
+                    const int HAND2_IS_GREATER = 2;
+                    const int HANDS_ARE_EQUAL = 0;
+                    
                     if (gPlayers[0]->getHand(i).getBustedFlag() == true || gPlayers[0]->getHand(i).getSimpleLossFlag() == true) {
                         game.payout(LOSE, *gPlayers[0]);
                     }
                     else if (gPlayers[0]->getHand(i).getStandFlag() == true) {
-                        const int HAND1_IS_GREATER = 1;
-                        const int HAND2_IS_GREATER = 2;
-                        const int HANDS_ARE_EQUAL = 0;
                         
                         switch (game.comparePlayerHands(gPlayers[0]->getHand(i), dealer.getHand())) {
                             case HAND1_IS_GREATER:
@@ -137,7 +138,7 @@ int main(int argc, const char * argv[]) {
                         }
                     }
                     else {
-                        //other case
+                        
                     }
                     
                 }

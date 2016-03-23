@@ -367,6 +367,7 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
             std::cout << player.getName() << "'s hand is :" << std::endl << player.getHand(index) << std::endl;
             calculatePlayerResult(player, index);
             player.getHand(index).setDoubledFlag(true);
+            player.getHand(index).setStandFlag(true); //Cannot get any new cards after a double
             //return choice;
             break;
         case PLAY_OPTIONS::SPLIT:
@@ -651,7 +652,6 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer) {
                 gPlayer.setInSession(false);
                 break;
             case WIN:
-                
                 if (gPlayer.getHand(index).getDoubledFlag()) {
                     std::cout << name << " wins with a doubled down hand for hand " << index << "  Win back bet. (3:1 payout)" << std::endl;
                     gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() *2));
