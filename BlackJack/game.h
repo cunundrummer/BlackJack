@@ -99,7 +99,7 @@ public:
     int calculatePlayerResult(GamePlayer& g, int index = 0);
     int comparePlayerHands(Hand playersHand, Hand DealersHand);
 
-    void payout(PAYOUT_TYPE, GamePlayer&);
+    void payout(PAYOUT_TYPE, GamePlayer& gamePlayer, int);
 
     void preparePlayersForNewRound(std::vector<GamePlayer*>&, DealerPlayer&);
     void printGame(std::vector<GamePlayer*> &, DealerPlayer) const;

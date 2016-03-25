@@ -83,7 +83,7 @@ int main(int argc, const char * argv[]) {
             game.dealCardToAllPlayers(players, true);
         }
         
-        setPlayersHandForTesting(dealer, 2, Suits::clubs, 10, Suits::spades);
+        setPlayersHandForTesting(dealer, 2, Suits::clubs, 3, Suits::spades);
         setPlayersHandForTesting(*gPlayers[0], 5, Suits::spades, 5, Suits::hearts);
         
         if (game.isInsuranceRequired(gPlayers, dealer.getHand()/* dealersHand*/)) {
@@ -120,19 +120,21 @@ int main(int argc, const char * argv[]) {
                     const int HANDS_ARE_EQUAL = 0;
                     
                     if (gPlayers[0]->getHand(i).getBustedFlag() == true || gPlayers[0]->getHand(i).getSimpleLossFlag() == true) {
-                        game.payout(LOSE, *gPlayers[0]);
+                        game.payout(LOSE, *gPlayers[0], i);
                     }
                     else if (gPlayers[0]->getHand(i).getStandFlag() == true) {
-                        
+                        std::cout << "Dealers hand is " << dealer.getHand();
+                        std::cout << gPlayers[0]->getName() << " hand[ " << i << " ] is " << gPlayers[0]->getHand(i) << std::endl;
                         switch (game.comparePlayerHands(gPlayers[0]->getHand(i), dealer.getHand())) {
+
                             case HAND1_IS_GREATER:
-                                game.payout(WIN, *gPlayers[0]);
+                                game.payout(WIN, *gPlayers[0], i);
                                 break;
                             case HAND2_IS_GREATER:
-                                game.payout(LOSE, *gPlayers[0]);
+                                game.payout(LOSE, *gPlayers[0], i);
                                 break;
                             case HANDS_ARE_EQUAL:
-                                game.payout(PUSH, *gPlayers[0]);
+                                game.payout(PUSH, *gPlayers[0], i);
                             default:
                                 break;
                         }

@@ -93,25 +93,24 @@ void GamePlayer::implementInsuranceBet() {
 }
 
 void GamePlayer::printBetReport() {
-    /*
-    std::cout << std::endl;
-    std::cout << "BET REPORT:" << std::endl;
-    std::cout << "Money @ start of round: " << getPreBetMoney() << std::endl;
-    std::cout << "Bet: -$" << _bet << std::endl;
-    std::cout << "Current money: $" << getMoney() << std::endl;
-    std::cout << "Insurance bet: -$" << getInsuranceBet() << std::endl;
-    std::cout << "Resolved insurance bet: $" << getResolvedInsurancePayout() << std::endl;
-    //std::cout << "Double bet: $"; (doubledFlag_) ?  std::cout << "-" << _bet << std::endl : std::cout << "0" << std::endl;
-    std::cout << "Total: $" << getMoney() << std::endl;
-    std::cout << "END OF BET REPORT" << std::endl << std::endl;
-    */
-    
+        
     std::cout << std::endl;
     std::cout << "BET REPORT:" << std::endl;
     std::cout << "Money @ start of round: " << getPreBetMoney() << std::endl;
     std::cout << "Bet: -$" << _bet << std::endl;
     if (_insuranceBetIsSet == true) {
         std::cout << "Insurance bet: -$" << getInsuranceBet() << std::endl;
+    }
+    int splitCout = 0;
+    for (auto h: hands_) {
+        if (h.getSplitFlag()) {
+            std::cout << "Splithand(" << splitCout << "): ";
+            std::cout << "-" << getBet() << std::endl;
+        }
+        if (h.getDoubledFlag()) {
+            std::cout << "Doubled: YES for hand(" << splitCout << ")" << std::endl;
+        }
+        splitCout++;
     }
     //std::cout << "Total: $" << getMoney() << std::endl;
     std::cout << "END OF BET REPORT" << std::endl << std::endl;
@@ -191,8 +190,8 @@ void GamePlayer::doubleDown(Card card, int handIndex) {
     if (_money - _bet > 0) { //enough money available for doubling down?
         std::cout << "Player can double down." << std::endl;
         std::cout << "Removing $" << _bet << " from $" << _money << ": " << "$" << _money << " - $" << _bet << " = $" << _money - _bet << std::endl;
-        _money -= _bet;
-        _bet *= 2;
+        //_money -= _bet;
+        //_bet *= 2;
         std::cout << "Adding card to hand, and disabling rest of session..." << std::endl;
         //maybe make call to hit instead?
         
@@ -205,7 +204,10 @@ void GamePlayer::doubleDown(Card card, int handIndex) {
     }
 }
 
-int GamePlayer::split(int index = 0) { //possible vector of hands to return
+/**
+ *  @warning There might be a problem if the hand is split more then once
+ */
+int GamePlayer::split(int index = 0) {
     static int splitCount = 0; //count the number times splits for current player have been made/reset to 0 a the end of round
     const int MAX_SPLITS_ALLOWED = 3;
     
@@ -227,9 +229,17 @@ int GamePlayer::split(int index = 0) { //possible vector of hands to return
         h2.addCard(hands_[index].removeLastCard());
         h1.addCard(hands_[index].removeLastCard());
         hands_.pop_back();
+        
+        double moneyAmountToRemove = 0;
         hands_.push_back(h1);
+        std::cout << "Removing $" << getBet() << " for splitting hand" << std::endl;
+        moneyAmountToRemove += getBet();
         hands_.push_back(h2);
+        std::cout << "Removing $" << getBet() << " for splitting hand" << std::endl;
+        moneyAmountToRemove += getBet();
         splitCount++;
+        
+        setMoney(getMoney() - moneyAmountToRemove);
     }
     else {
         std::cout << "Cannot split anymore hands." << std::endl;

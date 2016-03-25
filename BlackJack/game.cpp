@@ -382,6 +382,7 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
                 
                 std::cout << "Players hands after splitting is: " << std::endl;
                 std::cout << player.getHand(i) << " at index " << i << std::endl;
+                std::cout << player.getName() << " has $" << player.getMoney() << " after splitting." << std::endl;
                 
                 index = i;
                 const int EMPTY_CHOICE = 99;
@@ -532,22 +533,22 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
         for (auto gP: gPlayers) {
             if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer and player have BJ (push w/ins.)
                 if (gP->getInsuranceFlag() == true) {
-                    payout(INSURANCE_PUSH, *gP);
+                    payout(INSURANCE_PUSH, *gP, 0);
                     //std::cout << gP->getName(false) << " took insurance and wins even money! (2:1)" << std::endl;
                     
                 }
                 else {
-                    payout(NO_INSURANCE_PUSH, *gP);
+                    payout(NO_INSURANCE_PUSH, *gP, 0);
                     //std::cout << gP->getName(false) << " did not take insurance, therefore it's a push! (1:1)" << std::endl; //dealer and player have BJ (push/no ins.)
                 }
             }
             else { //dealer has BJ but player does not
                 if (gP->getInsuranceFlag() == true) {
-                    payout(INSURANCE_BJ, *gP);
+                    payout(INSURANCE_BJ, *gP, 0);
                     //std::cout << gP->getName(false) << " took insurance, therefore " << gP->getName(false) << " loses bet, but gets back insurance! (2:1)" << std::endl;
                 }
                 else {
-                    payout(NO_INSURANCE_BJ, *gP);
+                    payout(NO_INSURANCE_BJ, *gP, 0);
                     //std::cout << gP->getName(false) << " did not take insurance, and loses bet as a result." << std::endl;
                     
                 }
@@ -560,7 +561,7 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
         for (auto gP: gPlayers) {
             if (gP->getHand(0).calculate() == BLACKJACK_FLAG) { //dealer does not have BJ, player does have BJ
                 std::cout << gP->getName(false) << " has BlackJack and wins bet at 3:2 payout" << std::endl;
-                payout(BLACK_JACK, *gP);
+                payout(BLACK_JACK, *gP, 0);
             }
             else { //neither dealer or player have BJ
                 if (gP->isInSession()) {
@@ -581,11 +582,11 @@ int Game::insurancePayout(std::vector<GamePlayer*> &gPlayers, Hand dealersHand) 
  
  "The dealer will check to see if he has a 10-value card underneath his Ace, and if he does have Blackjack, your winning Insurance bet will be paid at odds of 2:1. You will still lose your original bet (unless you also have a Blackjack), so the net effect is that you break even (assuming you bet the full half bet for insurance.) This is why the bet is described as “insurance”, since it seems to protect your original bet against a dealer blackjack. Of course, if the dealer does not have blackjack, you’ll lose the insurance bet, and still have to play the original bet out."
  */
-void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer) {
+void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
     //try making payouts outside of this method, this method should probably just set appropriate flags, called set payoutflags
     //also, probably don't need so many cases.  Put conditional statements for insurance.  
     std::string name = gPlayer.getName();
-    for (int index = 0; index < gPlayer.getHands().size(); index++) {
+    //for (int index = 0; index < gPlayer.getHands().size(); index++) {
     
         switch (payoutType) {
             case INSURANCE_PUSH:  //Dealer and player have BJ, player took insurance
@@ -642,8 +643,9 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer) {
                 break;
             case LOSE:
                 std::cout << name << " did not win. Lose bet." << std::endl;
+                std::cout << name << " 's hand" << index << " is " << gPlayer.getHand(index) << std::endl;
                 //gPlayer.setMoney(gPlayer.getMoney() - gPlayer.getBet()); //player already has bet detucted
-                gPlayer.getHand(index).setSimpleLossFlag(true);
+                //gPlayer.getHand(index).setSimpleLossFlag(true);
                 gPlayer.setInSession(false);
                 break;
             case BUST:
@@ -654,19 +656,26 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer) {
             case WIN:
                 if (gPlayer.getHand(index).getDoubledFlag()) {
                     std::cout << name << " wins with a doubled down hand for hand " << index << "  Win back bet. (3:1 payout)" << std::endl;
-                    gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() *2));
+                    std::cout << name << " gets back bet:\n" << gPlayer.getBet() << " + \n";
+                    std::cout << gPlayer.getBet() * 2 << " =\n";
+                    std::cout << gPlayer.getBet() + (gPlayer.getBet() * 2) << std::endl;
+                    gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet() + (gPlayer.getBet() *2));
                 }
                 else {
                     std::cout << name << " wins. Win back bet. (2:1 payout)" << std::endl;
                     gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() * 2));
                 }
-            
+                
+                if (gPlayer.getHand(index).getSplitFlag() == true) { //pay back for split hand
+                    gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet()));
+                }
+                
                 gPlayer.getHand(index).setSimpleWinFlag(true);
                 break;
             default:
                 break;
         }
-    }
+    //}
     std::cout << name << " now has " << gPlayer.getMoney() << std::endl;
     std::cout << "DEBUG: END OF Game::payout()" << std::endl;
 }
