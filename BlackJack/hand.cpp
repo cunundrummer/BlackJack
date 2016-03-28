@@ -28,9 +28,9 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
     std::vector<Card> cVector;
     
     //std::cout << "In HAND<<, pilesize is " << h.pileSize() << std::endl;
-        for (auto hnd :h._cardPile) {
-            if (hnd.getFaceUp()) {
-                os << hnd << " ";
+        for (auto card :h._cardPile) {
+            if (card.getFaceUp() || h.pileSize() > 2) {
+                os << card << " ";
             }
             else {
                 os << "X" << " ";

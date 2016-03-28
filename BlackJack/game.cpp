@@ -121,6 +121,11 @@ void Game::setupDeck(int nDecks, bool randomize = true) {
     _deck = d;
     //Deck *deckPtr = new Deck(d);
     //_deck = deckPtr;
+    std::cout << "Shuffling deck..." << std::endl;
+    if (randomize) {
+        _deck.shuffle();
+    }
+    
     _deck.print();
     std::cout << std::endl << "[InGame::setUpDeck]There are " << _deck.pileSize() << " cards in the deck" << std::endl;
     
@@ -316,6 +321,7 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
     else
         askForInsurance = false;
     
+    std::cout << "DEBUG: insurance required?: " << ((askForInsurance) ? "yes" : "no") << std::endl;
     std::cout << "END DEBUG: game.isInsuranceRequired" << std::endl;
     return askForInsurance;
 }
@@ -468,6 +474,7 @@ int Game::comparePlayerHands(Hand playersHand, Hand DealersHand) {
     const int HAND1_IS_BUSTED = 3;
     const int HANDS_ARE_EQUAL = 0;
     const int TWENTY_ONE = 21;
+    
     int h1 = playersHand.calculate();
     int h2 = DealersHand.calculate();
     
@@ -481,7 +488,11 @@ int Game::comparePlayerHands(Hand playersHand, Hand DealersHand) {
         return HANDS_ARE_EQUAL;
     }
     else if (h1 < h2) {
-        return HAND2_IS_GREATER;
+        if (h2 > TWENTY_ONE) {
+            return HAND1_IS_GREATER;
+        }
+        else
+            return HAND2_IS_GREATER;
     }
     else {
         return TWENTY_ONE;

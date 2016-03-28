@@ -75,7 +75,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "Added dealer to players list." << std::endl;
     std::cout << "Building cards...deck(s)..." << std::endl;
     
-    game.setupDeck(2,false);
+    game.setupDeck(2,true);
     std::cout << std::endl;
     
     do {
@@ -92,9 +92,12 @@ int main(int argc, const char * argv[]) {
             game.dealCardToAllPlayers(players, true);
         }
         
-        setPlayersHandForTesting(dealer, 2, Suits::clubs, 3, Suits::spades);
-        setPlayersHandForTesting(*gPlayers[0], 5, Suits::spades, 5, Suits::hearts);
-        
+        /*
+        // these 2 statements are for debugging purposes only
+        //setPlayersHandForTesting(dealer, 2, Suits::clubs, 3, Suits::spades);
+        //setPlayersHandForTesting(*gPlayers[0], 5, Suits::spades, 5, Suits::hearts);
+        */
+       
         if (game.isInsuranceRequired(gPlayers, dealer.getHand()/* dealersHand*/)) {
             game.getInsuranceFromPlayers(gPlayers);
         }
@@ -106,6 +109,12 @@ int main(int argc, const char * argv[]) {
         if (gameFlag == BLACKJACK) {
             if (DEBUGGING) {
                 std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;
+            }
+            //check players hand for blackjack(push)
+            if (game.comparePlayerHands(gPlayers[0]->getHand(), dealer.getHand()) == 0) {
+                std::cout << "Dealer and player have BJ. It's a push... " << std::endl;
+                std::cout << "Dealers hand: " << dealer.getHand() << std::endl;
+                std::cout << gPlayers[0]->getName() << "'s hand: " << gPlayers[0]->getHand() << std::endl;
             }
             game.getQuitAnswer();
             
@@ -129,35 +138,45 @@ int main(int argc, const char * argv[]) {
                     const int HAND1_IS_GREATER = 1;
                     const int HAND2_IS_GREATER = 2;
                     const int HANDS_ARE_EQUAL = 0;
-                    
+                    const int TWENTY_ONE = 21;
                     if (gPlayers[0]->getHand(i).getBustedFlag() == true || gPlayers[0]->getHand(i).getSimpleLossFlag() == true) {
                         game.payout(LOSE, *gPlayers[0], i);
                     }
                     else if (gPlayers[0]->getHand(i).getStandFlag() == true) {
                         std::cout << "Dealers hand is " << dealer.getHand();
-                        std::cout << gPlayers[0]->getName() << " hand[ " << i << " ] is " << gPlayers[0]->getHand(i) << std::endl;
+                        std::cout << gPlayers[0]->getName() << " hand[" << i << "] is " << gPlayers[0]->getHand(i) << std::endl;
                         switch (game.comparePlayerHands(gPlayers[0]->getHand(i), dealer.getHand())) {
 
                             case HAND1_IS_GREATER:
                                 game.payout(WIN, *gPlayers[0], i);
                                 break;
                             case HAND2_IS_GREATER:
-                                game.payout(LOSE, *gPlayers[0], i);
+                                if (dealer.getHand().getBustedFlag()) {
+                                    game.payout(WIN, *gPlayers[0], i);
+                                }
+                                else {
+                                    game.payout(LOSE, *gPlayers[0], i);
+                                }
                                 break;
                             case HANDS_ARE_EQUAL:
                                 game.payout(PUSH, *gPlayers[0], i);
+                                break;
+                            case TWENTY_ONE:
+                                game.payout(WIN, *gPlayers[0], i);
+                                break;
                             default:
                                 break;
                         }
                     }
                     else {
-                        
+                        std::cout << "Error in main: else if standFlag" << std::endl;
+                        exit(9);
                     }
                     
-                }
-            }
-            
-        }
+                }//end of for
+            }//end of if (inSessiong)
+        }//end of else
+        
         if (DEBUGGING) {
             std::cout << "DEBUG: MAIN: showing player1" << std::endl;
             std::cout << *gPlayers[0] << std::endl;

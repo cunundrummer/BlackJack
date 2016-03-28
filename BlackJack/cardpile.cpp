@@ -78,7 +78,16 @@ void CardPile::print() {
 
 }
 
+/**
+ * Shuffles a pile of card objects
+ * @warning Implented with newer c++14 randomization. Requires <random> header
+ */
 void CardPile::shuffle() {
-    std::random_shuffle(_cardPile.begin(), _cardPile.end());
+    //c++14 'proper randomization
+    std::random_device rng;
+    std::mt19937 urng(rng());
+    std::shuffle(_cardPile.begin(), _cardPile.end(), urng);
+    
+    //std::random_shuffle(_cardPile.begin(), _cardPile.end()); //deprecated randomization, required srand
 }
 

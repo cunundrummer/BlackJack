@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <vector>
+#include <ctime>//used for old style randomization
+#include <random>
 #include "utilities.h"
 #include "card.h"
 
