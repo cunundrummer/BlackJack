@@ -668,9 +668,10 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
                 if (gPlayer.getHand(index).getDoubledFlag()) {
                     std::cout << name << " wins with a doubled down hand for hand " << index << "  Win back bet. (3:1 payout)" << std::endl;
                     std::cout << name << " gets back bet:\n" << gPlayer.getBet() << " + \n";
-                    std::cout << gPlayer.getBet() * 2 << " =\n";
-                    std::cout << gPlayer.getBet() + (gPlayer.getBet() * 2) << std::endl;
-                    gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet() + (gPlayer.getBet() *2));
+                    std::cout << "doubled bet: " << gPlayer.getBet() << " =\n";
+                    std::cout << "(bet & doubled bet)x2 " << ((gPlayer.getBet() * 2) * 2) << std::endl;  //gets back bet, plus doubled bet, and another 2xBet
+                    
+                    gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getBet() * 2) + (gPlayer.getBet() *2));
                 }
                 else {
                     std::cout << name << " wins. Win back bet. (2:1 payout)" << std::endl;

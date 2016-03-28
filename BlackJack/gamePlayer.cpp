@@ -190,7 +190,7 @@ void GamePlayer::doubleDown(Card card, int handIndex) {
     if (_money - _bet > 0) { //enough money available for doubling down?
         std::cout << "Player can double down." << std::endl;
         std::cout << "Removing $" << _bet << " from $" << _money << ": " << "$" << _money << " - $" << _bet << " = $" << _money - _bet << std::endl;
-        //_money -= _bet;
+        _money -= _bet;
         //_bet *= 2;
         std::cout << "Adding card to hand, and disabling rest of session..." << std::endl;
         //maybe make call to hit instead?
