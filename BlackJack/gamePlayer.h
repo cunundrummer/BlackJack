@@ -68,6 +68,8 @@ public:
     void doubleDown(Card card, int handIndex = 0);
     int split(int index); //return number of unresolved splits
     
+    virtual void playHand() {};
+    
 };
 
 #endif /* defined(__BlackJack__gamePlayer__) */

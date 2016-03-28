@@ -28,7 +28,7 @@ public:
     
     void init(bool inSessionFlag = true);
     void hit(Card card);
-    
+    void playHand(Deck& deck);
     void print();
     
     ~DealerPlayer(){};

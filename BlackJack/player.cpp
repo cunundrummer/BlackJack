@@ -217,3 +217,7 @@ void Player::doubleDown() {
 /*void Player::split() {
     
 }*/
+
+void Player::playHand(Deck& deck) {
+    
+}

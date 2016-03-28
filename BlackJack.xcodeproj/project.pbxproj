@@ -21,6 +21,7 @@
 		0DD62F351AFC2C7300671A2F /* hand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD62F331AFC2C7300671A2F /* hand.cpp */; };
 		0DD62F381AFC31B200671A2F /* deck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD62F361AFC31B200671A2F /* deck.cpp */; };
 		228341B81C9C829F00A9B37D /* testFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 228341B61C9C829F00A9B37D /* testFunctions.cpp */; };
+		22EB21AD1CA5CF84002A284D /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22EB21AB1CA5CF84002A284D /* debug.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +65,8 @@
 		0DD62F371AFC31B200671A2F /* deck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deck.h; sourceTree = "<group>"; };
 		228341B61C9C829F00A9B37D /* testFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testFunctions.cpp; sourceTree = "<group>"; };
 		228341B71C9C829F00A9B37D /* testFunctions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = testFunctions.hpp; sourceTree = "<group>"; };
+		22EB21AB1CA5CF84002A284D /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
+		22EB21AC1CA5CF84002A284D /* debug.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = debug.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +126,8 @@
 				0DD62F281AF15B5100671A2F /* utilities.h */,
 				228341B61C9C829F00A9B37D /* testFunctions.cpp */,
 				228341B71C9C829F00A9B37D /* testFunctions.hpp */,
+				22EB21AB1CA5CF84002A284D /* debug.cpp */,
+				22EB21AC1CA5CF84002A284D /* debug.hpp */,
 			);
 			path = BlackJack;
 			sourceTree = "<group>";
@@ -190,6 +195,7 @@
 				0DD62F321AF83A6F00671A2F /* cardpile.cpp in Sources */,
 				0DD62F351AFC2C7300671A2F /* hand.cpp in Sources */,
 				0DD62F261AF1563100671A2F /* player.cpp in Sources */,
+				22EB21AD1CA5CF84002A284D /* debug.cpp in Sources */,
 				0DD62F2F1AF824CA00671A2F /* card.cpp in Sources */,
 				0DD62F181AF04EBF00671A2F /* main.cpp in Sources */,
 				0DD62F2C1AF2A41600671A2F /* prompts.cpp in Sources */,

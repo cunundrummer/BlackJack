@@ -14,6 +14,7 @@
 #include <iomanip>
 #include "input.h"
 #include "hand.h"
+#include "deck.h"
 
 class Player {
 private:
@@ -67,6 +68,8 @@ public:
     virtual void stand();
     virtual void doubleDown();
     //virtual void split();
+    
+    virtual void playHand(Deck& deck); //auto play hand
     
 };
 

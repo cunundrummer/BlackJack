@@ -8,6 +8,8 @@
 /*
  -consider using a debug flag, so if there is an if DEBUG then all debug statements would be shown
  */
+#pragma
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -25,6 +27,7 @@
 #include "menu.h"
 #include "player.h"
 #include "testFunctions.hpp"
+#include "debug.hpp"
 
 const int GAME_GOES_ON_FLAG = 0;
 
@@ -34,6 +37,10 @@ void showAllPlayers(std::vector<Player*> players, bool showOnePlayer = true, int
 int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
+    
+    if (DEBUGGING) {
+        std::cout << "Debugging mode!" << std::endl;
+    }
     
     Game game(false, 1); // default is demo mode(false)
 
@@ -48,7 +55,7 @@ int main(int argc, const char * argv[]) {
     }
     
     std::vector<GamePlayer*> gPlayers;
-    std::cout << "DEBUG: Main: Entering player setup..." << std::endl;
+    (DEBUGGING) ? std::cout << "DEBUG: Main: Entering player setup..." << std::endl : std::cout << std::endl;
     game.setUpPlayers(gPlayers);
     
     DealerPlayer dealer;
@@ -57,9 +64,11 @@ int main(int argc, const char * argv[]) {
     ////////Making a vector for all player objects for ease of use in certain methods/functions
     std::vector<Player*> players(gPlayers.begin(), gPlayers.end());
     players.push_back(&dealer);
-    std::cout << "DEBUG: Testing all players including dealer..." << std::endl;
-    
-    std::cout << "END OF DEBUG: Testing all players including dealer..." << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: Testing all players including dealer..." << std::endl;
+        
+        std::cout << "END OF DEBUG: Testing all players including dealer..." << std::endl;
+    }
     ///////////////////////////////////////////////////////////////////////////////////////////
     
     std::cout << "Player setup phaze complete." << std::endl;
@@ -95,7 +104,9 @@ int main(int argc, const char * argv[]) {
         std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
     
         if (gameFlag == BLACKJACK) {
-            std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;
+            if (DEBUGGING) {
+                std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;
+            }
             game.getQuitAnswer();
             
         }
@@ -111,7 +122,7 @@ int main(int argc, const char * argv[]) {
                 
                 int choice = gPlayers[0]->buildPlayOptionForPlayerAndReturnChoice();
                 game.resolveChoice(choice, *gPlayers[0]);
-                
+                dealer.playHand(game.getDeck());
                 
                 for (int i = 0; i < gPlayers[0]->getHands().size(); i++) {
                     //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
@@ -147,24 +158,28 @@ int main(int argc, const char * argv[]) {
             }
             
         }
+        if (DEBUGGING) {
+            std::cout << "DEBUG: MAIN: showing player1" << std::endl;
+            std::cout << *gPlayers[0] << std::endl;
+            
+            std::cout << "There are " << game.getDeck().pileSize() << " in the deck." << std::endl;
+            std::cout << "END OF DEBUG MAIN" << std::endl;
+            std::cout << "****************************" << std::endl;
+        }
         
-        std::cout << "DEBUG: MAIN: showing player1" << std::endl;
-        std::cout << *gPlayers[0] << std::endl;
-        std::cout << "END OF DEBUG MAIN" << std::endl;
-        std::cout << "****************************" << std::endl;
         game.preparePlayersForNewRound(gPlayers, dealer);
         game.setDealStart(true);
         game.getQuitAnswer();
         
     } while (game.getQuitSentinal() == false);
-        
-    std::cout << std::endl << std::endl << "****************************" << std::endl;
-    std::cout << "DEBUG: MAIN: showing all players..." << std::endl;
-    showAllPlayers(players);
     
-
+    if (DEBUGGING) {
+        std::cout << std::endl << std::endl << "****************************" << std::endl;
+        std::cout << "DEBUG: MAIN: showing all players..." << std::endl;
+        showAllPlayers(players);
+    }
     
-        return 0;
+    return 0;
 }
 
 int calculatePlayerResult(GamePlayer& g) {

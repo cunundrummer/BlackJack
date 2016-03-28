@@ -13,6 +13,10 @@ CardPile::CardPile(std::vector<Card>& cards) {
         addCard(card);
     }
 }
+
+/**
+ *  Gets how many cards are in the 'pile'
+ */
 int CardPile::pileSize() {
     int sz =  convertSizeTtoInt(_cardPile.size());
     

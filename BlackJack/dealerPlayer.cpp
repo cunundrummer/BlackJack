@@ -9,11 +9,7 @@
 #include "dealerPlayer.h"
 
 void DealerPlayer::init(bool inSessionFlag) {
-    //bustedFlag_ = bustedFlag;
-    //pushFlag_ = pushFlag;
     inSessionFlag_ = inSessionFlag;
-    //standFlag_ = standFlag;
-    //blackjackFlag_ = blackjackFlag;
 }
 
 void DealerPlayer::print() {
@@ -31,4 +27,33 @@ void DealerPlayer::hit(Card card) {
     else {
         addCardToHandFromDeck(card);
     }
+}
+
+/**
+ *  The dealer will play his hand here.  Dealer will always hit as long as hand is less then hard 17.  A hard 17 is any hand thay totals 17 w/o aces.
+ *  @param Deck&
+ *  deck will have a card removed for hitting and will give to dealer
+ */
+void DealerPlayer::playHand(Deck& deck) {
+    
+    int dealersOnlyHand = 0;
+    const int HARD17 = 17;
+    //define method to determine wether hand is hard or soft
+    int handTotal = 0;
+    
+    do {
+        
+        handTotal = hands_[dealersOnlyHand].calculate();
+        
+        if (handTotal < HARD17) {
+            std::cout << DEALERS_NAME << " has a total of " << handTotal << ". " << DEALERS_NAME << " will hit." << std::endl;
+            hit(deck.removeLastCard());
+            std::cout << hands_[dealersOnlyHand];
+        }
+        else {
+            std::cout << DEALERS_NAME << " stands on " << handTotal << std::endl;
+        }
+    
+    } while (handTotal < HARD17);
+    
 }
