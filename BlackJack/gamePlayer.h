@@ -68,7 +68,7 @@ public:
     void doubleDown(Card card, int handIndex = 0);
     int split(int index); //return number of unresolved splits
     
-    virtual void playHand() {};
+    virtual void playHand(Deck& deck);
     
 };
 

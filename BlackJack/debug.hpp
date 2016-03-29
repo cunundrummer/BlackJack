@@ -11,6 +11,6 @@
 
 #include <iostream>
 
-const bool DEBUGGING = true;
+const bool DEBUGGING = false;
 
 #endif /* debug_hpp */

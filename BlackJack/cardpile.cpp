@@ -46,7 +46,6 @@ Card CardPile::removeLastCard() {
         exit(9);
         return Card(0, error);
     }
-    
 }
 
 void CardPile::addCard(Card c) {

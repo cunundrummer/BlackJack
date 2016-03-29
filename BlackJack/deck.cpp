@@ -12,6 +12,8 @@ Deck::Deck(int nDecks) {
     
     std::cout << "DEBUG: Deck constructor:  building " << nDecks << " decks." << std::endl;
     
+    cardCount = 0;
+    
     if (nDecks == 0) {
         nDecks = 1;
     }
@@ -45,4 +47,3 @@ Deck::Deck(int nDecks) {
     }
         std::cout << "DEBUG: Deck constructor: END: Have " << _cardPile.size() << " decks." << std::endl;
 }
-

@@ -16,6 +16,7 @@
 class Deck : public CardPile {
 private:
     const int MAX_CARDS_IN_A_DECK = 52;
+    int cardCount;
 public:
     Deck& operator=(Deck& other) {
         this->_cardPile = other._cardPile;
@@ -24,11 +25,6 @@ public:
     }
     
     Deck(int numDecks = 0);
-    /*void print() {
-        for (auto d: _cardPile) {
-        std::cout << d;
-        }
-    }*/
 };
 
 

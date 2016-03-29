@@ -261,3 +261,37 @@ int GamePlayer::indexOfSplitHand() {
     return numUnresolvedSplitHands;
 }
 
+void GamePlayer::playHand(Deck& deck) {
+    size_t handSize = hands_.size();
+    const int STAND_ON_18 = 18;
+    
+    //get card count?
+    for  (auto hand: hands_) {
+        do {
+            hit(deck.removeLastCard());
+        } while (hand.calculate() < STAND_ON_18);
+        
+        
+        int cardCount = 0;
+        for (int i = 0; i < handSize; i++) {
+            int cardValue = hand.getIndividualCard(i).getCardValue();
+            if ((cardValue >= 2) && (cardValue <= 6)) {
+                cardCount++;
+            }
+            else if (cardValue >= 7 && cardValue <= 9) {
+                cardValue += 0; //No adding/subtracting. Placed here for clarities sake
+            }
+            else if (cardValue >= 10) {
+                cardValue--;
+            }
+            else {
+                std::cout << "Error in Gameplayer::playHand..." << std::endl;
+                exit(9);
+            }
+        }
+        std::cout << "Card count in hand is: " << cardCount << std::endl;
+        
+        
+    }
+}
+
