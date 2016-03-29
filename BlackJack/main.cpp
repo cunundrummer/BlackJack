@@ -5,10 +5,6 @@
 //  Created by Leeran Pinckovich on 2015-04-28.
 //  Copyright (c) 2015 Compulsive Gamblers inc. All rights reserved.
 //
-/*
- -consider using a debug flag, so if there is an if DEBUG then all debug statements would be shown
- */
-#pragma
 
 #include <iostream>
 #include <vector>
@@ -42,7 +38,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "Debugging mode!" << std::endl;
     }
     
-    Game game(false, 1); // default is demo mode(false)
+    Game game(false, 2); // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;
     game.setIsDemoMode(promptUserForDemoMode());
@@ -111,17 +107,21 @@ int main(int argc, const char * argv[]) {
                 std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;
             }
             //check players hand for blackjack(push)
-            if (game.comparePlayerHands(gPlayers[0]->getHand(), dealer.getHand()) == 0) {
-                std::cout << "Dealer and player have BJ. It's a push... " << std::endl;
-                std::cout << "Dealers hand: " << dealer.getHand() << std::endl;
-                std::cout << gPlayers[0]->getName() << "'s hand: " << gPlayers[0]->getHand() << std::endl;
+            for (auto player: gPlayers) {
+            
+                if (game.comparePlayerHands(player->getHand(), dealer.getHand()) == 0) {
+                    std::cout << "Dealer and player have BJ. It's a push... " << std::endl;
+                    std::cout << "Dealers hand: " << dealer.getHand() << std::endl;
+                    std::cout << player->getName() << "'s hand: " << player->getHand() << std::endl;
+                }
             }
             game.getQuitAnswer();
             
         }
         else { //GAME_GOES_ON
             //start for loop for all players here
-            //BLACKJACK flag already dealt with, it should be impossible for player to get paid for blackjack here
+            
+            
             if (gPlayers[0]->isInSession()) {
                 
                 std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;  //maybe check if player has bj first

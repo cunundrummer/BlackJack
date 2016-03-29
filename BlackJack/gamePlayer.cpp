@@ -261,6 +261,11 @@ int GamePlayer::indexOfSplitHand() {
     return numUnresolvedSplitHands;
 }
 
+
+/**
+ *  This method is supposed to play the hand...incomplete
+ *  @warning INCOMPLETE,  and think this through harder, there is bets and side bets to be made. Consider creating another class
+ */
 void GamePlayer::playHand(Deck& deck) {
     size_t handSize = hands_.size();
     const int STAND_ON_18 = 18;
