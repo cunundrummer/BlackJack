@@ -78,7 +78,7 @@ int main(int argc, const char * argv[]) {
         std::cout << "GAME BEGINS, asking players for bets..." << std::endl;
 
         game.getBetsFromAllPlayers(gPlayers);
-        std::cout << "Bets have been taken, dealing cards to players..." << std::endl;
+        std::cout << "Bets have been taken, dealing cards to players...\n" << std::endl;
         
         if (game.getDealStart()) { //deal only 2 cards for start, dealers second card will be masked
             game.dealCardToAllPlayers(players, true);
@@ -100,8 +100,11 @@ int main(int argc, const char * argv[]) {
     
         game.setDealStart(false); //game started, must be reset to false when round is over
         int gameFlag = game.insurancePayout(gPlayers, dealer.getHand()); //1. detects and pays/deducts insurance if players chose insurance. 2.Returns blackjack for quick startover in case no game can be played.
-        std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
-    
+        
+        if (DEBUGGING) {
+            std::cout << "\nGameflag is " << printFlag(gameFlag) << std::endl;
+        }
+        
         if (gameFlag == BLACKJACK) {
             if (DEBUGGING) {
                 std::cout << "DEBUG: Main: Dealer has blackjack, prepping new round..." << std::endl;

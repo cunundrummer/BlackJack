@@ -126,8 +126,13 @@ void Game::setupDeck(int nDecks, bool randomize = true) {
         _deck.shuffle();
     }
     
-    _deck.print();
-    std::cout << std::endl << "[InGame::setUpDeck]There are " << _deck.pileSize() << " cards in the deck" << std::endl;
+    if (DEBUGGING) {
+        _deck.print();
+        std::cout << std::endl << "[InGame::setUpDeck] ";
+    }
+    
+    std::cout << std::endl << "There are " << _deck.pileSize() <<
+    " cards in the equivalent of " <<_deck.pileSize() / 52 << " decks." << std::endl;
     
 }
 
@@ -150,7 +155,15 @@ void Game::dealCard(Player &player, bool faceup = true) {
     
 }
 
+/**
+ *  Deals a card to a player
+ *  @warning Code in this method is not to clear, could be used as a way to 'hit' too?  
+ */
 void Game::dealCardToAllPlayers(std::vector<Player*> players, bool faceUp = true) {
+    if (DEBUGGING) {
+        std::cout << "DEBUG: game::dealcardstoallplayers: BEGIN" << std::endl;
+    }
+    
     const int ONE_CARD = 1;
     const int NO_CARDS = 0;
     for (auto p: players) {
@@ -166,21 +179,29 @@ void Game::dealCardToAllPlayers(std::vector<Player*> players, bool faceUp = true
             p->addCardToHandFromDeck(card, 0);
         }
     }
-    std::cout << "DEBUG: game::dealcardstoallplayers: END OF METHOD" << std::endl;
+    
+    if (DEBUGGING) {
+        std::cout << "DEBUG: game::dealcardstoallplayers: END OF METHOD" << std::endl;
+    }
+    
 }
 
 void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
     
     //do demo mode a.i. here for determining bets?
-    std::cout << "DEBUG: Game::getBetsFromAllPlayers start" << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: Game::getBetsFromAllPlayers start" << std::endl;
+        std::cout << "Players size is " << p.size() << std::endl;
+    }
     
-    std::cout << "Players size is " << p.size() << std::endl;
-
     for (size_t pCounter = 0; pCounter < p.size(); pCounter++) {
         p[pCounter]->setPreBetMoney();
         
         const double MAX_ALLOWABLE_BET_FROM_PLAYER = p[pCounter]->getMaxBetAllowed(MIN_ALLOWABLE_BET, MAX_ALLOWABLE_BET);
-        std::cout << p[pCounter]->getName(false) << " session status: " << p[pCounter]->isInSession() << std::endl;
+        if (DEBUGGING) {
+            std::cout << p[pCounter]->getName() << " session status: " << p[pCounter]->isInSession() << std::endl;
+        }
+        
         if (p[pCounter]->isInSession() == true) {
             std::cout << p[pCounter]->getName(false) << " has " << p[pCounter]->getMoney() << "." << std::endl;
             std::cout << "Please enter an amount upto " << MAX_ALLOWABLE_BET_FROM_PLAYER << std::endl;
@@ -204,6 +225,7 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
             std::cout << p[pCounter]->getName(false) << " before bet had " << p[pCounter]->getMoney() << " and after bet has ";
             std::cout << p[pCounter]->getMoney() << " - " << p[pCounter]->getBet() << " = " << p[pCounter]->getMoney() - p[pCounter]->getBet() << std::endl;
             p[pCounter]->setMoney(p[pCounter]->getMoney() - p[pCounter]->getBet());
+            std::cout << std::endl;
         }
         else {
             std::cout << p[pCounter]->getName(false) << "is not in session and therefore cannot participate." << std::endl;
@@ -300,9 +322,17 @@ void Game::printGame(std::vector<GamePlayer*> &gPlayers, DealerPlayer dealer) co
     std::cout << dealer << std::endl;
 }
 
+/**
+ *  Determines wether players will be asked for insurance.  If the dealers up card is and Ace, then insurance will be asked
+ *  @param std::vector<GamePlayer*>&  A const reference of all GamePlayers
+ *  @param Hand A dealersHand
+ */
 bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand dealersHand) {
     bool askForInsurance = false;
-    std::cout << "DEBUG: game.isInsuranceRequired" << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: game.isInsuranceRequired" << std::endl;
+    }
+    
     std::cout << "DEALERS HAND: " << dealersHand << std::endl;
     
     Card dealersUpCard = dealersHand.getIndividualCard(0);      //LEARN HOW TO PROGRAM WITH CONSTS!!!
@@ -311,8 +341,11 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
     //removed because of rule clarification const int TEN_CARD = 10;
     const int ACE = 1;
     
-    std::cout << "DEBUG: \nDealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
-    std::cout << "Dealers hole card is " << dealersHoleCard << ". And its value is " << dealersHoleCard.getCardValue() << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: \nDealers up card is " << dealersUpCard << ". And the number is " << dealersUpCard.getCardValue() << std::endl;
+        std::cout << "Dealers hole card is " << dealersHoleCard << ". And its value is " << dealersHoleCard.getCardValue() << std::endl;
+    }
+    
     
     if (dealersUpCard.getCardValue() == ACE)  { //if dealer has ACE as UP card
         std::cout << "Dealer might have a BlackJack! Dealer will ask for insurance." << std::endl;
@@ -321,8 +354,11 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
     else
         askForInsurance = false;
     
-    std::cout << "DEBUG: insurance required?: " << ((askForInsurance) ? "yes" : "no") << std::endl;
-    std::cout << "END DEBUG: game.isInsuranceRequired" << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: insurance required?: " << ((askForInsurance) ? "yes" : "no") << std::endl;
+        std::cout << "END DEBUG: game.isInsuranceRequired" << std::endl;
+    }
+    
     return askForInsurance;
 }
 
@@ -334,7 +370,10 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
             //add card from deck to players hand
             std::cout << "Player chose to hit to hand of index:" << index << std::endl;
             player.hit(getDeck().removeLastCard(), index); //should just add card, nothing else!
-            std::cout << "DEBUG: Game.resolvechoice: HITcase: After hitting, hand is: " << player.getHand(index);
+            if (DEBUGGING) {
+                std::cout << "DEBUG: Game.resolvechoice: HIT case: After hitting, hand is: " << player.getHand(index);
+            }
+            
             player.displayHand();
             
             int result = player.getHand(index).calculate();
@@ -354,7 +393,10 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
                 std::cout << "UNKNOWN/FORGOTTEN POSSIBILITY GOES HERE"  <<std::endl;
             }
             
-            std::cout << "END OF PLAY_OPTIONS::HIT" << std::endl;
+            if (DEBUGGING) {
+                std::cout << "END OF PLAY_OPTIONS::HIT" << std::endl;
+            }
+            
             break;
         }
         case PLAY_OPTIONS::STAND:
@@ -407,7 +449,10 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
             break;
     }
     
-    std::cout << "Game::resolveChoice: returning choice " << choice << std::endl;
+    if (DEBUGGING) {
+        std::cout << "Game::resolveChoice: returning choice " << choice << std::endl;
+    }
+    
     return choice;
 }
 
@@ -601,7 +646,10 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
     
         switch (payoutType) {
             case INSURANCE_PUSH:  //Dealer and player have BJ, player took insurance
-                std::cout << "DEBUG: INSURANCE_PUSH" << std::endl;
+                if (DEBUGGING) {
+                    std::cout << "DEBUG: INSURANCE_PUSH" << std::endl;
+                }
+                
                 std::cout << name << " took insurance and has a 21 as does the dealer. Even money (2:1 payout)" << std::endl;
                 gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet() + gPlayer.getInsuranceBet()); //gets back bet + insurance bet
                 gPlayer.getHand(index).setPushFlag(true);
@@ -609,14 +657,18 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
                 gPlayer.setInSession(false);
                 break;
             case PUSH: //neither dealer or player have BJ, but both have same total
-                std::cout << "DEBUG: PUSH" << std::endl;
+                if (DEBUGGING) {
+                    std::cout << "DEBUG: PUSH" << std::endl;
+                }
                 std::cout << name << " has " << gPlayer.getHand(index).calculate() << " as does the dealer. Push.(1:1 payout)" << std::endl;
                 gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet because of push
                 gPlayer.getHand().setPushFlag(true);
                 gPlayer.setInSession(false);
                 break;
             case NO_INSURANCE_PUSH:  //Dealer and player have BJ, player did not take insurance
-                std::cout << "DEBUG: NO_INSURANCE_PUSH" << std::endl;
+                if (DEBUGGING) {
+                    std::cout << "DEBUG: NO_INSURANCE_PUSH" << std::endl;
+                }
                 std::cout << name << " did not take insurance and has 21 as does the dealer. Push(1:1 payout)" << std::endl;
                 
                 gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet because of push
@@ -625,7 +677,9 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
                 gPlayer.setInSession(false);
                 break;
             case INSURANCE_BJ: //dealer has BJ and player does not
-                std::cout << "DEBUG: INSURANCE_BJ" << std::endl;
+                if (DEBUGGING) {
+                    std::cout << "DEBUG: INSURANCE_BJ" << std::endl;
+                }
                 std::cout << name << " took insurance and doesn't have BJ but dealer does. Lose bet but get back insurance @ (2:1 payout)" << std::endl;
                 gPlayer.setMoney(gPlayer.getMoney() + (gPlayer.getInsuranceBet()*2)); //see method documentation
                 gPlayer.getHand(index).setSimpleLossFlag(true);
@@ -633,20 +687,27 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
                 gPlayer.setInsuranceBet(0);
                 break;
             case NO_INSURANCE_BJ: //dealer has BJ but player does not
-                std::cout << "DEBUG: NO_INSURANCE_BJ" << std::endl;
+                if (DEBUGGING) {
+                    std::cout << "DEBUG: NO_INSURANCE_BJ" << std::endl;
+                }
                 std::cout << name << " did not take insurance and doesn't have BJ, but dealer does. Lose bet." << std::endl;
                 //money already set
                 gPlayer.setInSession(false);
                 gPlayer.getHand(index).setSimpleLossFlag(true);
                 break;
             case INSURANCE_NO_BJ://dealer doesn't have blackjack, neither does player, player has insurance
-                std::cout << "DEBUG: INSURANCE_NO_BJ" << std::endl;
+                if (DEBUGGING) {
+                    std::cout << "DEBUG: INSURANCE_NO_BJ" << std::endl;
+                }
                 std::cout << name << " took insurance, but no-one has BJ (lose insurance bet)" << std::endl;
                 //No need to remove money, as it is already removed when implementing insurance
                 //set flag?
                 gPlayer.setInsuranceBet(0);
                 break;
             case BLACK_JACK: //player has BJ
+                if (DEBUGGING) {
+                    std::cout << "DEBUG: BLACK_JACK" << std::endl;
+                }
                 std::cout << name << " has BJ. Dealer does not. (3:2 payout)" << std::endl;
                 gPlayer.getHand(index).setBlackjackFlag(true);
                 gPlayer.setInSession(false);
@@ -689,5 +750,8 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
         }
     //}
     std::cout << name << " now has " << gPlayer.getMoney() << std::endl;
-    std::cout << "DEBUG: END OF Game::payout()" << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: END OF Game::payout()" << std::endl;
+    }
+    
 }

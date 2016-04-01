@@ -26,7 +26,7 @@ void Hand::init(bool bustedFlag, bool pushFlag, bool surrenderFlag, bool doubled
 
 std::ostream& operator<< (std::ostream &os, Hand &h) {
     std::vector<Card> cVector;
-    
+    bool showHandTotal = true;
     //std::cout << "In HAND<<, pilesize is " << h.pileSize() << std::endl;
         for (auto card :h._cardPile) {
             if (card.getFaceUp() || h.pileSize() > 2) {
@@ -34,10 +34,20 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
             }
             else {
                 os << "X" << " ";
+                showHandTotal = false;
             }
         }
     
-    os << ": " << h.calculate();
+    if (showHandTotal) {
+        os << ": " << h.calculate();
+    }
+    else
+    {
+        os << ": ##";
+    }
+    if (DEBUGGING) {
+        os << "DEBUG: HAND: operator<<:" << h.calculate();
+    }
     os << std::endl;
     
     return os;

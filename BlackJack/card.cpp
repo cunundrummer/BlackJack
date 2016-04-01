@@ -9,11 +9,14 @@
 #include "card.h"
 
 bool Card::operator==(const Card &other) {
-    if (_bjValue == other._bjValue) {
-        std::cout << "(_bjValue == other._bjValue)" << " true" << std::endl;
+    if (DEBUGGING) {
+        if (_bjValue == other._bjValue) {
+            std::cout << "(_bjValue == other._bjValue)" << " true" << std::endl;
+        }
+        else
+            std::cout << "(_bjValue == other._bjValue)" << " false" << std::endl;
     }
-    else
-        std::cout << "(_bjValue == other._bjValue)" << " false" << std::endl;
+    
     return _bjValue == other._bjValue;
 }
 

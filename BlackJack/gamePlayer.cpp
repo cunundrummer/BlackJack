@@ -139,19 +139,25 @@ int GamePlayer::buildPlayOptionForPlayerAndReturnChoice() {
     }
     /*/////////////////////////////////////////////////////////////////////////*/
     
-    std::cout << "DEBUG:GamePlayer::buildPlayoptions..., number of hands are: " << playerNumberOfHandsInHand << std::endl;
-    std::cout << "DEBUG:GamePlayer::buildPlayoptions..., index = " << index << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG:GamePlayer::buildPlayoptions..., number of hands are: " << playerNumberOfHandsInHand << std::endl;
+        std::cout << "DEBUG:GamePlayer::buildPlayoptions..., index = " << index << std::endl;
+    }
+    
     if (isInSession() == true) { //default values as long as player is still in the game(hit, stand)
         options.push_back("Hit");
         options.push_back("Stand");
         
         if (getMoney() >= getBet()) {  //double down/splitting requires at least same amount as bet
-            std::cout << "HHHAAAANNNDD is " << getHand(index) << std::endl;
+            if (DEBUGGING) {
+                std::cout << "DEBUG: GamePlayer::buildPlayOptionsAndReturnChoice: Hand is " << getHand(index) << std::endl;
+            }
+            
             if (getHand(index).pileSize() == TWO_CARDS) { //handIsDoubleable
                 options.push_back("Double down");
             }
             else {
-                std::cout << "DEBUG: Gameplayer::buildplayOptionsForPlayer..., Hand[" << index << "] is not doubleable" << std::endl;
+                std::cout << "Error: Gameplayer::buildplayOptionsForPlayer..., Hand[" << index << "] is not doubleable" << std::endl;
                 std::cout << " because there are " << getHand(index).pileSize() << " cards in hand[" << index << "]" << std::endl;
             }
             if (getHand(index).getIndividualCard(0) == getHand(index).getIndividualCard(1) && getHand(index).pileSize() == TWO_CARDS) { //handIsSplittable
@@ -168,12 +174,18 @@ int GamePlayer::buildPlayOptionForPlayerAndReturnChoice() {
 }
 
 void GamePlayer::hit(Card card, int handIndex) {
-    std::cout << "DEBUG: IN HIT" << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: IN HIT" << std::endl;
+    }
+    
     std::cout << _name << " hits" << std::endl;
     addCardToHandFromDeck(card, handIndex);
     //int total = getHand(handIndex).calculate();
     
-    std::cout << "DEBUG: END OF HIT" << std::endl;
+    if (DEBUGGING) {
+        std::cout << "DEBUG: END OF HIT" << std::endl;
+    }
+    
 
 }
 /**

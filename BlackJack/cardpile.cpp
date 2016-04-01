@@ -58,6 +58,10 @@ void CardPile::addCard(int val, Suits suit) {
 }
 
 void CardPile::print() {
+    
+    if (DEBUGGING) {
+        std::cout << "DEBUG: CarPile: Print: BEGIN" << std::endl;
+    }
     int i= 0;
     int nCards = 0;
     std::cout << "DECK #" << nCards + 1 << std::endl;
@@ -74,7 +78,9 @@ void CardPile::print() {
         ++nCards;
         std::cout << *it << " ";
     }
-
+    if (DEBUGGING) {
+        std::cout << "DEBUG: CarPile: Print: END" << std::endl;
+    }
 }
 
 /**
