@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include "input.h"
+#include "debug.hpp"
 
 bool promptUserForDemoMode();
 void askUserForName();

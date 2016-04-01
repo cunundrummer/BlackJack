@@ -12,6 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include <cmath>
+#include "debug.hpp"
 
 bool stringIsAlphaNumOnly(const std::string &);
 bool is_digits(const std::string &str);

@@ -26,6 +26,7 @@
 #include "dealerPlayer.h"
 #include "menu.h"
 #include "player.h"
+#include "debug.hpp"
 
 void testMenu();
 void testPlayer();

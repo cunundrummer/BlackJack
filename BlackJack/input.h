@@ -13,6 +13,7 @@
 #include <string>
 #include <locale>
 #include "utilities.h"
+#include "debug.hpp"
 
 enum STRING_CASE { upper, lower };
 

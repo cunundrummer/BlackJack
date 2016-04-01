@@ -18,6 +18,7 @@
 #include "dealerPlayer.h"
 #include "deck.h"
 #include "menu.h"
+#include "debug.hpp"
 
 enum PLAY_RESULTS {BUSTED, BLACKJACK, GAME_GOES_ON};
 

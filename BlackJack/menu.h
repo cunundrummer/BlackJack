@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include "input.h"
+#include "debug.hpp"
 
 class Menu {
 private:
