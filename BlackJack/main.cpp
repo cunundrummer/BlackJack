@@ -136,73 +136,65 @@ int main(int argc, const char * argv[]) {
                     int choice = gPlayers[playerIndex]->buildPlayOptionForPlayerAndReturnChoice();
                     game.resolveChoice(choice, *gPlayers[playerIndex]);
                     //All players should have finished playing there hands by now. Next step is to play the dealers hand and then payouts
-                    //dealer.playHand(game.getDeck());
                     
-                    for (int i = 0; i < gPlayers[playerIndex]->getHands().size(); i++) {
-                        //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
-                        const int HAND1_IS_GREATER = 1;
-                        const int HAND2_IS_GREATER = 2;
-                        const int HANDS_ARE_EQUAL = 0;
-                        const int TWENTY_ONE = 21;
-                        if (gPlayers[playerIndex]->getHand(i).getBustedFlag() == true || gPlayers[playerIndex]->getHand(i).getSimpleLossFlag() == true) {
-                            game.payout(LOSE, *gPlayers[0], i);
-                        }
-                        else if (gPlayers[playerIndex]->getHand(i).getStandFlag()) { //out of place
-                            std::cout << "Dealers hand is " << dealer.getHand();
-                            std::cout << gPlayers[playerIndex]->getName() << " hand[" << i << "] is " << gPlayers[playerIndex]->getHand(i) << std::endl;
-                            switch (game.comparePlayerHands(gPlayers[playerIndex]->getHand(i), dealer.getHand())) {
-
-                                case HAND1_IS_GREATER:
-                                    game.payout(WIN, *gPlayers[playerIndex], i);
-                                    break;
-                                case HAND2_IS_GREATER:
-                                    if (dealer.getHand().getBustedFlag()) {
-                                        game.payout(WIN, *gPlayers[playerIndex], i);
-                                    }
-                                    else {
-                                        game.payout(LOSE, *gPlayers[playerIndex], i);
-                                    }
-                                    break;
-                                case HANDS_ARE_EQUAL:
-                                    game.payout(PUSH, *gPlayers[playerIndex], i);
-                                    break;
-                                case TWENTY_ONE:
-                                    game.payout(WIN, *gPlayers[playerIndex], i);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        else {
-                            std::cout << "Error in main: else if standFlag" << std::endl;
-                            exit(9);
-                        }
-                        
-                    }//end of for
+                    
                 }//end of if (inSession)
+                else {
+                    std::cout << gPlayers[playerIndex]->getName() << " out of session" << std::endl;
+                }
+                
             }//end of for (playercount...)
-        }//end of else
-        
-        if (DEBUGGING) {
-            std::cout << "DEBUG: MAIN: showing player1" << std::endl;
-            std::cout << *gPlayers[0] << std::endl;
+            dealer.playHand(game.getDeck());
+            for (int playerIndex = 0; playerIndex < gPlayers.size(); playerIndex++) {
+                for (int i = 0; i < gPlayers[playerIndex]->getHands().size(); i++) {
+                    //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
+                    const int HAND1_IS_GREATER = 1;
+                    const int HAND2_IS_GREATER = 2;
+                    const int HANDS_ARE_EQUAL = 0;
+                    const int TWENTY_ONE = 21;
+                    if (gPlayers[playerIndex]->getHand(i).getBustedFlag() == true || gPlayers[playerIndex]->getHand(i).getSimpleLossFlag() == true) {
+                        game.payout(LOSE, *gPlayers[0], i);
+                    }
+                    else if (gPlayers[playerIndex]->getHand(i).getStandFlag()) { //out of place
+                        std::cout << "Dealers hand is " << dealer.getHand();
+                        std::cout << gPlayers[playerIndex]->getName() << " hand[" << i << "] is " << gPlayers[playerIndex]->getHand(i) << std::endl;
+                        switch (game.comparePlayerHands(gPlayers[playerIndex]->getHand(i), dealer.getHand())) {
+                                
+                            case HAND1_IS_GREATER:
+                                game.payout(WIN, *gPlayers[playerIndex], i);
+                                break;
+                            case HAND2_IS_GREATER:
+                                if (dealer.getHand().getBustedFlag()) {
+                                    game.payout(WIN, *gPlayers[playerIndex], i);
+                                }
+                                else {
+                                    game.payout(LOSE, *gPlayers[playerIndex], i);
+                                }
+                                break;
+                            case HANDS_ARE_EQUAL:
+                                game.payout(PUSH, *gPlayers[playerIndex], i);
+                                break;
+                            case TWENTY_ONE:
+                                game.payout(WIN, *gPlayers[playerIndex], i);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        std::cout << "Error in main: else if standFlag" << std::endl;
+                        exit(9);
+                    }
+                }
+            }
             
-            std::cout << "There are " << game.getDeck().pileSize() << " in the deck." << std::endl;
-            std::cout << "END OF DEBUG MAIN" << std::endl;
-            std::cout << "****************************" << std::endl;
-        }
+        }//end of else
         
         game.preparePlayersForNewRound(gPlayers, dealer);
         game.setDealStart(true);
         game.getQuitAnswer();
         
     } while (game.getQuitSentinal() == false);
-    
-    if (DEBUGGING) {
-        std::cout << std::endl << std::endl << "****************************" << std::endl;
-        std::cout << "DEBUG: MAIN: showing all players..." << std::endl;
-        showAllPlayers(players);
-    }
     
     return 0;
 }
