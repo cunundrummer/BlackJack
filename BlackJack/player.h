@@ -15,6 +15,7 @@
 #include "input.h"
 #include "hand.h"
 #include "deck.h"
+#include "debug.hpp"
 
 class Player {
 private:

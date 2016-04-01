@@ -15,6 +15,7 @@
 #include <random>
 #include "utilities.h"
 #include "card.h"
+#include "debug.hpp"
 
 class CardPile {
 protected:

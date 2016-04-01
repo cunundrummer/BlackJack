@@ -10,7 +10,7 @@
 #define __BlackJack__card__
 
 #include <iostream>
-
+#include "debug.hpp"
 
 enum Suits { hearts, spades, diamonds, clubs, error };
 
