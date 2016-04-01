@@ -123,61 +123,64 @@ int main(int argc, const char * argv[]) {
         }
         else { //GAME_GOES_ON
             //start for loop for all players here
-            
-            
-            if (gPlayers[0]->isInSession()) {
+            for (int playerIndex = 0; playerIndex < gPlayers.size(); playerIndex++) {
                 
-                std::cout << "Checking play options for players, i.e. Double down/Split/Surrender/Hit" << std::endl;  //maybe check if player has bj first
-                
-                std::cout << "Dealers hand is " << dealer.getHand() << std::endl;
-                std::cout << gPlayers[0]->getName() << "'s hand is " << gPlayers[0]->getHand() << std::endl;
-                
-                int choice = gPlayers[0]->buildPlayOptionForPlayerAndReturnChoice();
-                game.resolveChoice(choice, *gPlayers[0]);
-                dealer.playHand(game.getDeck());
-                
-                for (int i = 0; i < gPlayers[0]->getHands().size(); i++) {
-                    //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
-                    const int HAND1_IS_GREATER = 1;
-                    const int HAND2_IS_GREATER = 2;
-                    const int HANDS_ARE_EQUAL = 0;
-                    const int TWENTY_ONE = 21;
-                    if (gPlayers[0]->getHand(i).getBustedFlag() == true || gPlayers[0]->getHand(i).getSimpleLossFlag() == true) {
-                        game.payout(LOSE, *gPlayers[0], i);
-                    }
-                    else if (gPlayers[0]->getHand(i).getStandFlag() == true) {
-                        std::cout << "Dealers hand is " << dealer.getHand();
-                        std::cout << gPlayers[0]->getName() << " hand[" << i << "] is " << gPlayers[0]->getHand(i) << std::endl;
-                        switch (game.comparePlayerHands(gPlayers[0]->getHand(i), dealer.getHand())) {
-
-                            case HAND1_IS_GREATER:
-                                game.payout(WIN, *gPlayers[0], i);
-                                break;
-                            case HAND2_IS_GREATER:
-                                if (dealer.getHand().getBustedFlag()) {
-                                    game.payout(WIN, *gPlayers[0], i);
-                                }
-                                else {
-                                    game.payout(LOSE, *gPlayers[0], i);
-                                }
-                                break;
-                            case HANDS_ARE_EQUAL:
-                                game.payout(PUSH, *gPlayers[0], i);
-                                break;
-                            case TWENTY_ONE:
-                                game.payout(WIN, *gPlayers[0], i);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    else {
-                        std::cout << "Error in main: else if standFlag" << std::endl;
-                        exit(9);
-                    }
+                if (gPlayers[playerIndex]->isInSession()) {
                     
-                }//end of for
-            }//end of if (inSessiong)
+                    std::cout << "Checking play options for player " << gPlayers[playerIndex]->getName() <<
+                    ", i.e. Double down/Split/Surrender/Hit" << std::endl;  //maybe check if player has bj first
+                    
+                    std::cout << "Dealers hand is " << dealer.getHand() << std::endl;
+                    std::cout << gPlayers[playerIndex]->getName() << "'s hand is " << gPlayers[playerIndex]->getHand() << std::endl;
+                    
+                    int choice = gPlayers[playerIndex]->buildPlayOptionForPlayerAndReturnChoice();
+                    game.resolveChoice(choice, *gPlayers[playerIndex]);
+                    //All players should have finished playing there hands by now. Next step is to play the dealers hand and then payouts
+                    //dealer.playHand(game.getDeck());
+                    
+                    for (int i = 0; i < gPlayers[playerIndex]->getHands().size(); i++) {
+                        //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
+                        const int HAND1_IS_GREATER = 1;
+                        const int HAND2_IS_GREATER = 2;
+                        const int HANDS_ARE_EQUAL = 0;
+                        const int TWENTY_ONE = 21;
+                        if (gPlayers[playerIndex]->getHand(i).getBustedFlag() == true || gPlayers[playerIndex]->getHand(i).getSimpleLossFlag() == true) {
+                            game.payout(LOSE, *gPlayers[0], i);
+                        }
+                        else if (gPlayers[playerIndex]->getHand(i).getStandFlag()) { //out of place
+                            std::cout << "Dealers hand is " << dealer.getHand();
+                            std::cout << gPlayers[playerIndex]->getName() << " hand[" << i << "] is " << gPlayers[playerIndex]->getHand(i) << std::endl;
+                            switch (game.comparePlayerHands(gPlayers[playerIndex]->getHand(i), dealer.getHand())) {
+
+                                case HAND1_IS_GREATER:
+                                    game.payout(WIN, *gPlayers[playerIndex], i);
+                                    break;
+                                case HAND2_IS_GREATER:
+                                    if (dealer.getHand().getBustedFlag()) {
+                                        game.payout(WIN, *gPlayers[playerIndex], i);
+                                    }
+                                    else {
+                                        game.payout(LOSE, *gPlayers[playerIndex], i);
+                                    }
+                                    break;
+                                case HANDS_ARE_EQUAL:
+                                    game.payout(PUSH, *gPlayers[playerIndex], i);
+                                    break;
+                                case TWENTY_ONE:
+                                    game.payout(WIN, *gPlayers[playerIndex], i);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        else {
+                            std::cout << "Error in main: else if standFlag" << std::endl;
+                            exit(9);
+                        }
+                        
+                    }//end of for
+                }//end of if (inSession)
+            }//end of for (playercount...)
         }//end of else
         
         if (DEBUGGING) {

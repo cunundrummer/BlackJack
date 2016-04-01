@@ -642,7 +642,6 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
     //try making payouts outside of this method, this method should probably just set appropriate flags, called set payoutflags
     //also, probably don't need so many cases.  Put conditional statements for insurance.  
     std::string name = gPlayer.getName();
-    //for (int index = 0; index < gPlayer.getHands().size(); index++) {
     
         switch (payoutType) {
             case INSURANCE_PUSH:  //Dealer and player have BJ, player took insurance
@@ -662,7 +661,7 @@ void Game::payout(PAYOUT_TYPE payoutType, GamePlayer& gPlayer, int index = 0) {
                 }
                 std::cout << name << " has " << gPlayer.getHand(index).calculate() << " as does the dealer. Push.(1:1 payout)" << std::endl;
                 gPlayer.setMoney(gPlayer.getMoney() + gPlayer.getBet()); //gets back bet because of push
-                gPlayer.getHand().setPushFlag(true);
+                gPlayer.getHand(index).setPushFlag(true);
                 gPlayer.setInSession(false);
                 break;
             case NO_INSURANCE_PUSH:  //Dealer and player have BJ, player did not take insurance

@@ -157,7 +157,7 @@ int GamePlayer::buildPlayOptionForPlayerAndReturnChoice() {
                 options.push_back("Double down");
             }
             else {
-                std::cout << "Error: Gameplayer::buildplayOptionsForPlayer..., Hand[" << index << "] is not doubleable" << std::endl;
+                std::cout << "Hand[" << index << "] is not doubleable" << std::endl;
                 std::cout << " because there are " << getHand(index).pileSize() << " cards in hand[" << index << "]" << std::endl;
             }
             if (getHand(index).getIndividualCard(0) == getHand(index).getIndividualCard(1) && getHand(index).pileSize() == TWO_CARDS) { //handIsSplittable
