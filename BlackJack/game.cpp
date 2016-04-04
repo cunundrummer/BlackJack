@@ -346,7 +346,6 @@ bool Game::isInsuranceRequired(const std::vector<GamePlayer*> &gPlayers, Hand de
         std::cout << "Dealers hole card is " << dealersHoleCard << ". And its value is " << dealersHoleCard.getCardValue() << std::endl;
     }
     
-    
     if (dealersUpCard.getCardValue() == ACE)  { //if dealer has ACE as UP card
         std::cout << "Dealer might have a BlackJack! Dealer will ask for insurance." << std::endl;
         askForInsurance = true;
@@ -413,7 +412,9 @@ int Game::resolveChoice(int choice, GamePlayer& player) {
             std::cout << "Player chose to double down." << std::endl;
             player.doubleDown(getDeck().removeLastCard(), index);  //adds a card if there is enough money, removes money = to bet amount
             std::cout << player.getName() << "'s hand is :" << std::endl << player.getHand(index) << std::endl;
-            calculatePlayerResult(player, index);
+            if (calculatePlayerResult(player, index) > 21) {
+                player.getHand().setBustedFlag(true);
+            }
             player.getHand(index).setDoubledFlag(true);
             player.getHand(index).setStandFlag(true); //Cannot get any new cards after a double
             //return choice;

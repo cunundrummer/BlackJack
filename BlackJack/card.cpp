@@ -10,45 +10,45 @@
 
 bool Card::operator==(const Card &other) {
     if (DEBUGGING) {
-        if (_bjValue == other._bjValue) {
-            std::cout << "(_bjValue == other._bjValue)" << " true" << std::endl;
+        if (bjValue_ == other.bjValue_) {
+            std::cout << "(bjValue_ == other.bjValue_)" << " true" << std::endl;
         }
         else
-            std::cout << "(_bjValue == other._bjValue)" << " false" << std::endl;
+            std::cout << "(bjValue_ == other.bjValue_)" << " false" << std::endl;
     }
     
-    return _bjValue == other._bjValue;
+    return bjValue_ == other.bjValue_;
 }
 
 std::ostream& operator<< (std::ostream &out, Card &card)
 {
     
-    if (card._bjValue == 1)
+    if (card.bjValue_ == 1)
         out << "A";
-    else if ( card._bjValue == 11)
+    else if ( card.bjValue_ == 11)
         out << "J";
-    else if (card._bjValue == 12)
+    else if (card.bjValue_ == 12)
         out << "Q";
-    else if (card._bjValue == 13)
+    else if (card.bjValue_ == 13)
         out << "K";
-    else if (card._bjValue >= 2 && card._bjValue <= 10)
-        out << card._bjValue;
+    else if (card.bjValue_ >= 2 && card.bjValue_ <= 10)
+        out << card.bjValue_;
     else {
         out << "Error: Value not in range: quitting!";
         exit(9);
     }
     
-    switch (card._suit) {
-        case 0:
+    switch (card.suit_) {
+        case hearts:
             out << "♡";
             break;
-        case 1:
+        case spades:
             out << "♠";
             break;
-        case 2:
+        case diamonds:
             out << "♢";
             break;
-        case 3:
+        case clubs:
             out << "♣";
             break;
             
@@ -62,12 +62,12 @@ std::ostream& operator<< (std::ostream &out, Card &card)
 }
 
 void Card::setBJValue(int val) {
-    _bjValue = val;
+    bjValue_ = val;
 }
 
 int Card::getCardValue() { //must rework 11 and jack to give right values!!!
-    if (_bjValue >= 11) {
-       _bjValue = 10;
+    if (bjValue_ >= 11) {
+       bjValue_ = 10;
     }
-    return _bjValue;
+    return bjValue_;
 }

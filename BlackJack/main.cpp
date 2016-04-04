@@ -147,7 +147,7 @@ int main(int argc, const char * argv[]) {
             dealer.playHand(game.getDeck());
             for (int playerIndex = 0; playerIndex < gPlayers.size(); playerIndex++) {
                 for (int i = 0; i < gPlayers[playerIndex]->getHands().size(); i++) {
-                    //gPlayers[0]->getHand().showHandFlags(gPlayers[0]->getHand());
+                    
                     const int HAND1_IS_GREATER = 1;
                     const int HAND2_IS_GREATER = 2;
                     const int HANDS_ARE_EQUAL = 0;
