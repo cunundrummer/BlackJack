@@ -96,3 +96,16 @@ void CardPile::shuffle() {
     //std::random_shuffle(_cardPile.begin(), _cardPile.end()); //deprecated randomization, required srand
 }
 
+/**
+ *  Reveals card at specified index
+ *  @param int atIndex defaults to 0
+ *  @return the card at index specified by atIndex
+ */
+Card CardPile::showCard(int atIndex) {
+    if ( (atIndex < 0) || (atIndex > _cardPile.size())) {
+        std::cout << "index out range error." << std::endl;
+        exit(9);
+    }
+    return _cardPile[atIndex];
+    
+}

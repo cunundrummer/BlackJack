@@ -26,12 +26,14 @@
 #include "dealerPlayer.h"
 #include "menu.h"
 #include "player.h"
+#include "AIGamePlayer.hpp"
 #include "debug.hpp"
 
 void testMenu();
 void testPlayer();
 void testAskForInsurance();
 void testInsurance();
+void testAIPlayer(AIGamePlayer);
 
 void setPlayersHandForTesting(Player& hand, int cardVal1, Suits suit1, int cardVal2, Suits suit2);
 

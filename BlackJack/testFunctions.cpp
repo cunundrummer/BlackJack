@@ -177,3 +177,16 @@ void setPlayersHandForTesting(Player& player, int cardVal1, Suits suit1, int car
     player.addCardToHandFromDeck(card1);
     player.addCardToHandFromDeck(card2);
 }
+
+void testAIPlayer(AIGamePlayer ai) {
+    
+    std::cout << "There are " <<ai.getPlayerCount() << " players currently playing." << std::endl;
+    std::cout << ai << std::endl;
+    
+    ai.setBet();
+    std::cout << "ai's bet is $" << ai.getBet() << std::endl;
+    
+    
+    std::cout << "Quitting from function..." << std::endl;
+    exit(0);
+}

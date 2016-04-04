@@ -16,6 +16,7 @@
 #include "player.h"
 #include "gamePlayer.h"
 #include "dealerPlayer.h"
+#include "AIGamePlayer.hpp"
 #include "deck.h"
 #include "menu.h"
 #include "debug.hpp"

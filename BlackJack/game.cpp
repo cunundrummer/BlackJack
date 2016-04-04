@@ -25,8 +25,10 @@ void Game::setUpPlayers(std::vector<GamePlayer*> &gPlayers){
         
         while (Player::_playerCount < _numPlayers) {  //use iterators instead?
             std::string compName = generateName("COMP");
-            gPlayers.push_back(new GamePlayer(compName, _MAX_CHARACTERS_FOR_NAME, 500, true));
-            std::cout << "DEBUG: In game::setUpPlayers, new gameplayer setup...\n" << gPlayers.at(gPlayers.size() -1)->getName(false) << std::endl;
+            gPlayers.push_back(new AIGamePlayer(compName));//, _MAX_CHARACTERS_FOR_NAME, 500, true));
+            if (DEBUGGING) {
+                std::cout << "DEBUG: In game::setUpPlayers, new gameplayer setup...\n" << gPlayers.at(gPlayers.size() -1)->getName(false) << std::endl;
+            }
             
         }
     }
@@ -51,10 +53,10 @@ void Game::setUpPlayers(std::vector<GamePlayer*> &gPlayers){
                     std::cout << gPlayers.at(gPlayers.size() - 1)->getName(false) << std::endl;
                 }
             }
-            else {
+            else { //not a human player
                 //enter code for computer player init
                 std::string compName = generateName("COMP");
-                gPlayers.push_back(new GamePlayer(compName, _MAX_CHARACTERS_FOR_NAME, 500, true));
+                gPlayers.push_back(new AIGamePlayer(compName));//, _MAX_CHARACTERS_FOR_NAME, 500, true));
             }
         } while (GamePlayer::_playerCount < _numPlayers);
     }

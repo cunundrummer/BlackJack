@@ -22,6 +22,7 @@
 #include "dealerPlayer.h"
 #include "menu.h"
 #include "player.h"
+#include "AIGamePlayer.hpp"
 #include "testFunctions.hpp"
 #include "debug.hpp"
 
@@ -34,10 +35,13 @@ int calculatePlayerResult(GamePlayer& g);
 
 int main(int argc, const char * argv[]) {
     
+    //AIGamePlayer g("g");
+    testAIPlayer(AIGamePlayer("Meh"));
+    
     if (DEBUGGING) {
         std::cout << "Debugging mode!" << std::endl;
     }
-    
+        
     Game game(false, 2); // default is demo mode(false)
 
     std::cout << "***** " << game.getGameTitle() << " *****" << std::endl;

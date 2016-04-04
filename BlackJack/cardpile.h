@@ -26,6 +26,7 @@ public:
     CardPile(std::vector<Card>& cards);
     void addCard(Card);
     void addCard(int, Suits);
+    Card showCard(int atIndex = 0);
     virtual Card removeLastCard();
     void shuffle();
     void getCardPile(CardPile &cardPile) { cardPile = _cardPile; }

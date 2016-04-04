@@ -18,7 +18,7 @@ enum PLAY_OPTIONS {HIT, STAND, DOUBLE_DOWN, SPLIT};
 class GamePlayer : public Player {
 private:
     double _max_allowable_bet_allowed;
-    double _bet;
+    
     double _insuranceBet;
     double doubledBet_;  //used for betReport
     double preBetMoney_;  //used for betReport
@@ -27,12 +27,15 @@ private:
     bool _insuranceBetIsSet;
     bool _wantsInsuranceFlag;
     
+protected:
+    double _bet;
+    
 public:
     GamePlayer();
     GamePlayer(std::string name, const int MAX_CHARACTERS_ALLOWED = 15, double money = 500,  const size_t MAX_NUMBER_HANDS = 4, bool inSession = true);
     virtual void init(bool inSessionFlag = true);
     
-    void setBet(double);
+    virtual void setBet(double);
     double getBet() { return _bet; }
     void setPreBetMoney() { preBetMoney_ = getMoney(); }
     double getPreBetMoney() { return preBetMoney_; }

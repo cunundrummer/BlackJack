@@ -30,7 +30,7 @@ private:
     
 public:
     Hand();
-    Hand(std::vector<Card> &cards):CardPile(cards) { init(); }
+    Hand(std::vector<Card> &cards) : CardPile(cards) { init(); }
     
     void init(bool bustedFlag = false, bool pushFlag = false, bool surrenderFlag = false, bool doubledFlag = false, bool standFlag = false, bool splitFlag = false, bool blackjackFlag = false, bool simpleLossFlag = false, bool simpleWinFlag = false);
     

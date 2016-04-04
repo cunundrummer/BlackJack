@@ -21,6 +21,7 @@
 		0DD62F351AFC2C7300671A2F /* hand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD62F331AFC2C7300671A2F /* hand.cpp */; };
 		0DD62F381AFC31B200671A2F /* deck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0DD62F361AFC31B200671A2F /* deck.cpp */; };
 		228341B81C9C829F00A9B37D /* testFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 228341B61C9C829F00A9B37D /* testFunctions.cpp */; };
+		22A4B5F71CB2EADC00278081 /* AIGamePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22A4B5F51CB2EADC00278081 /* AIGamePlayer.cpp */; };
 		22EB21AD1CA5CF84002A284D /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22EB21AB1CA5CF84002A284D /* debug.cpp */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,8 @@
 		0DD62F371AFC31B200671A2F /* deck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deck.h; sourceTree = "<group>"; };
 		228341B61C9C829F00A9B37D /* testFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testFunctions.cpp; sourceTree = "<group>"; };
 		228341B71C9C829F00A9B37D /* testFunctions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = testFunctions.hpp; sourceTree = "<group>"; };
+		22A4B5F51CB2EADC00278081 /* AIGamePlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AIGamePlayer.cpp; sourceTree = "<group>"; };
+		22A4B5F61CB2EADC00278081 /* AIGamePlayer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AIGamePlayer.hpp; sourceTree = "<group>"; };
 		22EB21AB1CA5CF84002A284D /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = "<group>"; };
 		22EB21AC1CA5CF84002A284D /* debug.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = debug.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,12 +102,16 @@
 		0DD62F161AF04EBF00671A2F /* BlackJack */ = {
 			isa = PBXGroup;
 			children = (
+				22A4B5F51CB2EADC00278081 /* AIGamePlayer.cpp */,
+				22A4B5F61CB2EADC00278081 /* AIGamePlayer.hpp */,
 				0DD62F2D1AF824CA00671A2F /* card.cpp */,
 				0DD62F2E1AF824CA00671A2F /* card.h */,
 				0DD62F301AF83A6F00671A2F /* cardpile.cpp */,
 				0DD62F311AF83A6F00671A2F /* cardpile.h */,
 				0D56AC741B16AA5B0054E1E4 /* dealerPlayer.cpp */,
 				0D56AC751B16AA5B0054E1E4 /* dealerPlayer.h */,
+				22EB21AB1CA5CF84002A284D /* debug.cpp */,
+				22EB21AC1CA5CF84002A284D /* debug.hpp */,
 				0DD62F361AFC31B200671A2F /* deck.cpp */,
 				0DD62F371AFC31B200671A2F /* deck.h */,
 				0DD62F1E1AF04F4700671A2F /* game.cpp */,
@@ -122,12 +129,10 @@
 				0DD62F251AF1563100671A2F /* player.h */,
 				0DD62F2A1AF2A41600671A2F /* prompts.cpp */,
 				0DD62F2B1AF2A41600671A2F /* prompts.h */,
-				0DD62F271AF15B5100671A2F /* utilities.cpp */,
-				0DD62F281AF15B5100671A2F /* utilities.h */,
 				228341B61C9C829F00A9B37D /* testFunctions.cpp */,
 				228341B71C9C829F00A9B37D /* testFunctions.hpp */,
-				22EB21AB1CA5CF84002A284D /* debug.cpp */,
-				22EB21AC1CA5CF84002A284D /* debug.hpp */,
+				0DD62F271AF15B5100671A2F /* utilities.cpp */,
+				0DD62F281AF15B5100671A2F /* utilities.h */,
 			);
 			path = BlackJack;
 			sourceTree = "<group>";
@@ -193,6 +198,7 @@
 			files = (
 				0DD62F291AF15B5100671A2F /* utilities.cpp in Sources */,
 				0DD62F321AF83A6F00671A2F /* cardpile.cpp in Sources */,
+				22A4B5F71CB2EADC00278081 /* AIGamePlayer.cpp in Sources */,
 				0DD62F351AFC2C7300671A2F /* hand.cpp in Sources */,
 				0DD62F261AF1563100671A2F /* player.cpp in Sources */,
 				22EB21AD1CA5CF84002A284D /* debug.cpp in Sources */,
