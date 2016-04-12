@@ -45,7 +45,9 @@ std::ostream& operator<< (std::ostream &os, Hand &h) {
     {
         os << ": ##";
     }
+    
     if (DEBUGGING) {
+        std::cout << std::endl;
         os << "DEBUG: HAND: operator<<:" << h.calculate();
     }
     os << std::endl;
@@ -123,6 +125,30 @@ int Hand::calculate() {
     
 }
 
+bool Hand::isHardHand() {
+    bool val = false;
+    
+    for (auto card: _cardPile) {
+        if (DEBUGGING) {
+            std::cout << "Card value: " << card.getCardValue() << std::endl;
+        }
+        if (card.getCardValue() != 1) {
+            if (DEBUGGING) {
+                std::cout << "Card not Ace...(true: Hard hand)" << std::endl;
+            }
+            val =  true;
+        }
+        else {
+            if (DEBUGGING) {
+                std::cout << "Card is an Ace...(false: Soft hand" << std::endl;
+            }
+            val = false;
+            break;
+        }
+    }
+    return val;
+}
+
 Card Hand::getIndividualCard(int index) {
     return _cardPile[index];
 }
@@ -131,3 +157,4 @@ Hand& Hand::clearHand() {
     _cardPile.erase(_cardPile.begin(), _cardPile.end());
     return *this;
 }
+

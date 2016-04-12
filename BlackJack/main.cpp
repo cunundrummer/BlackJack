@@ -36,6 +36,7 @@ int calculatePlayerResult(GamePlayer& g);
 int main(int argc, const char * argv[]) {
     
     //AIGamePlayer g("g");
+    //testHands();
     testAIPlayer(AIGamePlayer("Meh"));
     
     if (DEBUGGING) {

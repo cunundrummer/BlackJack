@@ -29,6 +29,7 @@
 #include "AIGamePlayer.hpp"
 #include "debug.hpp"
 
+void testHands();
 void testMenu();
 void testPlayer();
 void testAskForInsurance();

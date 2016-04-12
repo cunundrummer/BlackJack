@@ -47,57 +47,91 @@ void AIGamePlayer::setBet(double bet) {
 int AIGamePlayer::makePlayChoice(Hand& dealersHand) {
     const int UP_CARD_INDEX = 0;
     Card upCard = dealersHand.showCard(UP_CARD_INDEX);
-    const int MAX_ROWS = 10;
-    const int MAX_COLUMNS = 26;
     
-    //std::vector<std::vector<int>> simpleChart
+    bool hardHand = getHand().isHardHand();  //hard or soft
+    int calculatedPlayerHand = getHand().calculate();
     
     
     int choice = 0;
-    /*switch (upCard.getCardValue()) {
-        case 1:
-            <#statements#>
-            break;
-
-        case 2:
-            <#statements#>
-            break
-
-        case 3:
-            <#statements#>
-            break
-        
-        case 4:
-            <#statements#>
-            break
-        
-        case 5:
-            <#statements#>
-            break
-        
-        case 6:
-            <#statements#>
-            break
-        
-        case 7:
-            <#statements#>
-            break
-        
-        case 8:
-            <#statements#>
-            break
-        
-        case 9:
-            <#statements#>
-            break
-        
-        case 10:
-            <#statements#>
-            break
-        
-        default:
-            break;
-    }*/
     
-    return 0;
+    if (hardHand) {
+        choice = getDecisionForHardHand(calculatedPlayerHand, upCard.getCardValue());
+    }
+    else {
+        choice = getDecisionForSoftHand(calculatedPlayerHand, upCard.getCardValue());
+    }
+    
+    return choice;
+}
+
+int AIGamePlayer::getDecisionForHardHand(int handValue, int dealersUpCardValue) {
+    std::cout << "DEBUG: Entered AIGamePlayer::getDecisionForHardHand:..." << std::endl;
+    std::cout << "AIplayers hand value: " << handValue << std::endl;
+    std::cout << "DealersUpCardValue: " << dealersUpCardValue << std::endl;
+    
+    //Dealer = column; player = row//
+    //5 dummy rows for offset( has to start at 5 for hard hands
+    std::vector<std::vector<int> > chart = {
+        //1    2    3    4    5    6    7    8    9    10
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+
+        {HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT}, //START AT HARD 5 BECAUSE 4 = (2 | 2 ) AND ANYTHING LESS IS soft
+        {HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT},
+        {HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT},
+        {HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT, HIT},
+        {HIT, HIT, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, HIT, HIT, HIT, HIT},
+        {HIT, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, HIT},
+        {DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN, DOUBLE_DOWN},
+        {HIT, HIT, STAND, STAND, STAND, HIT, HIT, HIT, HIT, HIT},
+        {HIT, STAND, STAND, STAND, STAND, STAND, HIT, HIT, HIT, HIT},
+        {HIT, STAND, STAND, STAND, STAND, STAND, HIT, HIT, HIT, HIT},
+        {HIT, STAND, STAND, STAND, STAND, STAND, HIT, HIT, HIT, HIT}, //find better chart!!!
+        {HIT, STAND, STAND, STAND, STAND, STAND, HIT, HIT, HIT, HIT},
+        {STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND},
+        {STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND},
+        {STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND},
+        {STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND},
+        {STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND, STAND}
+        /*
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+         */
+        
+    };
+    
+    int choice = 0;
+    for (int row = 0; row < handValue; row++) {
+        
+        std::cout << row;
+        (row < 10) ? std::cout << " |": std::cout << "|";
+        
+        for (int colummn = 0; colummn < dealersUpCardValue; colummn++) {
+            std::cout << chart[row][colummn] << "|";
+            choice = chart[row][colummn];
+        }
+        std::cout << std::endl;
+    }
+    if (DEBUGGING) {
+        std::cout << "chart[17][5]" << " is reading " << chart[handValue][dealersUpCardValue] << std::endl;
+    }
+    choice = chart[handValue][dealersUpCardValue];
+    
+    return choice;
+}
+
+int AIGamePlayer::getDecisionForSoftHand(int handValue, int dealersUpCardValue) {
+    std::cout << "DEBUG: Entered AIGamePlayer::getDecisionForSoftHand:..." << std::endl;
+    return getDecisionForHardHand(handValue, dealersUpCardValue);
+    
 }

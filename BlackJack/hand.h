@@ -58,6 +58,7 @@ public:
     void showHandFlags(const Hand& h);
     
     int calculate();
+    bool isHardHand();
     void handToIndividualCards();//std::vector<Card>);
     Card getIndividualCard(int index);
     Hand& clearHand();

@@ -17,6 +17,10 @@
 #include "debug.hpp"
 
 class AIGamePlayer: public GamePlayer {
+private:
+    int getDecisionForHardHand(int handValue, int dealersUpCardValue);
+    int getDecisionForSoftHand(int handValue, int dealersUpCardValue);
+    
 public:
     AIGamePlayer(std::string name) : GamePlayer(name) {};
     

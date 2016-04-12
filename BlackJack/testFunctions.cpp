@@ -9,7 +9,7 @@
 #include "testFunctions.hpp"
 
 void testHands() {
-    std::vector<Card> cardsforHand1 { {5, spades}, {10, hearts} };
+    std::vector<Card> cardsforHand1 { {1, spades}, {10, hearts} };
     Hand hand(cardsforHand1);
     GamePlayer player;
     DealerPlayer dealer;
@@ -19,6 +19,8 @@ void testHands() {
     player.addCardToHandFromDeck(cardsforHand1[1], 0);
     //add hands to player
     std::cout << player;
+    
+    (hand.isHardHand()) ? std::cout << "Hand is a hard hand" << std::endl : std::cout << "Hand is a soft hand" << std::endl;
 }
 
 void testPlayer() {
@@ -186,6 +188,17 @@ void testAIPlayer(AIGamePlayer ai) {
     ai.setBet();
     std::cout << "ai's bet is $" << ai.getBet() << std::endl;
     
+    std::vector<Card> cardsforHand1 { {7, spades}, {10, hearts} };
+    std::vector<Hand> hand;
+    hand.reserve(1);
+        
+    ai.addCardToHandFromDeck(cardsforHand1[0]);
+    ai.addCardToHandFromDeck(cardsforHand1[1]);
+    
+    Hand dealersHand;
+    dealersHand.addCard(5, spades);
+    
+    std::cout << "Choice returned: " << ai.makePlayChoice(dealersHand) << std::endl;
     
     std::cout << "Quitting from function..." << std::endl;
     exit(0);
