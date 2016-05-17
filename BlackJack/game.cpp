@@ -218,7 +218,6 @@ void Game::getBetsFromAllPlayers(std::vector<GamePlayer*> &p) {
             }
             
             p[pCounter]->setBet(bet);
-
             if (bet == 0) {
                 std::cout << p[pCounter]->getName(false) << " is out." << std::endl;
                 p[pCounter]->setInSession(false);

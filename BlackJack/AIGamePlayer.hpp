@@ -23,6 +23,7 @@ private:
     
 public:
     AIGamePlayer(std::string name) : GamePlayer(name) {};
+    AIGamePlayer() {};
     
     virtual void setBet(double defaultBet = 0);
     int makePlayChoice(Hand& dealersHand);

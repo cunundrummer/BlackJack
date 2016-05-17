@@ -37,7 +37,7 @@ int main(int argc, const char * argv[]) {
     
     //AIGamePlayer g("g");
     //testHands();
-    testAIPlayer(AIGamePlayer("Meh"));
+    //testAIPlayer(AIGamePlayer("Meh"));
     
     if (DEBUGGING) {
         std::cout << "Debugging mode!" << std::endl;
@@ -67,8 +67,10 @@ int main(int argc, const char * argv[]) {
     players.push_back(&dealer);
     if (DEBUGGING) {
         std::cout << "DEBUG: Testing all players including dealer..." << std::endl;
-        
-        std::cout << "END OF DEBUG: Testing all players including dealer..." << std::endl;
+        for (auto p: players) {
+            std::cout << *p << std::endl;
+        }
+        std::cout << "\nEND OF DEBUG: Testing all players including dealer..." << std::endl;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////
     
